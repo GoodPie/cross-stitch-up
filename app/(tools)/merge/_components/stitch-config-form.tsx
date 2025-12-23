@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { StitchConfig } from "@/lib/pdf/types";
+import type { StitchConfig } from "@/lib/tools/merge/types";
 
 interface StitchConfigProps {
   onContinue: (config: StitchConfig) => void;

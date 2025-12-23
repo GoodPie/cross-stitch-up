@@ -1,9 +1,9 @@
-export interface PageRenderResult {
-  pageNumber: number;
-  canvas: HTMLCanvasElement;
-  width: number;
-  height: number;
-}
+// Re-export shared types for convenience
+export type {
+  PageRenderResult,
+  ProcessingProgress,
+  ExportOptions,
+} from "@/lib/shared/types";
 
 export interface GridCoordinates {
   xStart: number;
@@ -32,28 +32,14 @@ export interface DetectedGridPage {
   gridBounds: GridBounds;
 }
 
-export interface ProcessingProgress {
-  stage: string;
-  progress: number; // 0-100
-}
-
 export interface MergeResult {
   canvas: HTMLCanvasElement;
   imageUrl: string;
   pagesMerged: number;
   dimensions: { width: number; height: number };
+  originalFilename?: string;
 }
 
-export interface ExportOptions {
-  format: "png" | "pdf";
-  sizeMode: "pixels" | "print";
-  width: number;
-  height: number;
-  dpi?: number; // For print mode
-  maintainAspectRatio: boolean;
-}
-
-// New types for user-driven flow
 /**
  * Configuration for grid detection algorithm.
  * These can be overridden via StitchConfig.gridDetection

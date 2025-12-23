@@ -4,13 +4,10 @@ import { useState, useCallback } from "react";
 import { ArrowLeft, ArrowRight, Plus, Minus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { PageThumbnail } from "./page-thumbnail";
+import { PageThumbnail } from "@/components/shared/page-thumbnail";
 import { GridCanvas } from "./grid-canvas";
-import type {
-  PageRenderResult,
-  GridCell,
-  GridArrangement,
-} from "@/lib/pdf/types";
+import type { PageRenderResult } from "@/lib/shared/types";
+import type { GridCell, GridArrangement } from "@/lib/tools/merge/types";
 
 interface PageSelectorProps {
   pages: PageRenderResult[];

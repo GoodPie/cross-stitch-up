@@ -55,8 +55,9 @@ export function ExportDialog({
   const [printHeight, setPrintHeight] = useState<string>("10");
   const [dpi, setDpi] = useState<string>("300");
   const [maintainAspectRatio, setMaintainAspectRatio] = useState(true);
-  const [trackedCanvas, setTrackedCanvas] =
-    useState<HTMLCanvasElement | null>(null);
+  const [trackedCanvas, setTrackedCanvas] = useState<HTMLCanvasElement | null>(
+    null,
+  );
 
   // Sync pixel dimensions when canvas changes (state adjustment during render)
   if (canvas !== trackedCanvas) {

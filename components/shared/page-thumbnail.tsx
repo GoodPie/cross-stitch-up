@@ -1,9 +1,9 @@
 "use client";
 
 import { useMemo } from "react";
-import Image from 'next/image'
+import Image from "next/image";
 import { X } from "lucide-react";
-import type { PageRenderResult } from "@/lib/pdf/types";
+import type { PageRenderResult } from "@/lib/shared/types";
 
 interface PageThumbnailProps {
   page: PageRenderResult;

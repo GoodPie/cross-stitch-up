@@ -7,12 +7,14 @@ import {
 import type {
   MergeResult,
   DetectedGridPage,
-  PageRenderResult,
   GridArrangement,
   StitchConfig,
 } from "./types";
 
-export type { MergeResult, ExportOptions } from "./types";
+import type { PageRenderResult } from "@/lib/shared/types";
+
+export type { MergeResult } from "./types";
+export type { ExportOptions } from "@/lib/shared/types";
 
 /**
  * Process user-selected pages with their specified arrangement.

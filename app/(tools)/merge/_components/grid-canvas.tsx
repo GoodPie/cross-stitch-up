@@ -2,8 +2,9 @@
 
 import { useState, useCallback } from "react";
 import { Plus } from "lucide-react";
-import { PageThumbnail } from "./page-thumbnail";
-import type { PageRenderResult, GridCell } from "@/lib/pdf/types";
+import { PageThumbnail } from "@/components/shared/page-thumbnail";
+import type { PageRenderResult } from "@/lib/shared/types";
+import type { GridCell } from "@/lib/tools/merge/types";
 
 interface GridCanvasProps {
   cells: GridCell[];
