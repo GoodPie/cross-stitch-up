@@ -9,7 +9,7 @@ export function Header() {
         </div>
         <div>
           <h1 className="text-xl font-serif font-bold text-foreground">
-            StitchMerge
+            Cross Stitch-up
           </h1>
           <p className="text-xs text-muted-foreground">
             Combine your pattern pages into one
