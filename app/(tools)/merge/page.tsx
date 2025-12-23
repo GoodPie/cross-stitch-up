@@ -13,7 +13,7 @@ import type {
   MergeResult,
 } from "@/lib/tools/merge/types";
 
-type AppState =
+type MergeState =
   | "config"
   | "upload"
   | "selecting"
@@ -22,7 +22,7 @@ type AppState =
   | "error";
 
 export default function MergePage() {
-  const [appState, setAppState] = useState<AppState>("config");
+  const [mergeState, setMergeState] = useState<MergeState>("config");
   const [processingStage, setProcessingStage] = useState("");
   const [result, setResult] = useState<MergeResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -34,18 +34,18 @@ export default function MergePage() {
 
   const handleConfigContinue = useCallback((config: StitchConfig) => {
     setStitchConfig(config);
-    setAppState("upload");
+    setMergeState("upload");
   }, []);
 
   const handleFileSelected = useCallback(async (file: File) => {
     if (file.type !== "application/pdf") {
       setError("Please upload a PDF file");
-      setAppState("error");
+      setMergeState("error");
       return;
     }
 
     setOriginalFilename(file.name);
-    setAppState("processing");
+    setMergeState("processing");
     setProcessingStage("Loading PDF...");
     setError(null);
 
@@ -58,7 +58,7 @@ export default function MergePage() {
       });
 
       setPdfPages(pages);
-      setAppState("selecting");
+      setMergeState("selecting");
     } catch (err) {
       console.error("PDF loading error:", err);
       setError(
@@ -66,18 +66,18 @@ export default function MergePage() {
           ? err.message
           : "Failed to load PDF. Please try a different file.",
       );
-      setAppState("error");
+      setMergeState("error");
     }
   }, []);
 
   const handleBackToConfig = useCallback(() => {
-    setAppState("config");
+    setMergeState("config");
     setPdfPages([]);
     setOriginalFilename("");
   }, []);
 
   const handleBackToUpload = useCallback(() => {
-    setAppState("upload");
+    setMergeState("upload");
     setPdfPages([]);
   }, []);
 
@@ -85,7 +85,7 @@ export default function MergePage() {
     async (arrangement: GridArrangement) => {
       if (!stitchConfig) return;
 
-      setAppState("processing");
+      setMergeState("processing");
       setProcessingStage("Extracting grid sections...");
 
       try {
@@ -108,7 +108,7 @@ export default function MergePage() {
           originalFilename,
           canvas: mergeResult.canvas,
         });
-        setAppState("success");
+        setMergeState("success");
       } catch (err) {
         console.error("PDF processing error:", err);
         setError(
@@ -116,14 +116,14 @@ export default function MergePage() {
             ? err.message
             : "Failed to process PDF. Please try again.",
         );
-        setAppState("error");
+        setMergeState("error");
       }
     },
     [pdfPages, stitchConfig, originalFilename],
   );
 
   const handleReset = useCallback(() => {
-    setAppState("config");
+    setMergeState("config");
     setResult(null);
     setError(null);
     setProcessingStage("");
@@ -134,10 +134,10 @@ export default function MergePage() {
 
   return (
     <>
-      {appState === "config" && (
+      {mergeState === "config" && (
         <StitchConfigForm onContinue={handleConfigContinue} />
       )}
-      {appState === "upload" && (
+      {mergeState === "upload" && (
         <div className="space-y-4">
           <button
             onClick={handleBackToConfig}
@@ -167,18 +167,18 @@ export default function MergePage() {
           <DropZone onFileSelected={handleFileSelected} />
         </div>
       )}
-      {appState === "selecting" && (
+      {mergeState === "selecting" && (
         <PageSelector
           pages={pdfPages}
           onBack={handleBackToUpload}
           onMerge={handleMerge}
         />
       )}
-      {appState === "processing" && <ProcessingState stage={processingStage} />}
-      {appState === "success" && result && (
+      {mergeState === "processing" && <ProcessingState stage={processingStage} />}
+      {mergeState === "success" && result && (
         <ResultsState result={result} onReset={handleReset} />
       )}
-      {appState === "error" && (
+      {mergeState === "error" && (
         <div className="text-center space-y-4">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-destructive/10">
             <svg
