@@ -58,7 +58,7 @@ export function downloadAsPdf(
     pdfWidth = options.width * 25.4;
     pdfHeight = options.height * 25.4;
   } else {
-    // 'fit' mode - fit to A4 while maintaining aspect ratio
+    // 'fit' mode - fit to A4 while maintaining the aspect ratio
     const aspectRatio = canvas.width / canvas.height;
     const a4 = PAPER_SIZES.a4;
 
@@ -86,7 +86,7 @@ export function downloadAsPdf(
   // Get image data
   const imgData = exportCanvas.toDataURL("image/png");
 
-  // Center the image on the page
+  // Centre the image on the page
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
   const marginX = (pageWidth - pdfWidth) / 2;
@@ -100,7 +100,7 @@ export function downloadAsPdf(
 }
 
 /**
- * Sanitizes a filename for download.
+ * Sanitises a filename for download.
  */
 function sanitizeFilename(filename: string, extension: string): string {
   const baseName = filename.replace(/\.[^/.]+$/, "");

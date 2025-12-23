@@ -11,7 +11,7 @@ export async function loadAndRenderPdf(
   // Dynamically import pdfjs-dist to avoid SSR issues
   const pdfjsLib = await import("pdfjs-dist");
 
-  // Use worker from public folder (copied from node_modules/pdfjs-dist/build/)
+  // Use worker from the public folder (copied from node_modules/pdfjs-dist/build/)
   pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
 
   const arrayBuffer = await file.arrayBuffer();

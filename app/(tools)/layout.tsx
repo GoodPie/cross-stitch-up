@@ -1,12 +1,8 @@
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
-import {ReactNode} from "react";
+import { ReactNode } from "react";
 
-export default function ToolsLayout({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export default function ToolsLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col bg-linear-to-br from-background via-background to-muted/30">
       <Header showBackLink />

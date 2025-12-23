@@ -65,7 +65,7 @@ export function DropZone({ onFileSelected }: DropZoneProps) {
             }
           `}
         >
-          {/* Cross stitch corner decorations */}
+          {/* Cross-stitch corner decorations */}
           <div className="absolute top-3 left-3 w-6 h-6 border-t-2 border-l-2 border-secondary-foreground/20 rounded-tl" />
           <div className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 border-secondary-foreground/20 rounded-tr" />
           <div className="absolute bottom-3 left-3 w-6 h-6 border-b-2 border-l-2 border-secondary-foreground/20 rounded-bl" />

@@ -69,7 +69,7 @@ export async function processSelectedPages(
     throw new Error("Could not extract any grids from selected pages.");
   }
 
-  // Step 2: Merge grids into unified pattern
+  // Step 2: Merge grids into a unified pattern
   onProgress("Merging pattern...");
 
   const mergedCanvas = mergePatternGridsFromArrangement(

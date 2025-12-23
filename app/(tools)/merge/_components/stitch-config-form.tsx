@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { ArrowRight, Grid3X3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -75,7 +75,7 @@ export function StitchConfigForm({ onContinue }: StitchConfigProps) {
     <div className="space-y-6">
       <div className="relative">
         <div className="rounded-2xl border-2 border-muted-foreground/30 p-8 md:p-12 text-center">
-          {/* Cross stitch corner decorations */}
+          {/* Cross-stitch corner decorations */}
           <div className="absolute top-3 left-3 w-6 h-6 border-t-2 border-l-2 border-secondary-foreground/20 rounded-tl" />
           <div className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 border-secondary-foreground/20 rounded-tr" />
           <div className="absolute bottom-3 left-3 w-6 h-6 border-b-2 border-l-2 border-secondary-foreground/20 rounded-bl" />

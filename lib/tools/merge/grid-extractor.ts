@@ -4,7 +4,7 @@ import type { GridBounds, GridDetectionConfig, StitchConfig } from "./types";
 // CONSTANTS
 // =============================================================================
 
-/** When enabled, draws red border overlay on output canvas and logs detection steps */
+/** When enabled, draws a red border overlay on output canvas and logs detection steps */
 export const DEBUG_GRID_DETECTION = false;
 
 /** Confidence score weights and thresholds */
@@ -236,7 +236,7 @@ function measureLineThickness(
 
   let thickness = 1;
 
-  // Check in negative direction (above for horizontal, left for vertical)
+  // Check in the negative direction (above for horizontal, left for vertical)
   for (let delta = 1; delta <= maxDelta; delta++) {
     const checkPos = position - delta;
     if (checkPos < 0) break;
@@ -252,7 +252,7 @@ function measureLineThickness(
     }
   }
 
-  // Check in positive direction (below for horizontal, right for vertical)
+  // Check in the positive direction (below for horizontal, right for vertical)
   for (let delta = 1; delta <= maxDelta; delta++) {
     const checkPos = position + delta;
     if (checkPos >= limit) break;
@@ -610,7 +610,6 @@ function createSyntheticVerticalBorder(
 }
 
 function resolveVerticalBorders(
-  ctx: ImageContext,
   horizontalBorders: { top: LineCandidate; bottom: LineCandidate },
   verticalBorders: { left: LineCandidate | null; right: LineCandidate | null },
 ): { left: LineCandidate; right: LineCandidate } | null {
@@ -673,11 +672,11 @@ function verifyCorner(
   const checkSize = ctx.config.cornerDetection.cornerSize;
   const tolerance = CORNER.POSITION_TOLERANCE;
 
-  // Determine check directions based on corner type
+  // Determine check directions based on the corner type
   const hDir = cornerType.includes("Left") ? 1 : -1;
   const vDir = cornerType.includes("top") ? 1 : -1;
 
-  // Check if corner region has dark pixels
+  // Check if the corner region has dark pixels
   let cornerFound = false;
   for (let dy = -tolerance; dy <= tolerance && !cornerFound; dy++) {
     for (let dx = -tolerance; dx <= tolerance && !cornerFound; dx++) {
@@ -1012,7 +1011,7 @@ export function extractGridArea(canvas: HTMLCanvasElement): GridBounds {
   };
 }
 
-/** Detects black border lines surrounding the grid and crops to inside them */
+/** Detects black borderlines surrounding the grid and crops to inside them */
 export function extractGridWithoutAxisNumbers(
   canvas: HTMLCanvasElement,
   config?: StitchConfig,
@@ -1145,7 +1144,6 @@ export function detectGridBoundaries(
 
   // Step 3: Resolve vertical borders (use synthetic if needed)
   const resolvedVertical = resolveVerticalBorders(
-    ctx,
     { top: horizontalBorders.top, bottom: horizontalBorders.bottom },
     verticalBorders,
   );

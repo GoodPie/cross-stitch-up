@@ -33,7 +33,7 @@ export function PageSelector({ pages, onBack, onMerge }: PageSelectorProps) {
         const filtered = prev.filter((c) => !(c.row === row && c.col === col));
         // Remove the page from any other position
         const withoutPage = filtered.filter((c) => c.pageNumber !== pageNumber);
-        // Add new cell
+        // Add a new cell
         return [
           ...withoutPage,
           {
@@ -174,7 +174,7 @@ export function PageSelector({ pages, onBack, onMerge }: PageSelectorProps) {
           </div>
 
           {/* Grid canvas */}
-          <div className="min-h-[300px]">
+          <div className="min-h-75">
             <GridCanvas
               cells={cells}
               pages={pages}

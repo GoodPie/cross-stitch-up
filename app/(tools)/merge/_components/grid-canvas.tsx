@@ -92,7 +92,7 @@ export function GridCanvas({
           onDragLeave={handleDragLeave}
           onDrop={(e) => handleDrop(e, row, col)}
           className={`
-            aspect-[3/4] rounded-lg border-2 border-dashed transition-all duration-200
+            aspect-3/4 rounded-lg border-2 border-dashed transition-all duration-200
             ${occupied ? "border-solid border-border p-0" : "border-muted-foreground/30"}
             ${isOver && !occupied ? "border-primary bg-primary/10 scale-[1.02]" : ""}
             ${!occupied ? "flex items-center justify-center" : ""}

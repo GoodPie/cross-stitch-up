@@ -174,7 +174,9 @@ export default function MergePage() {
           onMerge={handleMerge}
         />
       )}
-      {mergeState === "processing" && <ProcessingState stage={processingStage} />}
+      {mergeState === "processing" && (
+        <ProcessingState stage={processingStage} />
+      )}
       {mergeState === "success" && result && (
         <ResultsState result={result} onReset={handleReset} />
       )}

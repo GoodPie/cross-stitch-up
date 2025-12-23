@@ -61,7 +61,6 @@ lib/
       index.ts                # processSelectedPages()
       types.ts                # Merge-specific types
       grid-extractor.ts       # Grid detection algorithm
-      grid-detector.ts        # Grid position helpers
 ```
 
 ### Adding New Tools

@@ -6,7 +6,7 @@ export interface ScaleOptions {
 
 /**
  * Scales a canvas to the target dimensions.
- * Uses high-quality image smoothing for best results.
+ * Uses high-quality image smoothing for the best results.
  */
 export function scaleCanvas(
   sourceCanvas: HTMLCanvasElement,
@@ -49,7 +49,7 @@ export function scaleCanvas(
   ctx.fillStyle = "#ffffff";
   ctx.fillRect(0, 0, scaledCanvas.width, scaledCanvas.height);
 
-  // Draw scaled image
+  // Draw a scaled image
   ctx.drawImage(
     sourceCanvas,
     0,
@@ -101,7 +101,7 @@ export function getAspectRatio(canvas: HTMLCanvasElement): number {
 }
 
 /**
- * Calculates the other dimension when maintaining aspect ratio.
+ * Calculates the other dimension when maintaining the aspect ratio.
  */
 export function calculateMaintainedDimension(
   sourceCanvas: HTMLCanvasElement,
