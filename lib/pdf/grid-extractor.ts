@@ -396,10 +396,7 @@ export function detectGridBoundaries(
     return outermost
   }
 
-  /**
-   * Find the best vertical line NEAR an expected position.
-   * Used when horizontal lines give us a hint about where vertical borders should be.
-   */
+  // Find vertical line near expected position (guided by horizontal line endpoints)
   const findBestVerticalLineNear = (
       expectedX: number,
       tolerance: number,
@@ -465,11 +462,7 @@ export function detectGridBoundaries(
     return candidates[0]
   }
 
-  /**
-   * Find horizontal lines and validate they form a consistent grid.
-   * Returns candidates that are likely to be actual grid borders, not table lines.
-   * The key insight: top and bottom borders should have the same x-range.
-   */
+  // Find horizontal borders with alignment validation (top/bottom should have same x-range)
   const findAndValidateHorizontalBorders = (): { top: LineCandidate | null; bottom: LineCandidate | null } => {
     const topCandidates: LineCandidate[] = []
     const bottomCandidates: LineCandidate[] = []
@@ -572,15 +565,9 @@ export function detectGridBoundaries(
     return { top: topCandidate, bottom: bestBottom }
   }
 
-  // === Corner Detection ===
+  // --- Corner Detection ---
 
-  /**
-   * Verifies a corner by checking for an L-shaped intersection.
-   * Instead of just checking pixel density, we verify that:
-   * 1. There are dark pixels extending horizontally from the corner
-   * 2. There are dark pixels extending vertically from the corner
-   * 3. The corner point itself (with some tolerance) is dark
-   */
+  // Verifies L-shaped intersection at corner: checks horizontal arm, vertical arm, and corner point
   const verifyCorner = (
       x: number,
       y: number,
@@ -650,10 +637,7 @@ export function detectGridBoundaries(
     return isValid
   }
 
-  /**
-   * Check if detected borders align properly to form a rectangle.
-   * Returns alignment score (0-1) and adjusted positions if needed.
-   */
+  // Checks if borders align to form a rectangle (returns 0-1 score)
   const checkBorderAlignment = (
       top: LineCandidate,
       bottom: LineCandidate,
@@ -698,7 +682,7 @@ export function detectGridBoundaries(
     }
   }
 
-  // === Internal Grid Line Detection ===
+  // --- Internal Grid Line Detection ---
 
   const findInternalGridLines = (
       bounds: GridBounds,
@@ -775,7 +759,7 @@ export function detectGridBoundaries(
     }
   }
 
-  // === Main Detection Logic ===
+  // --- Main Detection Logic ---
 
   if (DEBUG_GRID_DETECTION) {
     console.log('=== Grid Detection Debug (Improved Algorithm) ===')
