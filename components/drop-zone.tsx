@@ -1,50 +1,50 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useCallback, useRef } from "react"
-import { FileUp, File } from "lucide-react"
+import { useState, useCallback, useRef } from "react";
+import { FileUp, File } from "lucide-react";
 
 interface DropZoneProps {
-  onFileSelected: (file: File) => void
+  onFileSelected: (file: File) => void;
 }
 
 export function DropZone({ onFileSelected }: DropZoneProps) {
-  const [isDragOver, setIsDragOver] = useState(false)
-  const inputRef = useRef<HTMLInputElement>(null)
+  const [isDragOver, setIsDragOver] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragOver(true)
-  }, [])
+    e.preventDefault();
+    setIsDragOver(true);
+  }, []);
 
   const handleDragLeave = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragOver(false)
-  }, [])
+    e.preventDefault();
+    setIsDragOver(false);
+  }, []);
 
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
-      e.preventDefault()
-      setIsDragOver(false)
-      const file = e.dataTransfer.files[0]
+      e.preventDefault();
+      setIsDragOver(false);
+      const file = e.dataTransfer.files[0];
       if (file) {
-        onFileSelected(file)
+        onFileSelected(file);
       }
     },
     [onFileSelected],
-  )
+  );
 
   const handleClick = () => {
-    inputRef.current?.click()
-  }
+    inputRef.current?.click();
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+    const file = e.target.files?.[0];
     if (file) {
-      onFileSelected(file)
+      onFileSelected(file);
     }
-  }
+  };
 
   return (
     <div className="space-y-6">
@@ -71,7 +71,13 @@ export function DropZone({ onFileSelected }: DropZoneProps) {
           <div className="absolute bottom-3 left-3 w-6 h-6 border-b-2 border-l-2 border-secondary-foreground/20 rounded-bl" />
           <div className="absolute bottom-3 right-3 w-6 h-6 border-b-2 border-r-2 border-secondary-foreground/20 rounded-br" />
 
-          <input ref={inputRef} type="file" accept=".pdf" onChange={handleChange} className="hidden" />
+          <input
+            ref={inputRef}
+            type="file"
+            accept=".pdf"
+            onChange={handleChange}
+            className="hidden"
+          />
 
           <div className="space-y-4">
             <div
@@ -81,7 +87,11 @@ export function DropZone({ onFileSelected }: DropZoneProps) {
                 ${isDragOver ? "bg-primary text-primary-foreground scale-110" : "bg-accent text-accent-foreground"}
               `}
             >
-              {isDragOver ? <FileUp className="w-10 h-10 animate-bounce" /> : <File className="w-10 h-10" />}
+              {isDragOver ? (
+                <FileUp className="w-10 h-10 animate-bounce" />
+              ) : (
+                <File className="w-10 h-10" />
+              )}
             </div>
 
             <div className="space-y-2">
@@ -89,11 +99,16 @@ export function DropZone({ onFileSelected }: DropZoneProps) {
                 {isDragOver ? "Drop it here!" : "Drop your pattern PDF here"}
               </h2>
               <p className="text-muted-foreground">
-                or <span className="text-primary font-medium underline underline-offset-2">browse files</span>
+                or{" "}
+                <span className="text-primary font-medium underline underline-offset-2">
+                  browse files
+                </span>
               </p>
             </div>
 
-            <p className="text-sm text-muted-foreground/70">Supports PDF files from popular pattern makers</p>
+            <p className="text-sm text-muted-foreground/70">
+              Supports PDF files from popular pattern makers
+            </p>
           </div>
         </div>
       </div>
@@ -110,5 +125,5 @@ export function DropZone({ onFileSelected }: DropZoneProps) {
         </ul>
       </div>
     </div>
-  )
+  );
 }

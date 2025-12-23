@@ -1,21 +1,21 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { ArrowRight, Grid3X3 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { useState } from "react";
+import { ArrowRight, Grid3X3 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import type { StitchConfig } from "@/lib/pdf/types"
+} from "@/components/ui/select";
+import type { StitchConfig } from "@/lib/pdf/types";
 
 interface StitchConfigProps {
-  onContinue: (config: StitchConfig) => void
+  onContinue: (config: StitchConfig) => void;
 }
 
 const PRESETS = [
@@ -28,48 +28,48 @@ const PRESETS = [
   { label: "250 × 200", value: "250x200" },
   { label: "300 × 200", value: "300x200" },
   { label: "300 × 300", value: "300x300" },
-]
+];
 
 function parsePreset(value: string): { width: number; height: number } | null {
-  if (value === "custom") return null
-  const [w, h] = value.split("x").map(Number)
-  return { width: w, height: h }
+  if (value === "custom") return null;
+  const [w, h] = value.split("x").map(Number);
+  return { width: w, height: h };
 }
 
 export function StitchConfigForm({ onContinue }: StitchConfigProps) {
-  const [width, setWidth] = useState<string>("")
-  const [height, setHeight] = useState<string>("")
-  const [preset, setPreset] = useState<string>("custom")
+  const [width, setWidth] = useState<string>("");
+  const [height, setHeight] = useState<string>("");
+  const [preset, setPreset] = useState<string>("custom");
 
   const handlePresetChange = (value: string) => {
-    setPreset(value)
-    const parsed = parsePreset(value)
+    setPreset(value);
+    const parsed = parsePreset(value);
     if (parsed) {
-      setWidth(String(parsed.width))
-      setHeight(String(parsed.height))
+      setWidth(String(parsed.width));
+      setHeight(String(parsed.height));
     }
-  }
+  };
 
   const handleWidthChange = (value: string) => {
-    setWidth(value)
-    setPreset("custom")
-  }
+    setWidth(value);
+    setPreset("custom");
+  };
 
   const handleHeightChange = (value: string) => {
-    setHeight(value)
-    setPreset("custom")
-  }
+    setHeight(value);
+    setPreset("custom");
+  };
 
-  const widthNum = parseInt(width, 10)
-  const heightNum = parseInt(height, 10)
-  const isValid = widthNum > 0 && heightNum > 0
+  const widthNum = parseInt(width, 10);
+  const heightNum = parseInt(height, 10);
+  const isValid = widthNum > 0 && heightNum > 0;
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (isValid) {
-      onContinue({ width: widthNum, height: heightNum })
+      onContinue({ width: widthNum, height: heightNum });
     }
-  }
+  };
 
   return (
     <div className="space-y-6">
@@ -141,7 +141,12 @@ export function StitchConfigForm({ onContinue }: StitchConfigProps) {
                 </div>
               </div>
 
-              <Button type="submit" size="lg" disabled={!isValid} className="w-full">
+              <Button
+                type="submit"
+                size="lg"
+                disabled={!isValid}
+                className="w-full"
+              >
                 Continue to Upload
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
@@ -157,10 +162,10 @@ export function StitchConfigForm({ onContinue }: StitchConfigProps) {
         </h3>
         <ul className="text-sm text-muted-foreground space-y-1">
           <li>• Check the pattern cover page or info sheet</li>
-          <li>• Look for "Design Size" or "Stitch Count"</li>
+          <li>• Look for &#34;Design Size&#34; or &#34;Stitch Count&#34;</li>
           <li>• Usually listed as width × height (e.g., 200 × 150)</li>
         </ul>
       </div>
     </div>
-  )
+  );
 }

@@ -1,37 +1,41 @@
-"use client"
+"use client";
 
-import { useState, useCallback } from "react"
-import { ArrowLeft, ArrowRight, Plus, Minus } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
-import { PageThumbnail } from "./page-thumbnail"
-import { GridCanvas } from "./grid-canvas"
-import type { PageRenderResult, GridCell, GridArrangement } from "@/lib/pdf/types"
+import { useState, useCallback } from "react";
+import { ArrowLeft, ArrowRight, Plus, Minus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { PageThumbnail } from "./page-thumbnail";
+import { GridCanvas } from "./grid-canvas";
+import type {
+  PageRenderResult,
+  GridCell,
+  GridArrangement,
+} from "@/lib/pdf/types";
 
 interface PageSelectorProps {
-  pages: PageRenderResult[]
-  onBack: () => void
-  onMerge: (arrangement: GridArrangement) => void
+  pages: PageRenderResult[];
+  onBack: () => void;
+  onMerge: (arrangement: GridArrangement) => void;
 }
 
 export function PageSelector({ pages, onBack, onMerge }: PageSelectorProps) {
-  const [gridDimensions, setGridDimensions] = useState({ rows: 2, cols: 2 })
-  const [cells, setCells] = useState<GridCell[]>([])
+  const [gridDimensions, setGridDimensions] = useState({ rows: 2, cols: 2 });
+  const [cells, setCells] = useState<GridCell[]>([]);
 
   // Track which pages are assigned to the grid
-  const assignedPageNumbers = new Set(cells.map((c) => c.pageNumber))
+  const assignedPageNumbers = new Set(cells.map((c) => c.pageNumber));
 
   const handleCellAdd = useCallback(
     (pageNumber: number, row: number, col: number) => {
       // Find the page
-      const page = pages.find((p) => p.pageNumber === pageNumber)
-      if (!page) return
+      const page = pages.find((p) => p.pageNumber === pageNumber);
+      if (!page) return;
 
       setCells((prev) => {
         // Remove any existing cell at this position
-        const filtered = prev.filter((c) => !(c.row === row && c.col === col))
+        const filtered = prev.filter((c) => !(c.row === row && c.col === col));
         // Remove the page from any other position
-        const withoutPage = filtered.filter((c) => c.pageNumber !== pageNumber)
+        const withoutPage = filtered.filter((c) => c.pageNumber !== pageNumber);
         // Add new cell
         return [
           ...withoutPage,
@@ -41,43 +45,43 @@ export function PageSelector({ pages, onBack, onMerge }: PageSelectorProps) {
             pageNumber,
             canvas: page.canvas,
           },
-        ]
-      })
+        ];
+      });
     },
-    [pages]
-  )
+    [pages],
+  );
 
   const handleCellRemove = useCallback((row: number, col: number) => {
-    setCells((prev) => prev.filter((c) => !(c.row === row && c.col === col)))
-  }, [])
+    setCells((prev) => prev.filter((c) => !(c.row === row && c.col === col)));
+  }, []);
 
   const handleRowsChange = (delta: number) => {
-    const newRows = Math.max(1, Math.min(5, gridDimensions.rows + delta))
-    setGridDimensions((prev) => ({ ...prev, rows: newRows }))
+    const newRows = Math.max(1, Math.min(5, gridDimensions.rows + delta));
+    setGridDimensions((prev) => ({ ...prev, rows: newRows }));
     // Remove cells that are now out of bounds
-    setCells((prev) => prev.filter((c) => c.row < newRows))
-  }
+    setCells((prev) => prev.filter((c) => c.row < newRows));
+  };
 
   const handleColsChange = (delta: number) => {
-    const newCols = Math.max(1, Math.min(5, gridDimensions.cols + delta))
-    setGridDimensions((prev) => ({ ...prev, cols: newCols }))
+    const newCols = Math.max(1, Math.min(5, gridDimensions.cols + delta));
+    setGridDimensions((prev) => ({ ...prev, cols: newCols }));
     // Remove cells that are now out of bounds
-    setCells((prev) => prev.filter((c) => c.col < newCols))
-  }
+    setCells((prev) => prev.filter((c) => c.col < newCols));
+  };
 
   const handleMerge = () => {
-    if (cells.length === 0) return
+    if (cells.length === 0) return;
 
     onMerge({
       rows: gridDimensions.rows,
       cols: gridDimensions.cols,
       cells,
-    })
-  }
+    });
+  };
 
-  const totalSlots = gridDimensions.rows * gridDimensions.cols
-  const filledSlots = cells.length
-  const canMerge = filledSlots > 0
+  const totalSlots = gridDimensions.rows * gridDimensions.cols;
+  const filledSlots = cells.length;
+  const canMerge = filledSlots > 0;
 
   return (
     <div className="space-y-6">
@@ -86,7 +90,9 @@ export function PageSelector({ pages, onBack, onMerge }: PageSelectorProps) {
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back
         </Button>
-        <h2 className="text-lg font-serif font-semibold">Arrange Pattern Pages</h2>
+        <h2 className="text-lg font-serif font-semibold">
+          Arrange Pattern Pages
+        </h2>
         <div className="w-20" /> {/* Spacer for centering */}
       </div>
 
@@ -134,7 +140,9 @@ export function PageSelector({ pages, onBack, onMerge }: PageSelectorProps) {
               >
                 <Minus className="w-3 h-3" />
               </Button>
-              <span className="w-6 text-center font-medium">{gridDimensions.rows}</span>
+              <span className="w-6 text-center font-medium">
+                {gridDimensions.rows}
+              </span>
               <Button
                 variant="outline"
                 size="icon-sm"
@@ -154,7 +162,9 @@ export function PageSelector({ pages, onBack, onMerge }: PageSelectorProps) {
               >
                 <Minus className="w-3 h-3" />
               </Button>
-              <span className="w-6 text-center font-medium">{gridDimensions.cols}</span>
+              <span className="w-6 text-center font-medium">
+                {gridDimensions.cols}
+              </span>
               <Button
                 variant="outline"
                 size="icon-sm"
@@ -203,5 +213,5 @@ export function PageSelector({ pages, onBack, onMerge }: PageSelectorProps) {
         </ul>
       </div>
     </div>
-  )
+  );
 }

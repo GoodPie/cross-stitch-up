@@ -1,5 +1,5 @@
 interface ProcessingStateProps {
-  stage: string
+  stage: string;
 }
 
 export function ProcessingState({ stage }: ProcessingStateProps) {
@@ -44,11 +44,15 @@ export function ProcessingState({ stage }: ProcessingStateProps) {
       </div>
 
       <div className="space-y-2">
-        <h2 className="text-xl font-serif font-semibold text-foreground">Stitching together your pattern...</h2>
+        <h2 className="text-xl font-serif font-semibold text-foreground">
+          Stitching together your pattern...
+        </h2>
         <p className="text-primary font-medium">{stage}</p>
       </div>
 
-      <p className="text-sm text-muted-foreground">This may take a moment depending on the PDF size</p>
+      <p className="text-sm text-muted-foreground">
+        This may take a moment depending on the PDF size
+      </p>
     </div>
-  )
+  );
 }

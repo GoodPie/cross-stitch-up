@@ -8,14 +8,14 @@ const nextConfig = {
   },
   turbopack: {
     resolveAlias: {
-      canvas: { browser: './empty-module.js' },
+      canvas: { browser: "./empty-module.js" },
     },
   },
   webpack: (config) => {
     // Handle canvas module for pdfjs-dist (not available in browser)
-    config.resolve.alias.canvas = false
-    return config
+    config.resolve.alias.canvas = false;
+    return config;
   },
-}
+};
 
-export default nextConfig
+export default nextConfig;

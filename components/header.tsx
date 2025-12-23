@@ -1,4 +1,4 @@
-import { Scissors } from "lucide-react"
+import { Scissors } from "lucide-react";
 
 export function Header() {
   return (
@@ -8,10 +8,14 @@ export function Header() {
           <Scissors className="w-5 h-5" />
         </div>
         <div>
-          <h1 className="text-xl font-serif font-bold text-foreground">StitchMerge</h1>
-          <p className="text-xs text-muted-foreground">Combine your pattern pages into one</p>
+          <h1 className="text-xl font-serif font-bold text-foreground">
+            StitchMerge
+          </h1>
+          <p className="text-xs text-muted-foreground">
+            Combine your pattern pages into one
+          </p>
         </div>
       </div>
     </header>
-  )
+  );
 }

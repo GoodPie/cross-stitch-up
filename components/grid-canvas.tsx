@@ -1,16 +1,16 @@
-"use client"
+"use client";
 
-import { useState, useCallback } from "react"
-import { Plus } from "lucide-react"
-import { PageThumbnail } from "./page-thumbnail"
-import type { PageRenderResult, GridCell } from "@/lib/pdf/types"
+import { useState, useCallback } from "react";
+import { Plus } from "lucide-react";
+import { PageThumbnail } from "./page-thumbnail";
+import type { PageRenderResult, GridCell } from "@/lib/pdf/types";
 
 interface GridCanvasProps {
-  cells: GridCell[]
-  pages: PageRenderResult[]
-  onCellAdd: (pageNumber: number, row: number, col: number) => void
-  onCellRemove: (row: number, col: number) => void
-  gridDimensions: { rows: number; cols: number }
+  cells: GridCell[];
+  pages: PageRenderResult[];
+  onCellAdd: (pageNumber: number, row: number, col: number) => void;
+  onCellRemove: (row: number, col: number) => void;
+  gridDimensions: { rows: number; cols: number };
 }
 
 export function GridCanvas({
@@ -20,34 +20,40 @@ export function GridCanvas({
   onCellRemove,
   gridDimensions,
 }: GridCanvasProps) {
-  const [dragOverCell, setDragOverCell] = useState<{ row: number; col: number } | null>(null)
+  const [dragOverCell, setDragOverCell] = useState<{
+    row: number;
+    col: number;
+  } | null>(null);
 
-  const handleDragOver = useCallback((e: React.DragEvent, row: number, col: number) => {
-    e.preventDefault()
-    e.dataTransfer.dropEffect = "move"
-    setDragOverCell({ row, col })
-  }, [])
+  const handleDragOver = useCallback(
+    (e: React.DragEvent, row: number, col: number) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "move";
+      setDragOverCell({ row, col });
+    },
+    [],
+  );
 
   const handleDragLeave = useCallback(() => {
-    setDragOverCell(null)
-  }, [])
+    setDragOverCell(null);
+  }, []);
 
   const handleDrop = useCallback(
     (e: React.DragEvent, row: number, col: number) => {
-      e.preventDefault()
-      setDragOverCell(null)
-      const pageNumber = parseInt(e.dataTransfer.getData("text/plain"), 10)
+      e.preventDefault();
+      setDragOverCell(null);
+      const pageNumber = parseInt(e.dataTransfer.getData("text/plain"), 10);
       if (!isNaN(pageNumber)) {
-        onCellAdd(pageNumber, row, col)
+        onCellAdd(pageNumber, row, col);
       }
     },
-    [onCellAdd]
-  )
+    [onCellAdd],
+  );
 
   const getCellContent = (row: number, col: number) => {
-    const cell = cells.find((c) => c.row === row && c.col === col)
+    const cell = cells.find((c) => c.row === row && c.col === col);
     if (cell) {
-      const page = pages.find((p) => p.pageNumber === cell.pageNumber)
+      const page = pages.find((p) => p.pageNumber === cell.pageNumber);
       if (page) {
         return (
           <PageThumbnail
@@ -57,26 +63,26 @@ export function GridCanvas({
             onRemove={() => onCellRemove(row, col)}
             draggable={false}
           />
-        )
+        );
       }
     }
-    return null
-  }
+    return null;
+  };
 
   const isCellOccupied = (row: number, col: number) => {
-    return cells.some((c) => c.row === row && c.col === col)
-  }
+    return cells.some((c) => c.row === row && c.col === col);
+  };
 
   const isDragOver = (row: number, col: number) => {
-    return dragOverCell?.row === row && dragOverCell?.col === col
-  }
+    return dragOverCell?.row === row && dragOverCell?.col === col;
+  };
 
   // Create grid cells
-  const gridCells = []
+  const gridCells = [];
   for (let row = 0; row < gridDimensions.rows; row++) {
     for (let col = 0; col < gridDimensions.cols; col++) {
-      const occupied = isCellOccupied(row, col)
-      const isOver = isDragOver(row, col)
+      const occupied = isCellOccupied(row, col);
+      const isOver = isDragOver(row, col);
 
       gridCells.push(
         <div
@@ -99,8 +105,8 @@ export function GridCanvas({
               <span className="text-xs">Drop here</span>
             </div>
           )}
-        </div>
-      )
+        </div>,
+      );
     }
   }
 
@@ -113,5 +119,5 @@ export function GridCanvas({
     >
       {gridCells}
     </div>
-  )
+  );
 }

@@ -1,17 +1,17 @@
-"use client"
+"use client";
 
-import { useMemo } from "react"
-import { X } from "lucide-react"
-import type { PageRenderResult } from "@/lib/pdf/types"
+import { useMemo } from "react";
+import { X } from "lucide-react";
+import type { PageRenderResult } from "@/lib/pdf/types";
 
 interface PageThumbnailProps {
-  page: PageRenderResult
-  isSelected?: boolean
-  isInGrid?: boolean
-  gridPosition?: { row: number; col: number }
-  onRemove?: () => void
-  draggable?: boolean
-  onDragStart?: (e: React.DragEvent, page: PageRenderResult) => void
+  page: PageRenderResult;
+  isSelected?: boolean;
+  isInGrid?: boolean;
+  gridPosition?: { row: number; col: number };
+  onRemove?: () => void;
+  draggable?: boolean;
+  onDragStart?: (e: React.DragEvent, page: PageRenderResult) => void;
 }
 
 export function PageThumbnail({
@@ -25,14 +25,14 @@ export function PageThumbnail({
 }: PageThumbnailProps) {
   // Convert canvas to data URL for display
   const imageUrl = useMemo(() => {
-    return page.canvas.toDataURL("image/jpeg", 0.8)
-  }, [page.canvas])
+    return page.canvas.toDataURL("image/jpeg", 0.8);
+  }, [page.canvas]);
 
   const handleDragStart = (e: React.DragEvent) => {
-    e.dataTransfer.effectAllowed = "move"
-    e.dataTransfer.setData("text/plain", String(page.pageNumber))
-    onDragStart?.(e, page)
-  }
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", String(page.pageNumber));
+    onDragStart?.(e, page);
+  };
 
   return (
     <div
@@ -69,8 +69,8 @@ export function PageThumbnail({
       {isInGrid && onRemove && (
         <button
           onClick={(e) => {
-            e.stopPropagation()
-            onRemove()
+            e.stopPropagation();
+            onRemove();
           }}
           className="absolute top-2 right-2 p-1 bg-destructive text-destructive-foreground rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
           aria-label="Remove from grid"
@@ -83,12 +83,22 @@ export function PageThumbnail({
       {isSelected && !isInGrid && (
         <div className="absolute inset-0 bg-primary/20 flex items-center justify-center">
           <div className="bg-primary text-primary-foreground rounded-full p-2">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 13l4 4L19 7"
+              />
             </svg>
           </div>
         </div>
       )}
     </div>
-  )
+  );
 }
