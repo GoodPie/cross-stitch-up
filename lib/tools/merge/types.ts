@@ -41,20 +41,20 @@ export interface MergeResult {
 }
 
 /**
- * Configuration for grid detection algorithm.
+ * Configuration for the grid detection algorithm.
  * These can be overridden via StitchConfig.gridDetection
  */
 export interface GridDetectionConfig {
   /** RGB threshold for dark pixels (0-255). Lower = stricter. Default: 50 */
   darkPixelThreshold: number;
 
-  /** Maximum gap allowed in continuous runs (handles anti-aliasing). Default: 3 */
+  /** Maximum gap allowed in continuous runs (handles the antialiasing). Default: 3 */
   maxGapPixels: number;
 
-  /** Minimum border length as fraction of dimension (0-1). Default: 0.4 */
+  /** Minimum border length as the fraction of dimension (0-1). Default: 0.4 */
   minBorderFraction: number;
 
-  /** Pixels to expand outward from detected border. Default: 2 */
+  /** Pixels to expand outward from the detected border. Default: 2 */
   borderExpansion: number;
 
   /** Expected border thickness in pixels. Default: 2 */
@@ -63,17 +63,17 @@ export interface GridDetectionConfig {
   /** Tolerance for border thickness detection. Default: 2 */
   thicknessTolerance: number;
 
-  /** Search region limits as fraction of dimensions */
+  /** Search region limits as the fraction of dimensions */
   searchRegions: {
-    topMaxY: number; // Search for top border in top X% of page
-    bottomMinY: number; // Search for bottom border in bottom X% of page
-    leftMaxX: number; // Search for left border in left X% of page
-    rightMinX: number; // Search for right border in right X% of page
+    topMaxY: number; // Search for the top border in top X% of page
+    bottomMinY: number; // Search for the bottom border in bottom X% of page
+    leftMaxX: number; // Search for the left border in left X% of page
+    rightMinX: number; // Search for the right border in right X% of page
   };
 
   /** Corner detection settings */
   cornerDetection: {
-    /** Size of corner region to check (pixels). Default: 10 */
+    /** Size of the corner region to check (pixels). Default: 10 */
     cornerSize: number;
     /** Minimum dark pixels required in corner region (fraction). Default: 0.3 */
     minCornerDensity: number;
@@ -106,11 +106,5 @@ export interface GridCell {
   row: number;
   col: number;
   pageNumber: number;
-  canvas: HTMLCanvasElement;
-}
-
-export interface ExtractedGrid {
-  pageNumber: number;
-  position: { row: number; col: number };
   canvas: HTMLCanvasElement;
 }
