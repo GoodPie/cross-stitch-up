@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import Image from 'next/image'
 import { X } from "lucide-react";
 import type { PageRenderResult } from "@/lib/pdf/types";
 
@@ -46,7 +47,7 @@ export function PageThumbnail({
       `}
     >
       {/* Thumbnail image */}
-      <img
+      <Image
         src={imageUrl}
         alt={`Page ${page.pageNumber}`}
         className="w-full h-full object-cover"
