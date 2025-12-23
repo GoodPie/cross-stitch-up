@@ -9,7 +9,8 @@
     "prettier": "prettier --write .",
     "start": "next start",
     "playwright-codegen": "npx playwright codegen",
-    "e2e-test": "npx playwright test"
+    "e2e-test": "npx playwright test",
+    "sync-env": "npx vercel env pull"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -43,6 +44,7 @@
     "@sentry/nextjs": "^10.32.1",
     "@vercel/analytics": "1.3.1",
     "autoprefixer": "^10.4.20",
+    "better-auth": "^1.4.9",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "1.0.4",
