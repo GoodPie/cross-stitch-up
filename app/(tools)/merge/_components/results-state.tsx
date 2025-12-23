@@ -143,7 +143,7 @@ export function ResultsState({ result, onReset }: ResultsStateProps) {
         open={exportDialogOpen}
         onOpenChange={setExportDialogOpen}
         canvas={result.canvas ?? null}
-        filename={result.originalFilename}
+        filename={result.originalFilename || "cross-stitch-pattern"}
       />
     </div>
   );
