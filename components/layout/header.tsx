@@ -1,5 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import { Scissors, ChevronLeft } from "lucide-react";
+import { useSession } from "@/lib/auth-client";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { UserMenu } from "@/components/auth/user-menu";
 
 interface HeaderProps {
   toolName?: string;
@@ -7,6 +13,8 @@ interface HeaderProps {
 }
 
 export function Header({ toolName, showBackLink }: HeaderProps) {
+  const { data: session, isPending } = useSession();
+
   return (
     <header className="border-b border-border/50 bg-card/50 backdrop-blur-sm sticky top-0 z-10">
       <div className="container max-w-4xl mx-auto px-4 py-4 flex items-center gap-3">
@@ -32,6 +40,23 @@ export function Header({ toolName, showBackLink }: HeaderProps) {
             </p>
           </div>
         </Link>
+
+        <div className="ml-auto flex items-center gap-2">
+          {isPending ? (
+            <Skeleton className="h-9 w-9 rounded-full" />
+          ) : session?.user ? (
+            <UserMenu user={session.user} />
+          ) : (
+            <>
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/login">Log in</Link>
+              </Button>
+              <Button size="sm" asChild>
+                <Link href="/register">Sign up</Link>
+              </Button>
+            </>
+          )}
+        </div>
       </div>
     </header>
   );
