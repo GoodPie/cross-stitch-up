@@ -43,7 +43,7 @@ export function PageThumbnail({
         relative group rounded-lg overflow-hidden border-2 transition-all duration-200
         ${isSelected ? "border-primary ring-2 ring-primary/30" : "border-border"}
         ${draggable ? "cursor-grab active:cursor-grabbing hover:border-primary/50" : ""}
-        ${isInGrid ? "h-full" : "aspect-[3/4]"}
+        ${isInGrid ? "h-full" : "aspect-3/4"}
       `}
     >
       {/* Thumbnail image */}
@@ -52,6 +52,7 @@ export function PageThumbnail({
         alt={`Page ${page.pageNumber}`}
         className="w-full h-full object-cover"
         draggable={false}
+        fill={true}
       />
 
       {/* Page number badge */}

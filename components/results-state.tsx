@@ -6,7 +6,6 @@ import {Button} from "@/components/ui/button";
 import {Card} from "@/components/ui/card";
 import {ExportDialog} from "@/components/export-dialog";
 import type {MergedResult} from "@/app/page";
-import Image from 'next/image'
 
 interface ResultsStateProps {
     result: MergedResult;
@@ -81,7 +80,9 @@ export function ResultsState({result, onReset}: ResultsStateProps) {
                 transformOrigin: "center center",
               }}
             >
-              <Image
+
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src={result.imageUrl || "/placeholder.svg"}
                 alt="Merged cross stitch pattern"
                 className="max-w-full h-auto"
