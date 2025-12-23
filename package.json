@@ -6,6 +6,7 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "eslint .",
+    "prettier": "prettier --write .",
     "start": "next start",
     "playwright-codegen": "npx playwright codegen",
     "e2e-test": "npx playwright test"

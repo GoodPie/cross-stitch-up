@@ -10,7 +10,4 @@ export {
   getPngDataUrl,
   type PngExportOptions,
 } from "./png-exporter";
-export {
-  downloadAsPdf,
-  type PdfExportOptions,
-} from "./pdf-exporter";
+export { downloadAsPdf, type PdfExportOptions } from "./pdf-exporter";
