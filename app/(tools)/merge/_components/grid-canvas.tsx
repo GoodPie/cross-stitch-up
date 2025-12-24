@@ -78,6 +78,7 @@ export function GridCanvas({ cells, pages, onCellAdd, onCellRemove, gridDimensio
 
             gridCells.push(
                 <div
+                    tabIndex={0}
                     role="button"
                     key={`${row}-${col}`}
                     onDragOver={(e) => handleDragOver(e, row, col)}

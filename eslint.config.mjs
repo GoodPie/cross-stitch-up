@@ -17,6 +17,7 @@ const eslintConfig = defineConfig([
         rules: {
             // Non-interactive elements should not have interactive handlers
             "jsx-a11y/no-static-element-interactions": "error",
+            "jsx-a11y/interactive-supports-focus": "error"
         },
     },
 
