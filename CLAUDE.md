@@ -111,17 +111,17 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function ProtectedPage() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
 
-  if (!session) {
-    redirect("/login");
-  }
+    if (!session) {
+        redirect("/login");
+    }
 
-  // Optional: check roles, permissions, etc.
-  // if (session.user.role !== "admin") redirect("/unauthorized");
+    // Optional: check roles, permissions, etc.
+    // if (session.user.role !== "admin") redirect("/unauthorized");
 
-  return <PageContent user={session.user} />;
+    return <PageContent user={session.user} />;
 }
 ```

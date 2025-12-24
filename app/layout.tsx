@@ -8,24 +8,22 @@ const dmSans = DM_Sans({ subsets: ["latin"] });
 const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-fraunces" });
 
 export const metadata: Metadata = {
-  title: "Cross Stitch-up - Combine Your Cross Stitch Patterns",
-  description:
-    "Easily merge multi-page cross stitch pattern PDFs into a single image. Perfect for stitchers who want to see the full picture.",
+    title: "Cross Stitch-up - Combine Your Cross Stitch Patterns",
+    description:
+        "Easily merge multi-page cross stitch pattern PDFs into a single image. Perfect for stitchers who want to see the full picture.",
 };
 
 export default function RootLayout({
-  children,
+    children,
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
-      <body
-        className={`${dmSans.className} ${fraunces.variable} font-sans antialiased`}
-      >
-        {children}
-        <Analytics />
-      </body>
-    </html>
-  );
+    return (
+        <html lang="en">
+            <body className={`${dmSans.className} ${fraunces.variable} font-sans antialiased`}>
+                {children}
+                <Analytics />
+            </body>
+        </html>
+    );
 }

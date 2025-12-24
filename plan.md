@@ -44,8 +44,8 @@ Build a React application that takes cross stitch pattern PDFs (like those from 
 
 - Page 1: Cover page with StitchBox branding
 - Pages 2-5: Pattern grid split into 4 quadrants
-  - Each quadrant shows coordinates (e.g., Page 2 shows columns 10-50, rows 1-50)
-  - Grid contains symbols representing different thread colors
+    - Each quadrant shows coordinates (e.g., Page 2 shows columns 10-50, rows 1-50)
+    - Grid contains symbols representing different thread colors
 - Page 6: Instructions and color key
 
 ### UI Requirements

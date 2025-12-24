@@ -18,4 +18,3 @@ playwright-report
 # Misc
 .vercel
 *.min.js
-eslint.config.mts
