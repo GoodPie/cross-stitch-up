@@ -29,12 +29,13 @@ const eslintConfig = defineConfig([
         },
     },
 
-    // Prefer Number static methods over global equivalents
+    // Unicorn rules
     {
         files: ["**/*.{js,mjs,cjs,ts,tsx}"],
         plugins: { unicorn },
         rules: {
             "unicorn/prefer-number-properties": "error",
+            "unicorn/prefer-at": "error"
         },
     },
 
