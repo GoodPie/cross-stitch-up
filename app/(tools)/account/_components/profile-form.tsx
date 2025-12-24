@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, CheckCircle2 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
@@ -64,7 +64,8 @@ export function ProfileForm({ user }: ProfileFormProps) {
         setTimeout(() => setSuccess(false), 3000);
     }
 
-    const hasChanges = form.watch("name") !== (user.name || "");
+    const watchedName = useWatch({ control: form.control, name: "name" });
+    const hasChanges = watchedName !== (user.name || "");
 
     return (
         <Form {...form}>
