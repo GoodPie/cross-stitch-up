@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 async function getThreads(): Promise<ThreadsResponse> {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const baseUrl = process.env.BETTER_AUTH_URL || "http://localhost:3000";
 
     const res = await fetch(`${baseUrl}/api/threads`, {
         next: { revalidate: 3600 }, // Cache for 1 hour
