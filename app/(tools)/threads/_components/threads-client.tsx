@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import type { ThreadColour } from "@/lib/tools/threads/types";
-import { filterBySearch, filterByBrand, sortByColorSimilarity, hexToRgb } from "@/lib/tools/threads/color-utils";
-import { ThreadFilters } from "./thread-filters";
-import { ThreadGrid } from "./thread-grid";
+import {useMemo, useState} from "react";
+import type {ThreadColour} from "@/lib/tools/threads/types";
+import {filterByBrand, filterBySearch, hexToRgb, sortByColorSimilarity} from "@/lib/tools/threads/color-utils";
+import {ThreadFilters} from "./thread-filters";
+import {ThreadGrid} from "./thread-grid";
 
 interface ThreadsClientProps {
     readonly threads: ThreadColour[];
@@ -28,8 +28,7 @@ export function ThreadsClient({ threads, brands }: ThreadsClientProps) {
 
         // Sort by color similarity if a color is selected
         if (similarTo && hexToRgb(similarTo)) {
-            const sorted = sortByColorSimilarity(result, similarTo);
-            return sorted;
+            return sortByColorSimilarity(result, similarTo);
         }
 
         return result.map((t) => ({ ...t, distance: 0 }));
