@@ -6,10 +6,19 @@ import markdown from "@eslint/markdown";
 import eslintConfigPrettier from "eslint-config-prettier/flat";
 import unicorn from "eslint-plugin-unicorn";
 
+
 const eslintConfig = defineConfig([
     // Next.js + TypeScript
     ...nextVitals,
     ...nextTs,
+    // Accessibility rules (jsx-a11y plugin provided by eslint-config-next)
+    {
+        files: ["**/*.{jsx,tsx}"],
+        rules: {
+            // Non-interactive elements should not have interactive handlers
+            "jsx-a11y/no-static-element-interactions": "error",
+        },
+    },
 
     // React props should be read-only for immutability
     {

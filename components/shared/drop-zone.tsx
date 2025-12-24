@@ -51,6 +51,7 @@ export function DropZone({ onFileSelected }: DropZoneProps) {
             {/* Decorative corner elements */}
             <div className="relative">
                 <div
+                    role={"button"}
                     onClick={handleClick}
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
