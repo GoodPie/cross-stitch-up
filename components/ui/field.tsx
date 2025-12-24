@@ -84,7 +84,7 @@ function Field({
         <fieldset
             data-slot="field"
             data-orientation={orientation}
-            className={cn("border-0 p-0 m-0", fieldVariants({ orientation }), className)}
+            className={cn("m-0 border-0 p-0", fieldVariants({ orientation }), className)}
             {...props}
         />
     );

@@ -32,10 +32,10 @@ export function ThreadFilters({
     onClearFilters,
 }: ThreadFiltersProps) {
     return (
-        <div className="bg-card sticky top-0 z-10 space-y-4 rounded-lg border p-4 shadow-sm">
+        <div className="bg-card sticky top- z-10 space-y-4 rounded-lg border p-4 shadow-sm">
             <div className="flex flex-wrap items-end gap-4">
                 {/* Search input */}
-                <div className="min-w-[200px] flex-1 space-y-1.5">
+                <div className="min-w-50 flex-1 space-y-1.5">
                     <Label htmlFor="search">Search</Label>
                     <div className="relative">
                         <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />

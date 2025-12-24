@@ -70,8 +70,7 @@ export function filterBySearch(threads: ThreadColour[], search: string): ThreadC
 
     return threads.filter(
         (thread) =>
-            thread.name.toLowerCase().includes(searchLower) ||
-            thread.colour_code.toLowerCase().includes(searchLower)
+            thread.name.toLowerCase().includes(searchLower) || thread.colour_code.toLowerCase().includes(searchLower)
     );
 }
 

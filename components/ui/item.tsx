@@ -9,7 +9,7 @@ function ItemGroup({ className, ...props }: React.ComponentProps<"ul">) {
     return (
         <ul
             data-slot="item-group"
-            className={cn("group/item-group flex flex-col list-none p-0 m-0", className)}
+            className={cn("group/item-group m-0 flex list-none flex-col p-0", className)}
             {...props}
         />
     );

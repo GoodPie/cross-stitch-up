@@ -60,7 +60,7 @@ function InputOTPSeparator({ className, ...props }: React.ComponentProps<"hr">) 
     return (
         <hr
             data-slot="input-otp-separator"
-            className={cn("border-0 w-auto h-auto flex items-center", className)}
+            className={cn("flex h-auto w-auto items-center border-0", className)}
             {...props}
         />
     );
