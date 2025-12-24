@@ -10,6 +10,31 @@ export interface ProcessingProgress {
     progress: number; // 0-100
 }
 
+/**
+ * Processing stage constants for type-safe stage messages.
+ * Use these instead of magic strings throughout the codebase.
+ */
+export const ProcessingStages = {
+    // PDF loading stages
+    READING_PDF: "Reading PDF...",
+    // Merge tool stages
+    EXTRACTING_GRIDS: "Extracting grid sections...",
+    MERGING_PATTERN: "Merging pattern...",
+    FINALIZING: "Finalizing...",
+} as const;
+
+/**
+ * Helper functions for dynamic processing stage messages.
+ */
+export const ProcessingStageHelpers = {
+    /** Generate message for rendering a specific page */
+    renderingPage: (current: number, total: number): string => `Rendering page ${current} of ${total}...`,
+    /** Generate message for extracting grid from a specific page */
+    extractingGridFromPage: (pageNumber: number): string => `Extracting grid from page ${pageNumber}...`,
+} as const;
+
+export type ProcessingStage = (typeof ProcessingStages)[keyof typeof ProcessingStages];
+
 export interface ExportOptions {
     format: "png" | "pdf";
     sizeMode: "pixels" | "print";

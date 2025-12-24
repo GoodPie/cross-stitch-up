@@ -1,9 +1,10 @@
 import type { PageRenderResult } from "./types";
+import { ProcessingStages, ProcessingStageHelpers } from "./types";
 
 const RENDER_SCALE = 2.5; // High resolution for quality output
 
 export async function loadAndRenderPdf(file: File, onProgress?: (stage: string) => void): Promise<PageRenderResult[]> {
-    onProgress?.("Reading PDF...");
+    onProgress?.(ProcessingStages.READING_PDF);
 
     // Dynamically import pdfjs-dist to avoid SSR issues
     const pdfjsLib = await import("pdfjs-dist");
@@ -19,7 +20,7 @@ export async function loadAndRenderPdf(file: File, onProgress?: (stage: string) 
 
     // Render ALL pages - user will select which ones are pattern pages
     for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
-        onProgress?.(`Rendering page ${pageNum} of ${totalPages}...`);
+        onProgress?.(ProcessingStageHelpers.renderingPage(pageNum, totalPages));
 
         const page = await pdf.getPage(pageNum);
         const viewport = page.getViewport({ scale: RENDER_SCALE });

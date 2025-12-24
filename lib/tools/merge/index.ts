@@ -3,6 +3,7 @@ import { cropToGrid, extractGridWithoutAxisNumbers, drawDebugBounds } from "./gr
 import type { MergeResult, DetectedGridPage, GridArrangement, StitchConfig } from "./types";
 
 import type { PageRenderResult } from "@/lib/shared/types";
+import { ProcessingStages, ProcessingStageHelpers } from "@/lib/shared/types";
 
 export type { MergeResult } from "./types";
 export type { ExportOptions } from "@/lib/shared/types";
@@ -22,7 +23,7 @@ export async function processSelectedPages(
     }
 
     // Step 1: Extract grid areas from selected pages (cropping axis numbers)
-    onProgress("Extracting grid sections...");
+    onProgress(ProcessingStages.EXTRACTING_GRIDS);
 
     const detectedGrids: DetectedGridPage[] = [];
 
@@ -35,7 +36,7 @@ export async function processSelectedPages(
             continue;
         }
 
-        onProgress(`Extracting grid from page ${cell.pageNumber}...`);
+        onProgress(ProcessingStageHelpers.extractingGridFromPage(cell.pageNumber));
 
         // Use the detection function that crops out axis numbers
         const bounds = extractGridWithoutAxisNumbers(page.canvas, stitchConfig);
@@ -59,12 +60,12 @@ export async function processSelectedPages(
     }
 
     // Step 2: Merge grids into a unified pattern
-    onProgress("Merging pattern...");
+    onProgress(ProcessingStages.MERGING_PATTERN);
 
     const mergedCanvas = mergePatternGridsFromArrangement(detectedGrids, arrangement);
 
     // Step 3: Generate result
-    onProgress("Finalizing...");
+    onProgress(ProcessingStages.FINALIZING);
 
     const imageUrl = mergedCanvas.toDataURL("image/png");
 
