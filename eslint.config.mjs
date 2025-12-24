@@ -45,6 +45,8 @@ const eslintConfig = defineConfig([
             "no-nested-ternary": "error",
             // Lexical declarations in case clauses need block scoping
             "no-case-declarations": "error",
+            // No array index keys - use object keys instead
+            "react/no-array-index-key": "error",
         },
     },
 

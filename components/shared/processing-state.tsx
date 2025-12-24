@@ -28,10 +28,10 @@ export function ProcessingState({ stage }: ProcessingStateProps) {
             {/* Animated grid pattern */}
             <div className="flex justify-center gap-1">
                 {Array.from({ length: 5 }).map((_, i) => (
-                    <div key={i} className="flex flex-col gap-1">
+                    <div key={`row-${i.toString()}`} className="flex flex-col gap-1">
                         {Array.from({ length: 5 }).map((_, j) => (
                             <div
-                                key={j}
+                                key={`dot-${i.toString()}`}
                                 className="bg-primary/20 h-3 w-3 rounded-sm"
                                 style={{
                                     animation: `pulse 1.5s ease-in-out infinite`,
