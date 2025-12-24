@@ -20,6 +20,8 @@ const eslintConfig = defineConfig([
             // Mouse events must have corresponding keyboard events for accessibility
             "jsx-a11y/mouse-events-have-key-events": "error",
             "jsx-a11y/click-events-have-key-events": "error",
+            // Anchors must have accessible content
+            "jsx-a11y/anchor-has-content": "error",
         },
     },
 
