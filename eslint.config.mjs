@@ -43,6 +43,8 @@ const eslintConfig = defineConfig([
         rules: {
             // Nested ternaries reduce readability - use if/else or early returns
             "no-nested-ternary": "error",
+            // Lexical declarations in case clauses need block scoping
+            "no-case-declarations": "error",
         },
     },
 
