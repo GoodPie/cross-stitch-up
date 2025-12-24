@@ -9,4 +9,12 @@ export const tools: ToolMetadata[] = [
         href: "/merge",
         status: "stable",
     },
+    {
+        id: "threads",
+        name: "Thread Colors",
+        description: "Browse and search thread colors by name, code, or find similar colors",
+        icon: "Palette",
+        href: "/threads",
+        status: "stable",
+    },
 ];

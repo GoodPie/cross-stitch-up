@@ -36,8 +36,8 @@ const ALIGNMENT = {
     POSITION_BONUS_FACTOR: 0.2,
 } as const;
 
-/** Line detection thresholds */
-const LINE_DETECTION = {
+/** Line detection thresholds (exported for reuse) */
+export const LINE_DETECTION = {
     MIN_LENGTH_FRACTION: 0.8,
     RUN_MATCH_FRACTION: 0.9,
     TOLERANCE_MIN_PX: 5,
@@ -61,8 +61,8 @@ const GRID_SPACING = {
     MIN_CONSISTENCY: 0.7,
 } as const;
 
-/** Default detection configuration */
-const DEFAULT_DETECTION_CONFIG: GridDetectionConfig = {
+/** Default detection configuration (exported for reuse) */
+export const DEFAULT_DETECTION_CONFIG: GridDetectionConfig = {
     darkPixelThreshold: 50,
     maxGapPixels: 3,
     minBorderFraction: 0.4,
@@ -98,10 +98,10 @@ const DEFAULT_MARGINS = {
 // TYPES
 // =============================================================================
 
-type ScanDirection = "horizontal" | "vertical";
+export type ScanDirection = "horizontal" | "vertical";
 type CornerType = "topLeft" | "topRight" | "bottomLeft" | "bottomRight";
 
-interface DarkRun {
+export interface DarkRun {
     start: number;
     length: number;
 }
@@ -114,7 +114,7 @@ interface LineCandidate {
     confidence: number;
 }
 
-interface ImageContext {
+export interface ImageContext {
     data: Uint8ClampedArray;
     width: number;
     height: number;
@@ -133,7 +133,7 @@ interface AlignmentResult {
     aligned: boolean;
 }
 
-interface SpacingAnalysis {
+export interface SpacingAnalysis {
     isRegular: boolean;
     consistency: number;
 }
@@ -142,7 +142,7 @@ interface SpacingAnalysis {
 // PIXEL ANALYSIS
 // =============================================================================
 
-function createImageContext(canvas: HTMLCanvasElement, config: GridDetectionConfig): ImageContext | null {
+export function createImageContext(canvas: HTMLCanvasElement, config: GridDetectionConfig): ImageContext | null {
     const ctx = canvas.getContext("2d");
     if (!ctx) return null;
 
@@ -158,7 +158,7 @@ function createImageContext(canvas: HTMLCanvasElement, config: GridDetectionConf
     };
 }
 
-function isDarkPixel(ctx: ImageContext, x: number, y: number): boolean {
+export function isDarkPixel(ctx: ImageContext, x: number, y: number): boolean {
     if (x < 0 || x >= ctx.width || y < 0 || y >= ctx.height) return false;
 
     const idx = (y * ctx.width + x) * 4;
@@ -173,7 +173,7 @@ function isDarkPixel(ctx: ImageContext, x: number, y: number): boolean {
 // LINE DETECTION
 // =============================================================================
 
-function findLongestDarkRun(ctx: ImageContext, position: number, direction: ScanDirection): DarkRun {
+export function findLongestDarkRun(ctx: ImageContext, position: number, direction: ScanDirection): DarkRun {
     const limit = direction === "horizontal" ? ctx.width : ctx.height;
     let maxRun: DarkRun = { start: 0, length: 0 };
     let currentRun: DarkRun = { start: 0, length: 0 };
@@ -679,7 +679,7 @@ function checkBorderAlignment(borders: DetectedBorders): AlignmentResult {
 // INTERNAL GRID LINE DETECTION
 // =============================================================================
 
-function findInternalGridLines(ctx: ImageContext, bounds: GridBounds, direction: ScanDirection): number[] {
+export function findInternalGridLines(ctx: ImageContext, bounds: GridBounds, direction: ScanDirection): number[] {
     const lines: number[] = [];
     const dimension = direction === "horizontal" ? bounds.width : bounds.height;
     const minRunLength = dimension * LINE_DETECTION.MIN_LENGTH_FRACTION;
@@ -709,7 +709,7 @@ function findInternalGridLines(ctx: ImageContext, bounds: GridBounds, direction:
     return lines;
 }
 
-function analyzeGridLineSpacing(lines: number[], spacingTolerance: number): SpacingAnalysis {
+export function analyzeGridLineSpacing(lines: number[], spacingTolerance: number): SpacingAnalysis {
     if (lines.length < GRID_SPACING.MIN_LINES_FOR_ANALYSIS) {
         return { isRegular: false, consistency: 0 };
     }

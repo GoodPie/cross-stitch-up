@@ -1,10 +1,10 @@
 "use client";
 
-import {useState, useCallback} from "react";
-import {Plus} from "lucide-react";
-import {PageThumbnail} from "@/components/shared/page-thumbnail";
-import type {PageRenderResult} from "@/lib/shared/types";
-import type {GridCell} from "@/lib/tools/merge/types";
+import { useState, useCallback } from "react";
+import { Plus } from "lucide-react";
+import { PageThumbnail } from "@/components/shared/page-thumbnail";
+import type { PageRenderResult } from "@/lib/shared/types";
+import type { GridCell } from "@/lib/tools/merge/types";
 
 interface GridCanvasProps {
     readonly cells: GridCell[];
@@ -14,7 +14,7 @@ interface GridCanvasProps {
     readonly gridDimensions: { rows: number; cols: number };
 }
 
-export function GridCanvas({cells, pages, onCellAdd, onCellRemove, gridDimensions}: GridCanvasProps) {
+export function GridCanvas({ cells, pages, onCellAdd, onCellRemove, gridDimensions }: GridCanvasProps) {
     const [dragOverCell, setDragOverCell] = useState<{
         row: number;
         col: number;
@@ -23,7 +23,7 @@ export function GridCanvas({cells, pages, onCellAdd, onCellRemove, gridDimension
     const handleDragOver = useCallback((e: React.DragEvent, row: number, col: number) => {
         e.preventDefault();
         e.dataTransfer.dropEffect = "move";
-        setDragOverCell({row, col});
+        setDragOverCell({ row, col });
     }, []);
 
     const handleDragLeave = useCallback(() => {
@@ -51,7 +51,7 @@ export function GridCanvas({cells, pages, onCellAdd, onCellRemove, gridDimension
                     <PageThumbnail
                         page={page}
                         isInGrid
-                        gridPosition={{row, col}}
+                        gridPosition={{ row, col }}
                         onRemove={() => onCellRemove(row, col)}
                         draggable={false}
                     />
@@ -90,7 +90,7 @@ export function GridCanvas({cells, pages, onCellAdd, onCellRemove, gridDimension
                         getCellContent(row, col)
                     ) : (
                         <div className="text-muted-foreground/50 text-center">
-                            <Plus className="mx-auto mb-1 h-6 w-6"/>
+                            <Plus className="mx-auto mb-1 h-6 w-6" />
                             <span className="text-xs">Drop here</span>
                         </div>
                     )}
