@@ -10,6 +10,14 @@ const eslintConfig = defineConfig([
     ...nextVitals,
     ...nextTs,
 
+    // React props should be read-only for immutability
+    {
+        files: ["**/*.tsx"],
+        rules: {
+            "react/prefer-read-only-props": "error",
+        },
+    },
+
     // JSON linting
     {
         files: ["**/*.json"],
