@@ -37,6 +37,15 @@ const eslintConfig = defineConfig([
         },
     },
 
+    // Code clarity rules
+    {
+        files: ["**/*.{js,mjs,cjs,ts,tsx}"],
+        rules: {
+            // Nested ternaries reduce readability - use if/else or early returns
+            "no-nested-ternary": "error",
+        },
+    },
+
     // JSON linting
     {
         files: ["**/*.json"],
