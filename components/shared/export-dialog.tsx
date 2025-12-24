@@ -1,17 +1,17 @@
 "use client";
 
-import { useState } from "react";
-import { FileImage, FileText } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { downloadAsPng } from "@/lib/export/png-exporter";
-import { downloadAsPdf } from "@/lib/export/pdf-exporter";
-import { calculateMaintainedDimension } from "@/lib/export/canvas-scaler";
+import {useState} from "react";
+import {FileImage, FileText} from "lucide-react";
+import {Button} from "@/components/ui/button";
+import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription} from "@/components/ui/dialog";
+import {Label} from "@/components/ui/label";
+import {Input} from "@/components/ui/input";
+import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import {Checkbox} from "@/components/ui/checkbox";
+import {downloadAsPng} from "@/lib/export/png-exporter";
+import {downloadAsPdf} from "@/lib/export/pdf-exporter";
+import {calculateMaintainedDimension} from "@/lib/export/canvas-scaler";
 
 interface ExportDialogProps {
     readonly open: boolean;
@@ -24,12 +24,12 @@ type SizeMode = "original" | "pixels" | "print";
 type ExportFormat = "png" | "pdf";
 
 const DPI_OPTIONS = [
-    { value: "150", label: "150 DPI (Draft)" },
-    { value: "300", label: "300 DPI (Standard)" },
-    { value: "600", label: "600 DPI (High Quality)" },
+    {value: "150", label: "150 DPI (Draft)"},
+    {value: "300", label: "300 DPI (Standard)"},
+    {value: "600", label: "600 DPI (High Quality)"},
 ];
 
-export function ExportDialog({ open, onOpenChange, canvas, filename }: ExportDialogProps) {
+export function ExportDialog({open, onOpenChange, canvas, filename}: ExportDialogProps) {
     const [format, setFormat] = useState<ExportFormat>("png");
     const [sizeMode, setSizeMode] = useState<SizeMode>("original");
     const [pixelWidth, setPixelWidth] = useState<string>("");
@@ -55,17 +55,18 @@ export function ExportDialog({ open, onOpenChange, canvas, filename }: ExportDia
 
         switch (sizeMode) {
             case "original":
-                return { width: canvas.width, height: canvas.height };
+                return {width: canvas.width, height: canvas.height};
             case "pixels":
                 return {
                     width: Number.parseInt(pixelWidth) || canvas.width,
                     height: Number.parseInt(pixelHeight) || canvas.height,
                 };
-            case "print":
+            case "print": {
                 const w = Number.parseFloat(printWidth) || 8;
                 const h = Number.parseFloat(printHeight) || 10;
                 const d = Number.parseInt(dpi) || 300;
-                return { width: Math.round(w * d), height: Math.round(h * d) };
+                return {width: Math.round(w * d), height: Math.round(h * d)};
+            }
             default:
                 return null;
         }
@@ -147,16 +148,16 @@ export function ExportDialog({ open, onOpenChange, canvas, filename }: ExportDia
                             className="flex gap-4"
                         >
                             <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="png" id="format-png" />
+                                <RadioGroupItem value="png" id="format-png"/>
                                 <Label htmlFor="format-png" className="flex cursor-pointer items-center gap-2">
-                                    <FileImage className="h-4 w-4" />
+                                    <FileImage className="h-4 w-4"/>
                                     PNG Image
                                 </Label>
                             </div>
                             <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="pdf" id="format-pdf" />
+                                <RadioGroupItem value="pdf" id="format-pdf"/>
                                 <Label htmlFor="format-pdf" className="flex cursor-pointer items-center gap-2">
-                                    <FileText className="h-4 w-4" />
+                                    <FileText className="h-4 w-4"/>
                                     PDF Document
                                 </Label>
                             </div>
@@ -172,19 +173,19 @@ export function ExportDialog({ open, onOpenChange, canvas, filename }: ExportDia
                             className="space-y-2"
                         >
                             <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="original" id="size-original" />
+                                <RadioGroupItem value="original" id="size-original"/>
                                 <Label htmlFor="size-original" className="cursor-pointer">
                                     Original size ({canvas?.width} x {canvas?.height} px)
                                 </Label>
                             </div>
                             <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="pixels" id="size-pixels" />
+                                <RadioGroupItem value="pixels" id="size-pixels"/>
                                 <Label htmlFor="size-pixels" className="cursor-pointer">
                                     Custom pixel dimensions
                                 </Label>
                             </div>
                             <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="print" id="size-print" />
+                                <RadioGroupItem value="print" id="size-print"/>
                                 <Label htmlFor="size-print" className="cursor-pointer">
                                     Print size (inches)
                                 </Label>
@@ -271,7 +272,7 @@ export function ExportDialog({ open, onOpenChange, canvas, filename }: ExportDia
                                 </Label>
                                 <Select value={dpi} onValueChange={setDpi}>
                                     <SelectTrigger id="dpi">
-                                        <SelectValue />
+                                        <SelectValue/>
                                     </SelectTrigger>
                                     <SelectContent>
                                         {DPI_OPTIONS.map((option) => (
@@ -319,7 +320,7 @@ export function ExportDialog({ open, onOpenChange, canvas, filename }: ExportDia
                         Cancel
                     </Button>
                     <Button onClick={handleExport} className="gap-2">
-                        {format === "png" ? <FileImage className="h-4 w-4" /> : <FileText className="h-4 w-4" />}
+                        {format === "png" ? <FileImage className="h-4 w-4"/> : <FileText className="h-4 w-4"/>}
                         Export {format.toUpperCase()}
                     </Button>
                 </div>
