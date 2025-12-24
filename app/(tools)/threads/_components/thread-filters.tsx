@@ -32,7 +32,7 @@ export function ThreadFilters({
     onClearFilters,
 }: ThreadFiltersProps) {
     return (
-        <div className="bg-card sticky top- z-10 space-y-4 rounded-lg border p-4 shadow-sm">
+        <div className="bg-card sticky top-[80px] z-50 space-y-4 rounded-lg border p-4 shadow-sm">
             <div className="flex flex-wrap items-end gap-4">
                 {/* Search input */}
                 <div className="min-w-50 flex-1 space-y-1.5">
@@ -51,7 +51,7 @@ export function ThreadFilters({
                 </div>
 
                 {/* Brand filter */}
-                <div className="w-[150px] space-y-1.5">
+                <div className="w-37.5 space-y-1.5">
                     <Label htmlFor="brand">Brand</Label>
                     <Select value={brand} onValueChange={onBrandChange}>
                         <SelectTrigger id="brand">
@@ -69,7 +69,7 @@ export function ThreadFilters({
                 </div>
 
                 {/* Color similarity picker */}
-                <div className="w-[180px] space-y-1.5">
+                <div className="w-45 space-y-1.5">
                     <Label htmlFor="color-picker">Find similar colors</Label>
                     <div className="flex gap-2">
                         <div className="relative flex-1">

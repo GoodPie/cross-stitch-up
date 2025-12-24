@@ -37,7 +37,7 @@ function AuthSection() {
 
 export function Header({ toolName, showBackLink }: HeaderProps) {
     return (
-        <header className="border-border/50 bg-card/50 sticky top-0 z-10 border-b backdrop-blur-sm">
+        <header className="border-border/50 bg-card/50 sticky top-0 z-[100] border-b backdrop-blur-sm">
             <div className="container mx-auto flex max-w-4xl items-center gap-3 px-4 py-4">
                 {showBackLink && (
                     <Link
