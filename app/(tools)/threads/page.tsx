@@ -1,24 +1,39 @@
 import type { Metadata } from "next";
+import * as Sentry from "@sentry/nextjs";
 import { ThreadsClient } from "./_components/threads-client";
-import type { ThreadsResponse } from "@/lib/tools/threads/types";
+import type { ThreadColour, ThreadsResponse } from "@/lib/tools/threads/types";
+import { supabase } from "@/lib/supabase/client";
 
 export const metadata: Metadata = {
     title: "Thread Colors | Cross Stitch-up",
     description: "Browse and search thread colors by name, code, or find similar colors",
 };
 
+// Cache for 1 hour
+export const revalidate = 3600;
+
 async function getThreads(): Promise<ThreadsResponse> {
-    const baseUrl = process.env.BETTER_AUTH_URL || "http://localhost:3000";
+    const { data: threads, error } = await supabase
+        .from("thread_colours")
+        .select("id, brand, colour_code, name, r, g, b, hex")
+        .order("colour_code", { ascending: true });
 
-    const res = await fetch(`${baseUrl}/api/threads`, {
-        next: { revalidate: 3600 }, // Cache for 1 hour
-    });
-
-    if (!res.ok) {
+    if (error) {
+        Sentry.captureException(error, {
+            tags: { api: "threads", operation: "fetch" },
+        })
         throw new Error("Failed to fetch threads");
     }
 
-    return res.json();
+    const brands = [...new Set((threads as ThreadColour[]).map((t) => t.brand))].sort((a, b) =>
+        a.localeCompare(b)
+    );
+
+    return {
+        threads: threads as ThreadColour[],
+        total: threads.length,
+        brands,
+    };
 }
 
 export default async function ThreadsPage() {
