@@ -13,10 +13,12 @@ import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { PasswordInput } from "./password-input";
+import { SocialLogin } from "./social-login";
 
 export function LoginForm() {
     const router = useRouter();
     const [isLoading, setIsLoading] = React.useState(false);
+    const [isSocialLoading, setIsSocialLoading] = React.useState(false);
     const [isResending, setIsResending] = React.useState(false);
     const [error, setError] = React.useState<string | null>(null);
     const [emailNotVerified, setEmailNotVerified] = React.useState(false);
@@ -153,10 +155,16 @@ export function LoginForm() {
                     )}
                 />
 
-                <Button type="submit" className="w-full" disabled={isLoading}>
+                <Button type="submit" className="w-full" disabled={isLoading || isSocialLoading}>
                     {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Sign in
                 </Button>
+
+                <SocialLogin
+                    disabled={isLoading}
+                    onLoadingChange={setIsSocialLoading}
+                    onError={(err) => err && setError(err)}
+                />
             </form>
         </Form>
     );
