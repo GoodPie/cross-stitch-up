@@ -6,13 +6,13 @@ import { X } from "lucide-react";
 import type { PageRenderResult } from "@/lib/shared/types";
 
 interface PageThumbnailProps {
-    page: PageRenderResult;
-    isSelected?: boolean;
-    isInGrid?: boolean;
-    gridPosition?: { row: number; col: number };
-    onRemove?: () => void;
-    draggable?: boolean;
-    onDragStart?: (e: React.DragEvent, page: PageRenderResult) => void;
+    readonly page: PageRenderResult;
+    readonly isSelected?: boolean;
+    readonly isInGrid?: boolean;
+    readonly gridPosition?: { row: number; col: number };
+    readonly onRemove?: () => void;
+    readonly draggable?: boolean;
+    readonly onDragStart?: (e: React.DragEvent, page: PageRenderResult) => void;
 }
 
 export function PageThumbnail({

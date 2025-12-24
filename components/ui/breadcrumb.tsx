@@ -30,7 +30,7 @@ function BreadcrumbLink({
     className,
     ...props
 }: React.ComponentProps<"a"> & {
-    asChild?: boolean;
+    readonly asChild?: boolean;
 }) {
     const Comp = asChild ? Slot : "a";
 

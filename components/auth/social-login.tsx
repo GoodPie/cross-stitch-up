@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react";
 import { signIn } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 
-function GoogleIcon({ className }: { className?: string }) {
+function GoogleIcon({ className }: { readonly className?: string }) {
     return (
         <svg className={className} viewBox="0 0 24 24" aria-hidden="true">
             <path
@@ -29,10 +29,10 @@ function GoogleIcon({ className }: { className?: string }) {
 }
 
 interface SocialLoginProps {
-    disabled?: boolean;
-    callbackURL?: string;
-    onError?: (error: string) => void;
-    onLoadingChange?: (isLoading: boolean) => void;
+    readonly disabled?: boolean;
+    readonly callbackURL?: string;
+    readonly onError?: (error: string) => void;
+    readonly onLoadingChange?: (isLoading: boolean) => void;
 }
 
 export function SocialLogin({ disabled, callbackURL = "/", onError, onLoadingChange }: SocialLoginProps) {

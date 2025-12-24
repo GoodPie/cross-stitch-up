@@ -3,8 +3,8 @@ import * as React from "react";
 import { EmailLayout } from "./components/email-layout";
 
 interface ResetPasswordEmailProps {
-    userName?: string;
-    resetUrl: string;
+    readonly userName?: string;
+    readonly resetUrl: string;
 }
 
 export function ResetPasswordEmail({ userName, resetUrl }: ResetPasswordEmailProps) {

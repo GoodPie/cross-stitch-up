@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import type { StitchConfig } from "@/lib/tools/merge/types";
 
 interface StitchConfigProps {
-    onContinue: (config: StitchConfig) => void;
+    readonly onContinue: (config: StitchConfig) => void;
 }
 
 const PRESETS = [

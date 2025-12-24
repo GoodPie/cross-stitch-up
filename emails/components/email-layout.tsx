@@ -2,8 +2,8 @@ import { Body, Container, Head, Html, Preview, Section, Text } from "@react-emai
 import * as React from "react";
 
 interface EmailLayoutProps {
-    preview: string;
-    children: React.ReactNode;
+    readonly preview: string;
+    readonly children: React.ReactNode;
 }
 
 export function EmailLayout({ preview, children }: EmailLayoutProps) {

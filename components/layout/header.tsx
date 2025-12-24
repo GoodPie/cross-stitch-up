@@ -8,8 +8,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { UserMenu } from "@/components/auth/user-menu";
 
 interface HeaderProps {
-    toolName?: string;
-    showBackLink?: boolean;
+    readonly toolName?: string;
+    readonly showBackLink?: boolean;
 }
 
 export function Header({ toolName, showBackLink }: HeaderProps) {

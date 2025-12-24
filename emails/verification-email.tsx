@@ -3,8 +3,8 @@ import * as React from "react";
 import { EmailLayout } from "./components/email-layout";
 
 interface VerificationEmailProps {
-    userName?: string;
-    verificationUrl: string;
+    readonly userName?: string;
+    readonly verificationUrl: string;
 }
 
 export function VerificationEmail({ userName, verificationUrl }: VerificationEmailProps) {

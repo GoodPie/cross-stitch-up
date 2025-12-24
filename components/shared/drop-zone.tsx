@@ -6,7 +6,7 @@ import { useState, useCallback, useRef } from "react";
 import { FileUp, File } from "lucide-react";
 
 interface DropZoneProps {
-    onFileSelected: (file: File) => void;
+    readonly onFileSelected: (file: File) => void;
 }
 
 export function DropZone({ onFileSelected }: DropZoneProps) {

@@ -38,8 +38,8 @@ function ChartContainer({
     config,
     ...props
 }: React.ComponentProps<"div"> & {
-    config: ChartConfig;
-    children: React.ComponentProps<typeof RechartsPrimitive.ResponsiveContainer>["children"];
+    readonly config: ChartConfig;
+    readonly children: React.ComponentProps<typeof RechartsPrimitive.ResponsiveContainer>["children"];
 }) {
     const uniqueId = React.useId();
     const chartId = `chart-${id || uniqueId.replace(/:/g, "")}`;
@@ -62,7 +62,7 @@ function ChartContainer({
     );
 }
 
-const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
+const ChartStyle = ({ id, config }: { readonly id: string; readonly config: ChartConfig }) => {
     const colorConfig = Object.entries(config).filter(([, config]) => config.theme || config.color);
 
     if (!colorConfig.length) {
@@ -109,11 +109,11 @@ function ChartTooltipContent({
     labelKey,
 }: React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
     React.ComponentProps<"div"> & {
-        hideLabel?: boolean;
-        hideIndicator?: boolean;
-        indicator?: "line" | "dot" | "dashed";
-        nameKey?: string;
-        labelKey?: string;
+        readonly hideLabel?: boolean;
+        readonly hideIndicator?: boolean;
+        readonly indicator?: "line" | "dot" | "dashed";
+        readonly nameKey?: string;
+        readonly labelKey?: string;
     }) {
     const { config } = useChart();
 
@@ -235,8 +235,8 @@ function ChartLegendContent({
     nameKey,
 }: React.ComponentProps<"div"> &
     Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
-        hideIcon?: boolean;
-        nameKey?: string;
+        readonly hideIcon?: boolean;
+        readonly nameKey?: string;
     }) {
     const { config } = useChart();
 

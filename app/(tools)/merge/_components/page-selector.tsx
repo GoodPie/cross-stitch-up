@@ -10,9 +10,9 @@ import type { PageRenderResult } from "@/lib/shared/types";
 import type { GridCell, GridArrangement } from "@/lib/tools/merge/types";
 
 interface PageSelectorProps {
-    pages: PageRenderResult[];
-    onBack: () => void;
-    onMerge: (arrangement: GridArrangement) => void;
+    readonly pages: PageRenderResult[];
+    readonly onBack: () => void;
+    readonly onMerge: (arrangement: GridArrangement) => void;
 }
 
 export function PageSelector({ pages, onBack, onMerge }: PageSelectorProps) {

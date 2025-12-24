@@ -8,8 +8,8 @@ import { ExportDialog } from "@/components/shared/export-dialog";
 import type { MergeResult } from "@/lib/tools/merge/types";
 
 interface ResultsStateProps {
-    result: MergeResult;
-    onReset: () => void;
+    readonly result: MergeResult;
+    readonly onReset: () => void;
 }
 
 export function ResultsState({ result, onReset }: ResultsStateProps) {

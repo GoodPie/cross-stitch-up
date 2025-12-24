@@ -50,9 +50,9 @@ function SidebarProvider({
     children,
     ...props
 }: React.ComponentProps<"div"> & {
-    defaultOpen?: boolean;
-    open?: boolean;
-    onOpenChange?: (open: boolean) => void;
+    readonly defaultOpen?: boolean;
+    readonly open?: boolean;
+    readonly onOpenChange?: (open: boolean) => void;
 }) {
     const isMobile = useIsMobile();
     const [openMobile, setOpenMobile] = React.useState(false);
@@ -144,9 +144,9 @@ function Sidebar({
     children,
     ...props
 }: React.ComponentProps<"div"> & {
-    side?: "left" | "right";
-    variant?: "sidebar" | "floating" | "inset";
-    collapsible?: "offcanvas" | "icon" | "none";
+    readonly side?: "left" | "right";
+    readonly variant?: "sidebar" | "floating" | "inset";
+    readonly collapsible?: "offcanvas" | "icon" | "none";
 }) {
     const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
 
@@ -369,7 +369,7 @@ function SidebarGroupLabel({
     className,
     asChild = false,
     ...props
-}: React.ComponentProps<"div"> & { asChild?: boolean }) {
+}: React.ComponentProps<"div"> & { readonly asChild?: boolean }) {
     const Comp = asChild ? Slot : "div";
 
     return (
@@ -390,7 +390,7 @@ function SidebarGroupAction({
     className,
     asChild = false,
     ...props
-}: React.ComponentProps<"button"> & { asChild?: boolean }) {
+}: React.ComponentProps<"button"> & { readonly asChild?: boolean }) {
     const Comp = asChild ? Slot : "button";
 
     return (
@@ -473,9 +473,9 @@ function SidebarMenuButton({
     className,
     ...props
 }: React.ComponentProps<"button"> & {
-    asChild?: boolean;
-    isActive?: boolean;
-    tooltip?: string | React.ComponentProps<typeof TooltipContent>;
+    readonly asChild?: boolean;
+    readonly isActive?: boolean;
+    readonly tooltip?: string | React.ComponentProps<typeof TooltipContent>;
 } & VariantProps<typeof sidebarMenuButtonVariants>) {
     const Comp = asChild ? Slot : "button";
     const { isMobile, state } = useSidebar();
@@ -515,8 +515,8 @@ function SidebarMenuAction({
     showOnHover = false,
     ...props
 }: React.ComponentProps<"button"> & {
-    asChild?: boolean;
-    showOnHover?: boolean;
+    readonly asChild?: boolean;
+    readonly showOnHover?: boolean;
 }) {
     const Comp = asChild ? Slot : "button";
 
@@ -593,9 +593,9 @@ function SidebarMenuSubButton({
     className,
     ...props
 }: React.ComponentProps<"a"> & {
-    asChild?: boolean;
-    size?: "sm" | "md";
-    isActive?: boolean;
+    readonly asChild?: boolean;
+    readonly size?: "sm" | "md";
+    readonly isActive?: boolean;
 }) {
     const Comp = asChild ? Slot : "a";
 

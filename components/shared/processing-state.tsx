@@ -1,5 +1,5 @@
 interface ProcessingStateProps {
-    stage: string;
+    readonly stage: string;
 }
 
 export function ProcessingState({ stage }: ProcessingStateProps) {

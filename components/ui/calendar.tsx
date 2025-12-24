@@ -17,7 +17,7 @@ function Calendar({
     components,
     ...props
 }: React.ComponentProps<typeof DayPicker> & {
-    buttonVariant?: React.ComponentProps<typeof Button>["variant"];
+    readonly buttonVariant?: React.ComponentProps<typeof Button>["variant"];
 }) {
     const defaultClassNames = getDefaultClassNames();
 

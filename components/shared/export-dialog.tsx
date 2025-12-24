@@ -14,10 +14,10 @@ import { downloadAsPdf } from "@/lib/export/pdf-exporter";
 import { calculateMaintainedDimension } from "@/lib/export/canvas-scaler";
 
 interface ExportDialogProps {
-    open: boolean;
-    onOpenChange: (open: boolean) => void;
-    canvas: HTMLCanvasElement | null;
-    filename: string;
+    readonly open: boolean;
+    readonly onOpenChange: (open: boolean) => void;
+    readonly canvas: HTMLCanvasElement | null;
+    readonly filename: string;
 }
 
 type SizeMode = "original" | "pixels" | "print";

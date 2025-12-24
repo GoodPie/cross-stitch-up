@@ -12,7 +12,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 };
 
 interface ToolCardProps {
-    tool: ToolMetadata;
+    readonly tool: ToolMetadata;
 }
 
 export function ToolCard({ tool }: ToolCardProps) {

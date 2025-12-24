@@ -7,11 +7,11 @@ import type { PageRenderResult } from "@/lib/shared/types";
 import type { GridCell } from "@/lib/tools/merge/types";
 
 interface GridCanvasProps {
-    cells: GridCell[];
-    pages: PageRenderResult[];
-    onCellAdd: (pageNumber: number, row: number, col: number) => void;
-    onCellRemove: (row: number, col: number) => void;
-    gridDimensions: { rows: number; cols: number };
+    readonly cells: GridCell[];
+    readonly pages: PageRenderResult[];
+    readonly onCellAdd: (pageNumber: number, row: number, col: number) => void;
+    readonly onCellRemove: (row: number, col: number) => void;
+    readonly gridDimensions: { rows: number; cols: number };
 }
 
 export function GridCanvas({ cells, pages, onCellAdd, onCellRemove, gridDimensions }: GridCanvasProps) {

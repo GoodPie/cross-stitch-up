@@ -5,11 +5,11 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { cn } from "@/lib/utils";
 
 interface AuthCardProps {
-    title: string;
-    description?: string;
-    children: React.ReactNode;
-    footer?: React.ReactNode;
-    className?: string;
+    readonly title: string;
+    readonly description?: string;
+    readonly children: React.ReactNode;
+    readonly footer?: React.ReactNode;
+    readonly className?: string;
 }
 
 export function AuthCard({ title, description, children, footer, className }: AuthCardProps) {
