@@ -36,9 +36,8 @@ export function PageThumbnail({
     };
 
     return (
+        // eslint-disable-next-line jsx-a11y/no-static-element-interactions -- draggable element requires mouse interactions
         <div
-            tabIndex={0}
-            role={"button"}
             draggable={draggable}
             onDragStart={handleDragStart}
             className={`group relative overflow-hidden rounded-lg border-2 transition-all duration-200 ${isSelected ? "border-primary ring-primary/30 ring-2" : "border-border"} ${draggable ? "hover:border-primary/50 cursor-grab active:cursor-grabbing" : ""} ${isInGrid ? "h-full" : "aspect-3/4"} `}

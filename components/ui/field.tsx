@@ -79,13 +79,12 @@ function Field({
     className,
     orientation = "vertical",
     ...props
-}: ComponentProps<"div"> & VariantProps<typeof fieldVariants>) {
+}: ComponentProps<"fieldset"> & VariantProps<typeof fieldVariants>) {
     return (
-        <div
-            role="group"
+        <fieldset
             data-slot="field"
             data-orientation={orientation}
-            className={cn(fieldVariants({ orientation }), className)}
+            className={cn("border-0 p-0 m-0", fieldVariants({ orientation }), className)}
             {...props}
         />
     );

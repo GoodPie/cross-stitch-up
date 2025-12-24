@@ -57,15 +57,14 @@ export function DropZone({ onFileSelected }: DropZoneProps) {
         <div className="space-y-6">
             {/* Decorative corner elements */}
             <div className="relative">
-                <div
-                    tabIndex={0}
-                    role={"button"}
+                <button
+                    type="button"
                     onClick={handleClick}
                     onKeyDown={handleKeyDown}
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
                     onDrop={handleDrop}
-                    className={`relative cursor-pointer rounded-2xl border-2 border-dashed p-12 text-center transition-all duration-300 ease-out md:p-16 ${
+                    className={`relative w-full cursor-pointer rounded-2xl border-2 border-dashed bg-transparent p-12 text-center transition-all duration-300 ease-out md:p-16 ${
                         isDragOver
                             ? "border-primary bg-primary/5 scale-[1.02] shadow-lg"
                             : "border-muted-foreground/30 hover:border-primary/50 hover:bg-accent/50"
@@ -106,7 +105,7 @@ export function DropZone({ onFileSelected }: DropZoneProps) {
                             Supports PDF files from popular pattern makers
                         </p>
                     </div>
-                </div>
+                </button>
             </div>
 
             {/* Tips section */}
