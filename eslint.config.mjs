@@ -4,6 +4,7 @@ import nextTs from "eslint-config-next/typescript";
 import json from "@eslint/json";
 import markdown from "@eslint/markdown";
 import eslintConfigPrettier from "eslint-config-prettier/flat";
+import unicorn from "eslint-plugin-unicorn";
 
 const eslintConfig = defineConfig([
     // Next.js + TypeScript
@@ -15,6 +16,15 @@ const eslintConfig = defineConfig([
         files: ["**/*.tsx"],
         rules: {
             "react/prefer-read-only-props": "error",
+        },
+    },
+
+    // Prefer Number static methods over global equivalents
+    {
+        files: ["**/*.{js,mjs,cjs,ts,tsx}"],
+        plugins: { unicorn },
+        rules: {
+            "unicorn/prefer-number-properties": "error",
         },
     },
 
