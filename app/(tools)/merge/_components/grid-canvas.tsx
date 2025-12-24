@@ -34,8 +34,8 @@ export function GridCanvas({ cells, pages, onCellAdd, onCellRemove, gridDimensio
         (e: React.DragEvent, row: number, col: number) => {
             e.preventDefault();
             setDragOverCell(null);
-            const pageNumber = parseInt(e.dataTransfer.getData("text/plain"), 10);
-            if (!isNaN(pageNumber)) {
+            const pageNumber = Number.parseInt(e.dataTransfer.getData("text/plain"), 10);
+            if (!Number.isNaN(pageNumber)) {
                 onCellAdd(pageNumber, row, col);
             }
         },

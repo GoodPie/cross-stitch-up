@@ -54,8 +54,8 @@ export function StitchConfigForm({ onContinue }: StitchConfigProps) {
         setPreset("custom");
     };
 
-    const widthNum = parseInt(width, 10);
-    const heightNum = parseInt(height, 10);
+    const widthNum = Number.parseInt(width, 10);
+    const heightNum = Number.parseInt(height, 10);
     const isValid = widthNum > 0 && heightNum > 0;
 
     const handleSubmit = (e: React.FormEvent) => {

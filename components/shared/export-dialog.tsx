@@ -58,13 +58,13 @@ export function ExportDialog({ open, onOpenChange, canvas, filename }: ExportDia
                 return { width: canvas.width, height: canvas.height };
             case "pixels":
                 return {
-                    width: parseInt(pixelWidth) || canvas.width,
-                    height: parseInt(pixelHeight) || canvas.height,
+                    width: Number.parseInt(pixelWidth) || canvas.width,
+                    height: Number.parseInt(pixelHeight) || canvas.height,
                 };
             case "print":
-                const w = parseFloat(printWidth) || 8;
-                const h = parseFloat(printHeight) || 10;
-                const d = parseInt(dpi) || 300;
+                const w = Number.parseFloat(printWidth) || 8;
+                const h = Number.parseFloat(printHeight) || 10;
+                const d = Number.parseInt(dpi) || 300;
                 return { width: Math.round(w * d), height: Math.round(h * d) };
             default:
                 return null;
@@ -74,7 +74,7 @@ export function ExportDialog({ open, onOpenChange, canvas, filename }: ExportDia
     const handlePixelWidthChange = (value: string) => {
         setPixelWidth(value);
         if (maintainAspectRatio && canvas && value) {
-            const newHeight = calculateMaintainedDimension(canvas, "width", parseInt(value));
+            const newHeight = calculateMaintainedDimension(canvas, "width", Number.parseInt(value));
             setPixelHeight(String(newHeight));
         }
     };
@@ -82,7 +82,7 @@ export function ExportDialog({ open, onOpenChange, canvas, filename }: ExportDia
     const handlePixelHeightChange = (value: string) => {
         setPixelHeight(value);
         if (maintainAspectRatio && canvas && value) {
-            const newWidth = calculateMaintainedDimension(canvas, "height", parseInt(value));
+            const newWidth = calculateMaintainedDimension(canvas, "height", Number.parseInt(value));
             setPixelWidth(String(newWidth));
         }
     };
@@ -91,7 +91,7 @@ export function ExportDialog({ open, onOpenChange, canvas, filename }: ExportDia
         setPrintWidth(value);
         if (maintainAspectRatio && canvas && value) {
             const aspectRatio = canvas.width / canvas.height;
-            const newHeight = parseFloat(value) / aspectRatio;
+            const newHeight = Number.parseFloat(value) / aspectRatio;
             setPrintHeight(newHeight.toFixed(2));
         }
     };
@@ -100,7 +100,7 @@ export function ExportDialog({ open, onOpenChange, canvas, filename }: ExportDia
         setPrintHeight(value);
         if (maintainAspectRatio && canvas && value) {
             const aspectRatio = canvas.width / canvas.height;
-            const newWidth = parseFloat(value) * aspectRatio;
+            const newWidth = Number.parseFloat(value) * aspectRatio;
             setPrintWidth(newWidth.toFixed(2));
         }
     };
@@ -110,9 +110,9 @@ export function ExportDialog({ open, onOpenChange, canvas, filename }: ExportDia
 
         const options = {
             sizeMode,
-            width: sizeMode === "pixels" ? parseInt(pixelWidth) : parseFloat(printWidth),
-            height: sizeMode === "pixels" ? parseInt(pixelHeight) : parseFloat(printHeight),
-            dpi: parseInt(dpi),
+            width: sizeMode === "pixels" ? Number.parseInt(pixelWidth) : Number.parseFloat(printWidth),
+            height: sizeMode === "pixels" ? Number.parseInt(pixelHeight) : Number.parseFloat(printHeight),
+            dpi: Number.parseInt(dpi),
             maintainAspectRatio,
         };
 
