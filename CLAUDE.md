@@ -11,11 +11,24 @@ See `plan.md` for the full product specification and feature requirements.
 ## Commands
 
 ```bash
-pnpm dev      # Start development server
-pnpm build    # Production build
-pnpm lint     # Run ESLint
-pnpm start    # Start production server
+pnpm dev           # Start development server
+pnpm build         # Production build
+pnpm start         # Start production server
+pnpm lint          # Run ESLint
+pnpm lint:fix      # Run ESLint with auto-fix
+pnpm format        # Format code with Prettier
+pnpm format:check  # Check formatting without changes
 ```
+
+## Linting & Formatting
+
+Uses ESLint 9 (flat config) and Prettier with Tailwind plugin.
+
+- **ESLint config**: `eslint.config.js` - includes rules for JS, JSON, Markdown, and CSS
+- **Prettier config**: `.prettierrc` - uses Tailwind class sorting plugin
+- **CI**: GitHub Actions runs both `lint` and `format:check` on PRs to `main`
+
+Run `pnpm lint:fix && pnpm format` before committing to fix issues automatically.
 
 ## Architecture
 
