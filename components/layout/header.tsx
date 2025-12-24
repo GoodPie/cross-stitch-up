@@ -53,9 +53,7 @@ export function Header({ toolName, showBackLink }: HeaderProps) {
                         <Scissors className="h-5 w-5" />
                     </div>
                     <div>
-                        <h1 className="text-foreground font-serif text-xl font-bold">
-                            Cross Stitch-up
-                        </h1>
+                        <h1 className="text-foreground font-serif text-xl font-bold">Cross Stitch-up</h1>
                         <p className="text-muted-foreground text-xs">
                             {toolName || "Tools for cross stitch enthusiasts"}
                         </p>

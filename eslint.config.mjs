@@ -6,7 +6,6 @@ import markdown from "@eslint/markdown";
 import eslintConfigPrettier from "eslint-config-prettier/flat";
 import unicorn from "eslint-plugin-unicorn";
 
-
 const eslintConfig = defineConfig([
     // Next.js + TypeScript
     ...nextVitals,
@@ -17,7 +16,10 @@ const eslintConfig = defineConfig([
         rules: {
             // Non-interactive elements should not have interactive handlers
             "jsx-a11y/no-static-element-interactions": "error",
-            "jsx-a11y/interactive-supports-focus": "error"
+            "jsx-a11y/interactive-supports-focus": "error",
+            // Mouse events must have corresponding keyboard events for accessibility
+            "jsx-a11y/mouse-events-have-key-events": "error",
+            "jsx-a11y/click-events-have-key-events": "error",
         },
     },
 
@@ -35,7 +37,7 @@ const eslintConfig = defineConfig([
         plugins: { unicorn },
         rules: {
             "unicorn/prefer-number-properties": "error",
-            "unicorn/prefer-at": "error"
+            "unicorn/prefer-at": "error",
         },
     },
 

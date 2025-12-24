@@ -39,6 +39,13 @@ export function DropZone({ onFileSelected }: DropZoneProps) {
         inputRef.current?.click();
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            inputRef.current?.click();
+        }
+    };
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
@@ -54,6 +61,7 @@ export function DropZone({ onFileSelected }: DropZoneProps) {
                     tabIndex={0}
                     role={"button"}
                     onClick={handleClick}
+                    onKeyDown={handleKeyDown}
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
                     onDrop={handleDrop}

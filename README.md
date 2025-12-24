@@ -38,24 +38,24 @@ Combine multi-page cross stitch pattern PDFs (like those from StitchBox) into a 
 
 1. Clone the repository:
 
-   ```bash
-   git clone <repository-url>
-   cd pdf-cross-stitch-stitcher
-   ```
+    ```bash
+    git clone <repository-url>
+    cd pdf-cross-stitch-stitcher
+    ```
 
 2. Install dependencies:
 
-   ```bash
-   pnpm install
-   ```
+    ```bash
+    pnpm install
+    ```
 
 3. Set up environment variables (see [Environment Variables](#environment-variables))
 
 4. Start the development server:
 
-   ```bash
-   pnpm dev
-   ```
+    ```bash
+    pnpm dev
+    ```
 
 5. Open [http://localhost:3000](http://localhost:3000)
 
@@ -63,17 +63,17 @@ Combine multi-page cross stitch pattern PDFs (like those from StitchBox) into a 
 
 Create a `.env.local` file in the project root with the following variables:
 
-| Variable                       | Description                                         | Required |
-| ------------------------------ | --------------------------------------------------- | -------- |
-| `BETTER_AUTH_SECRET`           | Secret key for Better Auth session encryption       | Yes      |
+| Variable                       | Description                                          | Required |
+| ------------------------------ | ---------------------------------------------------- | -------- |
+| `BETTER_AUTH_SECRET`           | Secret key for Better Auth session encryption        | Yes      |
 | `BETTER_AUTH_URL`              | Base URL of your app (e.g., `http://localhost:3000`) | Yes      |
-| `GOOGLE_CLIENT_ID`             | Google OAuth client ID                              | Yes      |
-| `GOOGLE_CLIENT_SECRET`         | Google OAuth client secret                          | Yes      |
-| `POSTGRES_URL`                 | PostgreSQL connection string                        | Yes      |
-| `RESEND_API_KEY`               | API key for Resend email service                    | Yes      |
-| `SENTRY_AUTH_TOKEN`            | Sentry authentication token for error tracking     | No       |
-| `BLOB_READ_WRITE_TOKEN`        | Vercel Blob storage token                           | No       |
-| `NODE_TLS_REJECT_UNAUTHORIZED` | Set to `0` for local dev with self-signed certs     | No       |
+| `GOOGLE_CLIENT_ID`             | Google OAuth client ID                               | Yes      |
+| `GOOGLE_CLIENT_SECRET`         | Google OAuth client secret                           | Yes      |
+| `POSTGRES_URL`                 | PostgreSQL connection string                         | Yes      |
+| `RESEND_API_KEY`               | API key for Resend email service                     | Yes      |
+| `SENTRY_AUTH_TOKEN`            | Sentry authentication token for error tracking       | No       |
+| `BLOB_READ_WRITE_TOKEN`        | Vercel Blob storage token                            | No       |
+| `NODE_TLS_REJECT_UNAUTHORIZED` | Set to `0` for local dev with self-signed certs      | No       |
 
 ### Example `.env.local`
 
@@ -106,8 +106,8 @@ NODE_TLS_REJECT_UNAUTHORIZED=0
 4. Click **Create Credentials > OAuth client ID**
 5. Select **Web application**
 6. Add authorized redirect URIs:
-   - `http://localhost:3000/api/auth/callback/google` (development)
-   - `https://yourdomain.com/api/auth/callback/google` (production)
+    - `http://localhost:3000/api/auth/callback/google` (development)
+    - `https://yourdomain.com/api/auth/callback/google` (production)
 7. Copy the Client ID and Client Secret to your environment variables
 
 ### Syncing Environment Variables from Vercel
@@ -120,18 +120,17 @@ pnpm sync-env
 
 ## Available Scripts
 
-| Command              | Description                                                                  |
-| -------------------- |------------------------------------------------------------------------------|
-| `pnpm dev`           | Start development server                                                     |
-| `pnpm build`         | Create production build                                                      |
-| `pnpm start`         | Start production server                                                      |
-| `pnpm lint`          | Run ESLint                                                                   |
-| `pnpm lint:fix`      | Run ESLint with auto-fix                                                     |
-| `pnpm format`        | Format code with Prettier                                                    |
-| `pnpm format:check`  | Check formatting without changes                                             |
-| `pnpm e2e-test`      | Run Playwright end-to-end tests                                              |
-| `pnpm sync-env`      | Pull environment variables from Vercel. Make sure you run `vercel link` first |
-
+| Command             | Description                                                                   |
+| ------------------- | ----------------------------------------------------------------------------- |
+| `pnpm dev`          | Start development server                                                      |
+| `pnpm build`        | Create production build                                                       |
+| `pnpm start`        | Start production server                                                       |
+| `pnpm lint`         | Run ESLint                                                                    |
+| `pnpm lint:fix`     | Run ESLint with auto-fix                                                      |
+| `pnpm format`       | Format code with Prettier                                                     |
+| `pnpm format:check` | Check formatting without changes                                              |
+| `pnpm e2e-test`     | Run Playwright end-to-end tests                                               |
+| `pnpm sync-env`     | Pull environment variables from Vercel. Make sure you run `vercel link` first |
 
 ## Deployment
 
@@ -168,9 +167,9 @@ StitchMerge is designed with privacy in mind:
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Run linting and formatting before committing:
-   ```bash
-   pnpm lint:fix && pnpm format
-   ```
+    ```bash
+    pnpm lint:fix && pnpm format
+    ```
 4. Commit your changes (`git commit -m 'Add amazing feature'`)
 5. Push to the branch (`git push origin feature/amazing-feature`)
 6. Open a Pull Request

@@ -700,7 +700,6 @@ function findInternalGridLines(ctx: ImageContext, bounds: GridBounds, direction:
             run.start + run.length >= boundsStart + boundsSize * LINE_DETECTION.INTERNAL_LINE_SPAN_END;
 
         if (spansGrid) {
-
             if (lines.length === 0 || pos - (lines.at(-1) || 0) > LINE_DETECTION.LINE_GAP_THRESHOLD) {
                 lines.push(pos);
             }
