@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LogOut, User } from "lucide-react";
 import { signOut } from "@/lib/auth-client";
@@ -69,7 +70,7 @@ export function UserMenu({ user }: UserMenuProps) {
                     )}
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuContent align="end" className="w-56 z-150">
                 <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
                         {user.name && <p className="text-sm leading-none font-medium">{user.name}</p>}
@@ -77,9 +78,11 @@ export function UserMenu({ user }: UserMenuProps) {
                     </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem disabled>
-                    <User className="mr-2 h-4 w-4" />
-                    <span>Account settings</span>
+                <DropdownMenuItem asChild>
+                    <Link href="/account">
+                        <User className="mr-2 h-4 w-4" />
+                        <span>Account settings</span>
+                    </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut} disabled={isLoading} variant="destructive">

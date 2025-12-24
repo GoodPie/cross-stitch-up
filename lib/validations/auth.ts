@@ -41,7 +41,12 @@ export const resetPasswordSchema = z
         path: ["confirmPassword"],
     });
 
+export const profileSchema = z.object({
+    name: z.string().min(3, "Name must be at least 3 characters"),
+});
+
 export type LoginInput = z.infer<typeof loginSchema>;
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
+export type ProfileInput = z.infer<typeof profileSchema>;
