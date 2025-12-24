@@ -23,31 +23,31 @@ const PAPER_SIZES = {
 export function downloadAsPdf(
     canvas: HTMLCanvasElement,
     filename: string,
-    options: PdfExportOptions = { sizeMode: "fit" }
+    { sizeMode = "fit", width, height, dpi, maintainAspectRatio }: PdfExportOptions
 ): void {
     let exportCanvas = canvas;
     let pdfWidth: number;
     let pdfHeight: number;
 
-    if (options.sizeMode === "pixels" && options.width && options.height) {
+    if (sizeMode === "pixels" && width && height) {
         exportCanvas = scaleCanvas(canvas, {
-            targetWidth: options.width,
-            targetHeight: options.height,
-            maintainAspectRatio: options.maintainAspectRatio ?? true,
+            targetWidth: width,
+            targetHeight: height,
+            maintainAspectRatio: maintainAspectRatio ?? true,
         });
         // Convert pixels to mm (assuming 96 DPI for screen)
         pdfWidth = (exportCanvas.width / 96) * 25.4;
         pdfHeight = (exportCanvas.height / 96) * 25.4;
-    } else if (options.sizeMode === "print" && options.width && options.height && options.dpi) {
-        const pixelDimensions = printSizeToPixels(options.width, options.height, options.dpi);
+    } else if (sizeMode === "print" && width && height && dpi) {
+        const pixelDimensions = printSizeToPixels(width, height, dpi);
         exportCanvas = scaleCanvas(canvas, {
             targetWidth: pixelDimensions.width,
             targetHeight: pixelDimensions.height,
-            maintainAspectRatio: options.maintainAspectRatio ?? true,
+            maintainAspectRatio: maintainAspectRatio ?? true,
         });
         // Width and height are in inches, convert to mm
-        pdfWidth = options.width * 25.4;
-        pdfHeight = options.height * 25.4;
+        pdfWidth = width * 25.4;
+        pdfHeight = height * 25.4;
     } else {
         // 'fit' mode - fit to A4 while maintaining the aspect ratio
         const aspectRatio = canvas.width / canvas.height;

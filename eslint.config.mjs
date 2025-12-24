@@ -42,6 +42,8 @@ const eslintConfig = defineConfig([
         rules: {
             "unicorn/prefer-number-properties": "error",
             "unicorn/prefer-at": "error",
+            // Object literals as defaults get replaced entirely, not merged - use destructuring instead
+            "unicorn/no-object-as-default-parameter": "error",
         },
     },
 

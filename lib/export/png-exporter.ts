@@ -14,22 +14,22 @@ export interface PngExportOptions {
 export function downloadAsPng(
     canvas: HTMLCanvasElement,
     filename: string,
-    options: PngExportOptions = { sizeMode: "original" }
+    { sizeMode = "original", width, height, dpi, maintainAspectRatio }: PngExportOptions
 ): void {
     let exportCanvas = canvas;
 
-    if (options.sizeMode === "pixels" && options.width && options.height) {
+    if (sizeMode === "pixels" && width && height) {
         exportCanvas = scaleCanvas(canvas, {
-            targetWidth: options.width,
-            targetHeight: options.height,
-            maintainAspectRatio: options.maintainAspectRatio ?? true,
+            targetWidth: width,
+            targetHeight: height,
+            maintainAspectRatio: maintainAspectRatio ?? true,
         });
-    } else if (options.sizeMode === "print" && options.width && options.height && options.dpi) {
-        const pixelDimensions = printSizeToPixels(options.width, options.height, options.dpi);
+    } else if (sizeMode === "print" && width && height && dpi) {
+        const pixelDimensions = printSizeToPixels(width, height, dpi);
         exportCanvas = scaleCanvas(canvas, {
             targetWidth: pixelDimensions.width,
             targetHeight: pixelDimensions.height,
-            maintainAspectRatio: options.maintainAspectRatio ?? true,
+            maintainAspectRatio: maintainAspectRatio ?? true,
         });
     }
 
