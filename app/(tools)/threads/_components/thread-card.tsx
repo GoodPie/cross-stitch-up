@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Copy, Check } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import type { ThreadColour } from "@/lib/tools/threads/types";
 import { getContrastColor } from "@/lib/tools/threads/color-utils";
@@ -23,9 +24,13 @@ export function ThreadCard({ thread, isSelected, onSelect, showDistance }: Threa
     const contrastColor = getContrastColor(thread.hex);
 
     const copyToClipboard = async (value: string, field: string) => {
-        await navigator.clipboard.writeText(value);
-        setCopiedField(field);
-        setTimeout(() => setCopiedField(null), 1500);
+        try {
+            await navigator.clipboard.writeText(value);
+            setCopiedField(field);
+            setTimeout(() => setCopiedField(null), 1500);
+        } catch {
+            toast.error("Failed to copy to clipboard");
+        }
     };
 
     return (
