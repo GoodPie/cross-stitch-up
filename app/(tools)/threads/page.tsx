@@ -21,13 +21,11 @@ async function getThreads(): Promise<ThreadsResponse> {
     if (error) {
         Sentry.captureException(error, {
             tags: { api: "threads", operation: "fetch" },
-        })
+        });
         throw new Error("Failed to fetch threads");
     }
 
-    const brands = [...new Set((threads as ThreadColour[]).map((t) => t.brand))].sort((a, b) =>
-        a.localeCompare(b)
-    );
+    const brands = [...new Set((threads as ThreadColour[]).map((t) => t.brand))].sort((a, b) => a.localeCompare(b));
 
     return {
         threads: threads as ThreadColour[],

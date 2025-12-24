@@ -10,15 +10,7 @@ import { profileSchema, type ProfileInput } from "@/lib/validations/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
 interface ProfileFormProps {
     readonly user: {
@@ -92,9 +84,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                             <FormControl>
                                 <Input placeholder="Enter your name" autoComplete="name" {...field} />
                             </FormControl>
-                            <FormDescription>
-                                This is the name displayed on your profile
-                            </FormDescription>
+                            <FormDescription>This is the name displayed on your profile</FormDescription>
                             <FormMessage />
                         </FormItem>
                     )}

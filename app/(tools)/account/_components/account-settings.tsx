@@ -1,12 +1,6 @@
 "use client";
 
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProfileForm } from "./profile-form";
 
@@ -24,9 +18,7 @@ export function AccountSettings({ user }: AccountSettingsProps) {
         <div className="space-y-6">
             <div>
                 <h1 className="font-serif text-2xl font-bold">Account Settings</h1>
-                <p className="text-muted-foreground">
-                    Manage your account settings and preferences
-                </p>
+                <p className="text-muted-foreground">Manage your account settings and preferences</p>
             </div>
 
             <Tabs defaultValue="profile" className="w-full">
@@ -41,9 +33,7 @@ export function AccountSettings({ user }: AccountSettingsProps) {
                     <Card>
                         <CardHeader>
                             <CardTitle>Profile Information</CardTitle>
-                            <CardDescription>
-                                Update your profile information
-                            </CardDescription>
+                            <CardDescription>Update your profile information</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <ProfileForm user={user} />

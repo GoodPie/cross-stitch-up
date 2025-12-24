@@ -70,7 +70,7 @@ export function UserMenu({ user }: UserMenuProps) {
                     )}
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 z-150">
+            <DropdownMenuContent align="end" className="z-150 w-56">
                 <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
                         {user.name && <p className="text-sm leading-none font-medium">{user.name}</p>}
