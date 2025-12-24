@@ -22,6 +22,8 @@ const eslintConfig = defineConfig([
             "jsx-a11y/click-events-have-key-events": "error",
             // Anchors must have accessible content
             "jsx-a11y/anchor-has-content": "error",
+            // Prefer semantic HTML elements over ARIA roles
+            "jsx-a11y/prefer-tag-over-role": "error",
         },
     },
 
