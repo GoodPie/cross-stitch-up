@@ -18,7 +18,9 @@ export async function GET(): Promise<NextResponse<ThreadsResponse | { error: str
         }
 
         // Get unique brands for filter dropdown
-        const brands = [...new Set((threads as ThreadColour[]).map((t) => t.brand))].sort();
+        const brands = [...new Set((threads as ThreadColour[]).map((t) => t.brand))].sort((a, b) =>
+            a.localeCompare(b)
+        );
 
         return NextResponse.json({
             threads: threads as ThreadColour[],
