@@ -1,3 +1,5 @@
+import { AnimatedGrid } from "./animated-grid";
+
 interface ProcessingStateProps {
     readonly stage: string;
 }
@@ -26,22 +28,7 @@ export function ProcessingState({ stage }: ProcessingStateProps) {
             </div>
 
             {/* Animated grid pattern */}
-            <div className="flex justify-center gap-1">
-                {Array.from({ length: 5 }).map((_, i) => (
-                    <div key={`row-${i.toString()}`} className="flex flex-col gap-1">
-                        {Array.from({ length: 5 }).map((_, j) => (
-                            <div
-                                key={`dot-${i.toString()}`}
-                                className="bg-primary/20 h-3 w-3 rounded-sm"
-                                style={{
-                                    animation: `pulse 1.5s ease-in-out infinite`,
-                                    animationDelay: `${(i + j) * 0.1}s`,
-                                }}
-                            />
-                        ))}
-                    </div>
-                ))}
-            </div>
+            <AnimatedGrid />
 
             <div className="space-y-2">
                 <h2 className="text-foreground font-serif text-xl font-semibold">Stitching together your pattern...</h2>
