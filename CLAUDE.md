@@ -100,3 +100,28 @@ npx shadcn@latest add <component-name>
 - **Client components**: Use `"use client"` directive for interactive components
 - **Dynamic imports**: PDF processing uses dynamic imports to avoid SSR issues with pdfjs-dist
 - **Privacy-first**: All processing happens client-side; files never leave the browser
+
+### Authentication (Better Auth)
+
+Use per-page auth checks for protected routes. This keeps auth logic co-located and allows granular control:
+
+```tsx
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+
+export default async function ProtectedPage() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    redirect("/login");
+  }
+
+  // Optional: check roles, permissions, etc.
+  // if (session.user.role !== "admin") redirect("/unauthorized");
+
+  return <PageContent user={session.user} />;
+}
+```
