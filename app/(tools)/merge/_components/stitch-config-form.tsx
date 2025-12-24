@@ -74,21 +74,21 @@ export function StitchConfigForm({ onContinue }: StitchConfigProps) {
   return (
     <div className="space-y-6">
       <div className="relative">
-        <div className="rounded-2xl border-2 border-muted-foreground/30 p-8 md:p-12 text-center">
+        <div className="border-muted-foreground/30 rounded-2xl border-2 p-8 text-center md:p-12">
           {/* Cross-stitch corner decorations */}
-          <div className="absolute top-3 left-3 w-6 h-6 border-t-2 border-l-2 border-secondary-foreground/20 rounded-tl" />
-          <div className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 border-secondary-foreground/20 rounded-tr" />
-          <div className="absolute bottom-3 left-3 w-6 h-6 border-b-2 border-l-2 border-secondary-foreground/20 rounded-bl" />
-          <div className="absolute bottom-3 right-3 w-6 h-6 border-b-2 border-r-2 border-secondary-foreground/20 rounded-br" />
+          <div className="border-secondary-foreground/20 absolute top-3 left-3 h-6 w-6 rounded-tl border-t-2 border-l-2" />
+          <div className="border-secondary-foreground/20 absolute top-3 right-3 h-6 w-6 rounded-tr border-t-2 border-r-2" />
+          <div className="border-secondary-foreground/20 absolute bottom-3 left-3 h-6 w-6 rounded-bl border-b-2 border-l-2" />
+          <div className="border-secondary-foreground/20 absolute right-3 bottom-3 h-6 w-6 rounded-br border-r-2 border-b-2" />
 
           <form onSubmit={handleSubmit} className="space-y-8">
             <div className="space-y-4">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent text-accent-foreground">
-                <Grid3X3 className="w-8 h-8" />
+              <div className="bg-accent text-accent-foreground inline-flex h-16 w-16 items-center justify-center rounded-2xl">
+                <Grid3X3 className="h-8 w-8" />
               </div>
 
               <div className="space-y-2">
-                <h2 className="text-xl md:text-2xl font-serif font-semibold text-foreground">
+                <h2 className="text-foreground font-serif text-xl font-semibold md:text-2xl">
                   Pattern Dimensions
                 </h2>
                 <p className="text-muted-foreground">
@@ -97,7 +97,7 @@ export function StitchConfigForm({ onContinue }: StitchConfigProps) {
               </div>
             </div>
 
-            <div className="max-w-md mx-auto space-y-6">
+            <div className="mx-auto max-w-md space-y-6">
               {/* Preset selector */}
               <div className="space-y-2">
                 <Label htmlFor="preset">Common Sizes</Label>
@@ -148,7 +148,7 @@ export function StitchConfigForm({ onContinue }: StitchConfigProps) {
                 className="w-full"
               >
                 Continue to Upload
-                <ArrowRight className="w-4 h-4 ml-2" />
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
           </form>
@@ -156,11 +156,11 @@ export function StitchConfigForm({ onContinue }: StitchConfigProps) {
       </div>
 
       {/* Tips section */}
-      <div className="bg-accent/50 rounded-xl p-4 border border-border/50">
-        <h3 className="font-medium text-foreground mb-2 flex items-center gap-2">
+      <div className="bg-accent/50 border-border/50 rounded-xl border p-4">
+        <h3 className="text-foreground mb-2 flex items-center gap-2 font-medium">
           <span className="text-lg">💡</span> Where to find dimensions
         </h3>
-        <ul className="text-sm text-muted-foreground space-y-1">
+        <ul className="text-muted-foreground space-y-1 text-sm">
           <li>• Check the pattern cover page or info sheet</li>
           <li>• Look for &#34;Design Size&#34; or &#34;Stitch Count&#34;</li>
           <li>• Usually listed as width × height (e.g., 200 × 150)</li>

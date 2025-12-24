@@ -41,11 +41,11 @@ function VerifyEmailContent() {
           verifyError.code === "TOKEN_EXPIRED"
         ) {
           setError(
-            "This verification link is invalid or has expired. Please request a new one.",
+            "This verification link is invalid or has expired. Please request a new one."
           );
         } else {
           setError(
-            verifyError.message || "Something went wrong. Please try again.",
+            verifyError.message || "Something went wrong. Please try again."
           );
         }
         return;
@@ -64,8 +64,8 @@ function VerifyEmailContent() {
 
   if (state === "loading") {
     return (
-      <div className="text-center space-y-4 py-4">
-        <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
+      <div className="space-y-4 py-4 text-center">
+        <Loader2 className="text-primary mx-auto h-8 w-8 animate-spin" />
         <p className="text-muted-foreground">Verifying your email...</p>
       </div>
     );
@@ -73,12 +73,12 @@ function VerifyEmailContent() {
 
   if (state === "error") {
     return (
-      <div className="text-center space-y-4">
-        <div className="mx-auto w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
-          <AlertCircle className="w-6 h-6 text-red-600" />
+      <div className="space-y-4 text-center">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
+          <AlertCircle className="h-6 w-6 text-red-600" />
         </div>
         <div className="space-y-2">
-          <h3 className="font-semibold text-lg">Verification failed</h3>
+          <h3 className="text-lg font-semibold">Verification failed</h3>
           <p className="text-muted-foreground text-sm">{error}</p>
         </div>
         <div className="flex flex-col gap-2">
@@ -91,12 +91,12 @@ function VerifyEmailContent() {
   }
 
   return (
-    <div className="text-center space-y-4">
-      <div className="mx-auto w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
-        <CheckCircle2 className="w-6 h-6 text-green-600" />
+    <div className="space-y-4 text-center">
+      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+        <CheckCircle2 className="h-6 w-6 text-green-600" />
       </div>
       <div className="space-y-2">
-        <h3 className="font-semibold text-lg">Email verified!</h3>
+        <h3 className="text-lg font-semibold">Email verified!</h3>
         <p className="text-muted-foreground text-sm">
           Your email has been verified. Redirecting you to the home page...
         </p>
@@ -110,8 +110,8 @@ export default function VerifyEmailPage() {
     <AuthCard title="Email Verification">
       <React.Suspense
         fallback={
-          <div className="text-center space-y-4 py-4">
-            <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
+          <div className="space-y-4 py-4 text-center">
+            <Loader2 className="text-primary mx-auto h-8 w-8 animate-spin" />
             <p className="text-muted-foreground">Loading...</p>
           </div>
         }

@@ -14,7 +14,7 @@ export interface PngExportOptions {
 export function downloadAsPng(
   canvas: HTMLCanvasElement,
   filename: string,
-  options: PngExportOptions = { sizeMode: "original" },
+  options: PngExportOptions = { sizeMode: "original" }
 ): void {
   let exportCanvas = canvas;
 
@@ -33,7 +33,7 @@ export function downloadAsPng(
     const pixelDimensions = printSizeToPixels(
       options.width,
       options.height,
-      options.dpi,
+      options.dpi
     );
     exportCanvas = scaleCanvas(canvas, {
       targetWidth: pixelDimensions.width,

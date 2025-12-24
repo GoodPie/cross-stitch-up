@@ -4,16 +4,16 @@ interface ProcessingStateProps {
 
 export function ProcessingState({ stage }: ProcessingStateProps) {
   return (
-    <div className="text-center space-y-8 py-12">
+    <div className="space-y-8 py-12 text-center">
       {/* Animated stitching indicator */}
       <div className="relative inline-flex items-center justify-center">
-        <div className="w-24 h-24 rounded-full border-4 border-accent">
-          <div className="absolute inset-0 rounded-full border-4 border-primary border-t-transparent animate-spin" />
+        <div className="border-accent h-24 w-24 rounded-full border-4">
+          <div className="border-primary absolute inset-0 animate-spin rounded-full border-4 border-t-transparent" />
         </div>
         {/* Needle icon */}
         <div className="absolute">
           <svg
-            className="w-8 h-8 text-primary animate-pulse"
+            className="text-primary h-8 w-8 animate-pulse"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -32,7 +32,7 @@ export function ProcessingState({ stage }: ProcessingStateProps) {
             {Array.from({ length: 5 }).map((_, j) => (
               <div
                 key={j}
-                className="w-3 h-3 rounded-sm bg-primary/20"
+                className="bg-primary/20 h-3 w-3 rounded-sm"
                 style={{
                   animation: `pulse 1.5s ease-in-out infinite`,
                   animationDelay: `${(i + j) * 0.1}s`,
@@ -44,13 +44,13 @@ export function ProcessingState({ stage }: ProcessingStateProps) {
       </div>
 
       <div className="space-y-2">
-        <h2 className="text-xl font-serif font-semibold text-foreground">
+        <h2 className="text-foreground font-serif text-xl font-semibold">
           Stitching together your pattern...
         </h2>
         <p className="text-primary font-medium">{stage}</p>
       </div>
 
-      <p className="text-sm text-muted-foreground">
+      <p className="text-muted-foreground text-sm">
         This may take a moment depending on the PDF size
       </p>
     </div>

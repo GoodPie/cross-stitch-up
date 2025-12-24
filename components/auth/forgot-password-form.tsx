@@ -54,12 +54,12 @@ export function ForgotPasswordForm() {
 
   if (success) {
     return (
-      <div className="text-center space-y-4">
-        <div className="mx-auto w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
-          <CheckCircle2 className="w-6 h-6 text-green-600" />
+      <div className="space-y-4 text-center">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+          <CheckCircle2 className="h-6 w-6 text-green-600" />
         </div>
         <div className="space-y-2">
-          <h3 className="font-semibold text-lg">Check your email</h3>
+          <h3 className="text-lg font-semibold">Check your email</h3>
           <p className="text-muted-foreground text-sm">
             If an account exists with that email, we&apos;ve sent you a password
             reset link.

@@ -23,17 +23,17 @@ export function ToolCard({ tool }: ToolCardProps) {
     <Card
       className={`group relative p-6 transition-all duration-200 ${
         isComingSoon
-          ? "opacity-60 cursor-not-allowed"
-          : "hover:shadow-lg hover:border-primary/50 cursor-pointer"
+          ? "cursor-not-allowed opacity-60"
+          : "hover:border-primary/50 cursor-pointer hover:shadow-lg"
       }`}
     >
       <div className="flex items-start gap-4">
-        <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-accent flex items-center justify-center text-accent-foreground">
-          <Icon className="w-6 h-6" />
+        <div className="bg-accent text-accent-foreground flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl">
+          <Icon className="h-6 w-6" />
         </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">
-            <h3 className="font-serif font-semibold text-foreground">
+        <div className="min-w-0 flex-1">
+          <div className="mb-1 flex items-center gap-2">
+            <h3 className="text-foreground font-serif font-semibold">
               {tool.name}
             </h3>
             {tool.status === "beta" && (
@@ -47,10 +47,10 @@ export function ToolCard({ tool }: ToolCardProps) {
               </Badge>
             )}
           </div>
-          <p className="text-sm text-muted-foreground">{tool.description}</p>
+          <p className="text-muted-foreground text-sm">{tool.description}</p>
         </div>
         {!isComingSoon && (
-          <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+          <ArrowRight className="text-muted-foreground group-hover:text-primary h-5 w-5 transition-all group-hover:translate-x-1" />
         )}
       </div>
     </Card>

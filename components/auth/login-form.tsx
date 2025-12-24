@@ -61,7 +61,7 @@ export function LoginForm() {
         setError("Invalid email or password.");
       } else {
         setError(
-          signInError.message || "Something went wrong. Please try again.",
+          signInError.message || "Something went wrong. Please try again."
         );
       }
       return;
@@ -97,7 +97,7 @@ export function LoginForm() {
               {emailNotVerified && (
                 <div className="mt-2">
                   {resendSuccess ? (
-                    <p className="text-green-600 text-sm">
+                    <p className="text-sm text-green-600">
                       Verification email sent! Check your inbox.
                     </p>
                   ) : (
@@ -105,7 +105,7 @@ export function LoginForm() {
                       type="button"
                       variant="link"
                       size="sm"
-                      className="p-0 h-auto"
+                      className="h-auto p-0"
                       onClick={handleResendVerification}
                       disabled={isResending}
                     >
@@ -153,7 +153,7 @@ export function LoginForm() {
                 <FormLabel>Password</FormLabel>
                 <Link
                   href="/forgot-password"
-                  className="text-sm text-muted-foreground hover:text-primary"
+                  className="text-muted-foreground hover:text-primary text-sm"
                 >
                   Forgot password?
                 </Link>

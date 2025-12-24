@@ -23,7 +23,7 @@ const PAPER_SIZES = {
 export function downloadAsPdf(
   canvas: HTMLCanvasElement,
   filename: string,
-  options: PdfExportOptions = { sizeMode: "fit" },
+  options: PdfExportOptions = { sizeMode: "fit" }
 ): void {
   let exportCanvas = canvas;
   let pdfWidth: number;
@@ -47,7 +47,7 @@ export function downloadAsPdf(
     const pixelDimensions = printSizeToPixels(
       options.width,
       options.height,
-      options.dpi,
+      options.dpi
     );
     exportCanvas = scaleCanvas(canvas, {
       targetWidth: pixelDimensions.width,

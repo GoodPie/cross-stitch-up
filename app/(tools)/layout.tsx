@@ -4,9 +4,9 @@ import { ReactNode } from "react";
 
 export default function ToolsLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen flex flex-col bg-linear-to-br from-background via-background to-muted/30">
+    <div className="from-background via-background to-muted/30 flex min-h-screen flex-col bg-linear-to-br">
       <Header showBackLink />
-      <main className="flex-1 container max-w-4xl mx-auto px-4 py-8">
+      <main className="container mx-auto max-w-4xl flex-1 px-4 py-8">
         {children}
       </main>
       <Footer />

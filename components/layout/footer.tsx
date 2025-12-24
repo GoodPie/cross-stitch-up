@@ -1,8 +1,8 @@
 export function Footer() {
   return (
-    <footer className="border-t border-border/50 bg-card/30 mt-auto">
-      <div className="container max-w-4xl mx-auto px-4 py-6 text-center">
-        <p className="text-sm text-muted-foreground">
+    <footer className="border-border/50 bg-card/30 mt-auto border-t">
+      <div className="container mx-auto max-w-4xl px-4 py-6 text-center">
+        <p className="text-muted-foreground text-sm">
           Made with <span className="text-primary">♥</span> for stitchers
           everywhere
         </p>

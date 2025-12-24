@@ -4,7 +4,7 @@ const RENDER_SCALE = 2.5; // High resolution for quality output
 
 export async function loadAndRenderPdf(
   file: File,
-  onProgress?: (stage: string) => void,
+  onProgress?: (stage: string) => void
 ): Promise<PageRenderResult[]> {
   onProgress?.("Reading PDF...");
 
@@ -36,7 +36,7 @@ export async function loadAndRenderPdf(
       throw new Error("Could not get canvas 2D context");
     }
 
-    // @ts-ignore
+    // @ts-expect-error pdfjs-dist types are incomplete
     await page.render({ canvasContext: ctx, viewport }).promise;
 
     results.push({

@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-export interface PasswordInputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
+export type PasswordInputProps = React.InputHTMLAttributes<HTMLInputElement>;
 
 const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
   ({ className, ...props }, ref) => {
@@ -24,19 +24,19 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
           type="button"
           variant="ghost"
           size="sm"
-          className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+          className="absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent"
           onClick={() => setShowPassword(!showPassword)}
           aria-label={showPassword ? "Hide password" : "Show password"}
         >
           {showPassword ? (
-            <EyeOff className="h-4 w-4 text-muted-foreground" />
+            <EyeOff className="text-muted-foreground h-4 w-4" />
           ) : (
-            <Eye className="h-4 w-4 text-muted-foreground" />
+            <Eye className="text-muted-foreground h-4 w-4" />
           )}
         </Button>
       </div>
     );
-  },
+  }
 );
 PasswordInput.displayName = "PasswordInput";
 

@@ -56,7 +56,7 @@ export function ExportDialog({
   const [dpi, setDpi] = useState<string>("300");
   const [maintainAspectRatio, setMaintainAspectRatio] = useState(true);
   const [trackedCanvas, setTrackedCanvas] = useState<HTMLCanvasElement | null>(
-    null,
+    null
   );
 
   // Sync pixel dimensions when canvas changes (state adjustment during render)
@@ -96,7 +96,7 @@ export function ExportDialog({
       const newHeight = calculateMaintainedDimension(
         canvas,
         "width",
-        parseInt(value),
+        parseInt(value)
       );
       setPixelHeight(String(newHeight));
     }
@@ -108,7 +108,7 @@ export function ExportDialog({
       const newWidth = calculateMaintainedDimension(
         canvas,
         "height",
-        parseInt(value),
+        parseInt(value)
       );
       setPixelWidth(String(newWidth));
     }
@@ -181,9 +181,9 @@ export function ExportDialog({
                 <RadioGroupItem value="png" id="format-png" />
                 <Label
                   htmlFor="format-png"
-                  className="flex items-center gap-2 cursor-pointer"
+                  className="flex cursor-pointer items-center gap-2"
                 >
-                  <FileImage className="w-4 h-4" />
+                  <FileImage className="h-4 w-4" />
                   PNG Image
                 </Label>
               </div>
@@ -191,9 +191,9 @@ export function ExportDialog({
                 <RadioGroupItem value="pdf" id="format-pdf" />
                 <Label
                   htmlFor="format-pdf"
-                  className="flex items-center gap-2 cursor-pointer"
+                  className="flex cursor-pointer items-center gap-2"
                 >
-                  <FileText className="w-4 h-4" />
+                  <FileText className="h-4 w-4" />
                   PDF Document
                 </Label>
               </div>
@@ -231,7 +231,7 @@ export function ExportDialog({
 
           {/* Pixel Dimensions */}
           {sizeMode === "pixels" && (
-            <div className="space-y-3 pl-6 border-l-2 border-border">
+            <div className="border-border space-y-3 border-l-2 pl-6">
               <div className="flex gap-3">
                 <div className="flex-1 space-y-1">
                   <Label htmlFor="pixel-width" className="text-xs">
@@ -268,7 +268,7 @@ export function ExportDialog({
                 />
                 <Label
                   htmlFor="aspect-ratio-pixels"
-                  className="text-xs cursor-pointer"
+                  className="cursor-pointer text-xs"
                 >
                   Maintain aspect ratio
                 </Label>
@@ -278,7 +278,7 @@ export function ExportDialog({
 
           {/* Print Dimensions */}
           {sizeMode === "print" && (
-            <div className="space-y-3 pl-6 border-l-2 border-border">
+            <div className="border-border space-y-3 border-l-2 pl-6">
               <div className="flex gap-3">
                 <div className="flex-1 space-y-1">
                   <Label htmlFor="print-width" className="text-xs">
@@ -334,7 +334,7 @@ export function ExportDialog({
                 />
                 <Label
                   htmlFor="aspect-ratio-print"
-                  className="text-xs cursor-pointer"
+                  className="cursor-pointer text-xs"
                 >
                   Maintain aspect ratio
                 </Label>
@@ -367,9 +367,9 @@ export function ExportDialog({
           </Button>
           <Button onClick={handleExport} className="gap-2">
             {format === "png" ? (
-              <FileImage className="w-4 h-4" />
+              <FileImage className="h-4 w-4" />
             ) : (
-              <FileText className="w-4 h-4" />
+              <FileText className="h-4 w-4" />
             )}
             Export {format.toUpperCase()}
           </Button>

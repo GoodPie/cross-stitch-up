@@ -10,7 +10,7 @@ export interface ScaleOptions {
  */
 export function scaleCanvas(
   sourceCanvas: HTMLCanvasElement,
-  options: ScaleOptions,
+  options: ScaleOptions
 ): HTMLCanvasElement {
   const { targetWidth, targetHeight, maintainAspectRatio } = options;
 
@@ -59,7 +59,7 @@ export function scaleCanvas(
     0,
     0,
     scaledCanvas.width,
-    scaledCanvas.height,
+    scaledCanvas.height
   );
 
   return scaledCanvas;
@@ -71,7 +71,7 @@ export function scaleCanvas(
 export function printSizeToPixels(
   widthInches: number,
   heightInches: number,
-  dpi: number,
+  dpi: number
 ): { width: number; height: number } {
   return {
     width: Math.round(widthInches * dpi),
@@ -85,7 +85,7 @@ export function printSizeToPixels(
 export function pixelsToPrintSize(
   widthPixels: number,
   heightPixels: number,
-  dpi: number,
+  dpi: number
 ): { width: number; height: number } {
   return {
     width: widthPixels / dpi,
@@ -106,7 +106,7 @@ export function getAspectRatio(canvas: HTMLCanvasElement): number {
 export function calculateMaintainedDimension(
   sourceCanvas: HTMLCanvasElement,
   knownDimension: "width" | "height",
-  value: number,
+  value: number
 ): number {
   const ratio = getAspectRatio(sourceCanvas);
 

@@ -32,7 +32,7 @@ export function GridCanvas({
       e.dataTransfer.dropEffect = "move";
       setDragOverCell({ row, col });
     },
-    [],
+    []
   );
 
   const handleDragLeave = useCallback(() => {
@@ -48,7 +48,7 @@ export function GridCanvas({
         onCellAdd(pageNumber, row, col);
       }
     },
-    [onCellAdd],
+    [onCellAdd]
   );
 
   const getCellContent = (row: number, col: number) => {
@@ -91,22 +91,17 @@ export function GridCanvas({
           onDragOver={(e) => handleDragOver(e, row, col)}
           onDragLeave={handleDragLeave}
           onDrop={(e) => handleDrop(e, row, col)}
-          className={`
-            aspect-3/4 rounded-lg border-2 border-dashed transition-all duration-200
-            ${occupied ? "border-solid border-border p-0" : "border-muted-foreground/30"}
-            ${isOver && !occupied ? "border-primary bg-primary/10 scale-[1.02]" : ""}
-            ${!occupied ? "flex items-center justify-center" : ""}
-          `}
+          className={`aspect-3/4 rounded-lg border-2 border-dashed transition-all duration-200 ${occupied ? "border-border border-solid p-0" : "border-muted-foreground/30"} ${isOver && !occupied ? "border-primary bg-primary/10 scale-[1.02]" : ""} ${!occupied ? "flex items-center justify-center" : ""} `}
         >
           {occupied ? (
             getCellContent(row, col)
           ) : (
-            <div className="text-center text-muted-foreground/50">
-              <Plus className="w-6 h-6 mx-auto mb-1" />
+            <div className="text-muted-foreground/50 text-center">
+              <Plus className="mx-auto mb-1 h-6 w-6" />
               <span className="text-xs">Drop here</span>
             </div>
           )}
-        </div>,
+        </div>
       );
     }
   }

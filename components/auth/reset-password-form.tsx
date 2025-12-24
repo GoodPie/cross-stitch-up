@@ -62,11 +62,11 @@ export function ResetPasswordForm() {
         resetError.code === "TOKEN_EXPIRED"
       ) {
         setError(
-          "This password reset link is invalid or has expired. Please request a new one.",
+          "This password reset link is invalid or has expired. Please request a new one."
         );
       } else {
         setError(
-          resetError.message || "Something went wrong. Please try again.",
+          resetError.message || "Something went wrong. Please try again."
         );
       }
       return;
@@ -77,12 +77,12 @@ export function ResetPasswordForm() {
 
   if (hasInvalidToken) {
     return (
-      <div className="text-center space-y-4">
-        <div className="mx-auto w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
-          <AlertCircle className="w-6 h-6 text-red-600" />
+      <div className="space-y-4 text-center">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
+          <AlertCircle className="h-6 w-6 text-red-600" />
         </div>
         <div className="space-y-2">
-          <h3 className="font-semibold text-lg">Invalid or expired link</h3>
+          <h3 className="text-lg font-semibold">Invalid or expired link</h3>
           <p className="text-muted-foreground text-sm">
             This password reset link is invalid or has expired.
           </p>
@@ -96,12 +96,12 @@ export function ResetPasswordForm() {
 
   if (success) {
     return (
-      <div className="text-center space-y-4">
-        <div className="mx-auto w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
-          <CheckCircle2 className="w-6 h-6 text-green-600" />
+      <div className="space-y-4 text-center">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+          <CheckCircle2 className="h-6 w-6 text-green-600" />
         </div>
         <div className="space-y-2">
-          <h3 className="font-semibold text-lg">Password reset successful</h3>
+          <h3 className="text-lg font-semibold">Password reset successful</h3>
           <p className="text-muted-foreground text-sm">
             Your password has been reset. You can now sign in with your new
             password.
@@ -159,7 +159,7 @@ export function ResetPasswordForm() {
           )}
         />
 
-        <div className="text-xs text-muted-foreground">
+        <div className="text-muted-foreground text-xs">
           Password must be at least 8 characters and contain uppercase,
           lowercase, and a number.
         </div>

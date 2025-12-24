@@ -23,7 +23,7 @@ pnpm start    # Start production server
 
 The app uses a route-based architecture for multiple tools:
 
-```
+```text
 app/
   page.tsx                    # Landing page (tool selector)
   layout.tsx                  # Root layout with fonts/analytics

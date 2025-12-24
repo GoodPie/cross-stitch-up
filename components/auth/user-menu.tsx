@@ -67,7 +67,7 @@ export function UserMenu({ user }: UserMenuProps) {
               className="h-9 w-9 rounded-full object-cover"
             />
           ) : (
-            <div className="flex object-cover w-full h-full items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-medium">
+            <div className="bg-primary text-primary-foreground flex h-full w-full items-center justify-center rounded-full object-cover text-sm font-medium">
               {initials}
             </div>
           )}
@@ -77,10 +77,10 @@ export function UserMenu({ user }: UserMenuProps) {
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             {user.name && (
-              <p className="text-sm font-medium leading-none">{user.name}</p>
+              <p className="text-sm leading-none font-medium">{user.name}</p>
             )}
             {user.email && (
-              <p className="text-xs leading-none text-muted-foreground">
+              <p className="text-muted-foreground text-xs leading-none">
                 {user.email}
               </p>
             )}

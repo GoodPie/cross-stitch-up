@@ -24,11 +24,11 @@ export async function processSelectedPages(
   pages: PageRenderResult[],
   arrangement: GridArrangement,
   stitchConfig: StitchConfig,
-  onProgress: (stage: string) => void,
+  onProgress: (stage: string) => void
 ): Promise<MergeResult> {
   if (arrangement.cells.length === 0) {
     throw new Error(
-      "No pages selected. Please select at least one pattern page.",
+      "No pages selected. Please select at least one pattern page."
     );
   }
 
@@ -74,7 +74,7 @@ export async function processSelectedPages(
 
   const mergedCanvas = mergePatternGridsFromArrangement(
     detectedGrids,
-    arrangement,
+    arrangement
   );
 
   // Step 3: Generate result
@@ -102,7 +102,7 @@ export async function processSelectedPages(
 function mergePatternGridsFromArrangement(
   grids: DetectedGridPage[],
   arrangement: GridArrangement,
-  overlapPixels: number = 3,
+  overlapPixels: number = 3
 ): HTMLCanvasElement {
   if (grids.length === 0) {
     throw new Error("No grids to merge");

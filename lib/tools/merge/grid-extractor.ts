@@ -144,7 +144,7 @@ interface SpacingAnalysis {
 
 function createImageContext(
   canvas: HTMLCanvasElement,
-  config: GridDetectionConfig,
+  config: GridDetectionConfig
 ): ImageContext | null {
   const ctx = canvas.getContext("2d");
   if (!ctx) return null;
@@ -183,7 +183,7 @@ function isDarkPixel(ctx: ImageContext, x: number, y: number): boolean {
 function findLongestDarkRun(
   ctx: ImageContext,
   position: number,
-  direction: ScanDirection,
+  direction: ScanDirection
 ): DarkRun {
   const limit = direction === "horizontal" ? ctx.width : ctx.height;
   let maxRun: DarkRun = { start: 0, length: 0 };
@@ -224,14 +224,14 @@ function measureLineThickness(
   ctx: ImageContext,
   position: number,
   run: DarkRun,
-  direction: ScanDirection,
+  direction: ScanDirection
 ): number {
   const limit = direction === "horizontal" ? ctx.height : ctx.width;
   const maxDelta =
     ctx.config.expectedBorderThickness + ctx.config.thicknessTolerance;
   const tolerance = Math.max(
     LINE_DETECTION.TOLERANCE_MIN_PX,
-    run.length * LINE_DETECTION.TOLERANCE_FRACTION,
+    run.length * LINE_DETECTION.TOLERANCE_FRACTION
   );
 
   let thickness = 1;
@@ -275,11 +275,11 @@ function calculateLineConfidence(
   runLength: number,
   dimension: number,
   thickness: number,
-  expectedThickness: number,
+  expectedThickness: number
 ): number {
   const lengthScore = Math.min(
     1,
-    runLength / (dimension * LINE_DETECTION.MIN_LENGTH_FRACTION),
+    runLength / (dimension * LINE_DETECTION.MIN_LENGTH_FRACTION)
   );
   const thicknessScore =
     thickness >= expectedThickness ? 1 : thickness / expectedThickness;
@@ -294,7 +294,7 @@ function findBorderCandidates(
   startPos: number,
   endPos: number,
   direction: ScanDirection,
-  scanForward: boolean,
+  scanForward: boolean
 ): LineCandidate[] {
   const candidates: LineCandidate[] = [];
   const dimension = direction === "horizontal" ? ctx.width : ctx.height;
@@ -313,7 +313,7 @@ function findBorderCandidates(
         run.length,
         dimension,
         thickness,
-        ctx.config.expectedBorderThickness,
+        ctx.config.expectedBorderThickness
       );
 
       if (confidence >= CONFIDENCE.MIN_CANDIDATE) {
@@ -333,19 +333,19 @@ function findBorderCandidates(
 
 function selectBestCandidate(
   candidates: LineCandidate[],
-  preferOutermost: boolean,
+  preferOutermost: boolean
 ): LineCandidate | null {
   if (candidates.length === 0) return null;
 
   // Sort by position
   candidates.sort((a, b) =>
-    preferOutermost ? a.position - b.position : b.position - a.position,
+    preferOutermost ? a.position - b.position : b.position - a.position
   );
 
   const outermost = candidates[0];
   const highestConfidence = candidates.reduce(
     (max, c) => (c.confidence > max.confidence ? c : max),
-    candidates[0],
+    candidates[0]
   );
 
   if (outermost.confidence >= CONFIDENCE.MIN_OUTERMOST) {
@@ -383,7 +383,7 @@ function findHorizontalBorders(ctx: ImageContext): {
     0,
     topEndY,
     "horizontal",
-    true,
+    true
   );
   topCandidates.sort((a, b) => a.position - b.position);
   const topCandidate = topCandidates[0] || null;
@@ -398,7 +398,7 @@ function findHorizontalBorders(ctx: ImageContext): {
     ctx.height - 1,
     bottomStartY,
     "horizontal",
-    false,
+    false
   );
   bottomCandidates.sort((a, b) => b.position - a.position);
 
@@ -419,7 +419,7 @@ function findHorizontalBorders(ctx: ImageContext): {
     if (DEBUG_GRID_DETECTION && !bestBottom) {
       const pct = ((lengthDiff / topCandidate.runLength) * 100).toFixed(1);
       console.log(
-        `  Checking bottom at y=${bottom.position}: startDiff=${startDiff}px, lengthDiff=${lengthDiff}px (${pct}%)`,
+        `  Checking bottom at y=${bottom.position}: startDiff=${startDiff}px, lengthDiff=${lengthDiff}px (${pct}%)`
       );
     }
 
@@ -443,7 +443,7 @@ function findHorizontalBorders(ctx: ImageContext): {
     bestBottom = bottomCandidates[0];
     if (DEBUG_GRID_DETECTION) {
       console.log(
-        `  -> No aligned bottom found, using outermost at y=${bestBottom.position}`,
+        `  -> No aligned bottom found, using outermost at y=${bestBottom.position}`
       );
     }
   }
@@ -451,10 +451,10 @@ function findHorizontalBorders(ctx: ImageContext): {
   if (DEBUG_GRID_DETECTION && topCandidate && bestBottom) {
     console.log("Top/Bottom alignment result:");
     console.log(
-      `  Top: y=${topCandidate.position}, x=${topCandidate.runStart}-${topCandidate.runStart + topCandidate.runLength}`,
+      `  Top: y=${topCandidate.position}, x=${topCandidate.runStart}-${topCandidate.runStart + topCandidate.runLength}`
     );
     console.log(
-      `  Bottom: y=${bestBottom.position}, x=${bestBottom.runStart}-${bestBottom.runStart + bestBottom.runLength}`,
+      `  Bottom: y=${bestBottom.position}, x=${bestBottom.runStart}-${bestBottom.runStart + bestBottom.runLength}`
     );
   }
 
@@ -464,7 +464,7 @@ function findHorizontalBorders(ctx: ImageContext): {
 function findVerticalBorderNear(
   ctx: ImageContext,
   expectedX: number,
-  side: "left" | "right",
+  side: "left" | "right"
 ): LineCandidate | null {
   const tolerance = ALIGNMENT.VERTICAL_SEARCH_TOLERANCE;
   const startX = Math.max(0, expectedX - tolerance);
@@ -473,7 +473,7 @@ function findVerticalBorderNear(
 
   if (DEBUG_GRID_DETECTION) {
     console.log(
-      `  Searching for ${side} border near x=${expectedX} (range: ${startX}-${endX})`,
+      `  Searching for ${side} border near x=${expectedX} (range: ${startX}-${endX})`
     );
   }
 
@@ -486,7 +486,7 @@ function findVerticalBorderNear(
       const thickness = measureLineThickness(ctx, x, run, "vertical");
       const lengthScore = Math.min(
         1,
-        run.length / (ctx.height * LINE_DETECTION.MIN_LENGTH_FRACTION),
+        run.length / (ctx.height * LINE_DETECTION.MIN_LENGTH_FRACTION)
       );
       const thicknessScore =
         thickness >= ctx.config.expectedBorderThickness
@@ -516,7 +516,7 @@ function findVerticalBorderNear(
   if (candidates.length === 0) {
     if (DEBUG_GRID_DETECTION) {
       console.log(
-        `  No vertical line found near x=${expectedX} (+-${tolerance}px)`,
+        `  No vertical line found near x=${expectedX} (+-${tolerance}px)`
       );
     }
     return null;
@@ -524,12 +524,12 @@ function findVerticalBorderNear(
 
   // For left side prefer leftmost, for right side prefer rightmost
   candidates.sort((a, b) =>
-    side === "left" ? a.position - b.position : b.position - a.position,
+    side === "left" ? a.position - b.position : b.position - a.position
   );
 
   if (DEBUG_GRID_DETECTION) {
     console.log(
-      `  Found ${candidates.length} candidates, best at x=${candidates[0].position}`,
+      `  Found ${candidates.length} candidates, best at x=${candidates[0].position}`
     );
   }
 
@@ -541,21 +541,21 @@ function findVerticalBorders(
   horizontalBorders: {
     top: LineCandidate | null;
     bottom: LineCandidate | null;
-  },
+  }
 ): { left: LineCandidate | null; right: LineCandidate | null } {
   const { searchRegions } = ctx.config;
 
   // If we have horizontal borders, use their endpoints to guide vertical search
   if (horizontalBorders.top && horizontalBorders.bottom) {
     const leftSearchCenter = Math.round(
-      (horizontalBorders.top.runStart + horizontalBorders.bottom.runStart) / 2,
+      (horizontalBorders.top.runStart + horizontalBorders.bottom.runStart) / 2
     );
     const rightSearchCenter = Math.round(
       (horizontalBorders.top.runStart +
         horizontalBorders.top.runLength +
         horizontalBorders.bottom.runStart +
         horizontalBorders.bottom.runLength) /
-        2,
+        2
     );
 
     if (DEBUG_GRID_DETECTION) {
@@ -579,14 +579,14 @@ function findVerticalBorders(
     0,
     leftEndX,
     "vertical",
-    true,
+    true
   );
   const rightCandidates = findBorderCandidates(
     ctx,
     ctx.width - 1,
     rightStartX,
     "vertical",
-    false,
+    false
   );
 
   return {
@@ -598,7 +598,7 @@ function findVerticalBorders(
 function createSyntheticVerticalBorder(
   topBorder: LineCandidate,
   bottomBorder: LineCandidate,
-  xPosition: number,
+  xPosition: number
 ): LineCandidate {
   return {
     position: xPosition,
@@ -611,14 +611,14 @@ function createSyntheticVerticalBorder(
 
 function resolveVerticalBorders(
   horizontalBorders: { top: LineCandidate; bottom: LineCandidate },
-  verticalBorders: { left: LineCandidate | null; right: LineCandidate | null },
+  verticalBorders: { left: LineCandidate | null; right: LineCandidate | null }
 ): { left: LineCandidate; right: LineCandidate } | null {
   const { top, bottom } = horizontalBorders;
   let { left, right } = verticalBorders;
 
   const expectedLeftX = Math.round((top.runStart + bottom.runStart) / 2);
   const expectedRightX = Math.round(
-    (top.runStart + top.runLength + bottom.runStart + bottom.runLength) / 2,
+    (top.runStart + top.runLength + bottom.runStart + bottom.runLength) / 2
   );
 
   const leftMisalignment = left
@@ -631,17 +631,17 @@ function resolveVerticalBorders(
   if (DEBUG_GRID_DETECTION) {
     console.log("Vertical line alignment check:");
     console.log(
-      `  Expected left: x=${expectedLeftX}, detected: x=${left?.position ?? "none"}, off by ${leftMisalignment}px`,
+      `  Expected left: x=${expectedLeftX}, detected: x=${left?.position ?? "none"}, off by ${leftMisalignment}px`
     );
     console.log(
-      `  Expected right: x=${expectedRightX}, detected: x=${right?.position ?? "none"}, off by ${rightMisalignment}px`,
+      `  Expected right: x=${expectedRightX}, detected: x=${right?.position ?? "none"}, off by ${rightMisalignment}px`
     );
   }
 
   if (!left || leftMisalignment > ALIGNMENT.VERTICAL_MISALIGNMENT_THRESHOLD) {
     if (DEBUG_GRID_DETECTION) {
       console.log(
-        `  Using horizontal line start (x=${expectedLeftX}) for left border`,
+        `  Using horizontal line start (x=${expectedLeftX}) for left border`
       );
     }
     left = createSyntheticVerticalBorder(top, bottom, expectedLeftX);
@@ -650,7 +650,7 @@ function resolveVerticalBorders(
   if (!right || rightMisalignment > ALIGNMENT.VERTICAL_MISALIGNMENT_THRESHOLD) {
     if (DEBUG_GRID_DETECTION) {
       console.log(
-        `  Using horizontal line end (x=${expectedRightX}) for right border`,
+        `  Using horizontal line end (x=${expectedRightX}) for right border`
       );
     }
     right = createSyntheticVerticalBorder(top, bottom, expectedRightX);
@@ -667,7 +667,7 @@ function verifyCorner(
   ctx: ImageContext,
   x: number,
   y: number,
-  cornerType: CornerType,
+  cornerType: CornerType
 ): boolean {
   const checkSize = ctx.config.cornerDetection.cornerSize;
   const tolerance = CORNER.POSITION_TOLERANCE;
@@ -689,7 +689,7 @@ function verifyCorner(
   if (!cornerFound) {
     if (DEBUG_GRID_DETECTION) {
       console.log(
-        `  Corner ${cornerType} failed: no dark pixel near (${x}, ${y})`,
+        `  Corner ${cornerType} failed: no dark pixel near (${x}, ${y})`
       );
     }
     return false;
@@ -734,7 +734,7 @@ function verifyCorner(
 
   if (DEBUG_GRID_DETECTION) {
     console.log(
-      `  Corner ${cornerType} at (${x}, ${y}): hArm=${(hRatio * 100).toFixed(0)}%, vArm=${(vRatio * 100).toFixed(0)}% -> ${isValid ? "VALID" : "INVALID"}`,
+      `  Corner ${cornerType} at (${x}, ${y}): hArm=${(hRatio * 100).toFixed(0)}%, vArm=${(vRatio * 100).toFixed(0)}% -> ${isValid ? "VALID" : "INVALID"}`
     );
   }
 
@@ -747,25 +747,25 @@ function validateCorners(ctx: ImageContext, borders: DetectedBorders): number {
       ctx,
       borders.left.position,
       borders.top.position,
-      "topLeft",
+      "topLeft"
     ),
     topRight: verifyCorner(
       ctx,
       borders.right.position,
       borders.top.position,
-      "topRight",
+      "topRight"
     ),
     bottomLeft: verifyCorner(
       ctx,
       borders.left.position,
       borders.bottom.position,
-      "bottomLeft",
+      "bottomLeft"
     ),
     bottomRight: verifyCorner(
       ctx,
       borders.right.position,
       borders.bottom.position,
-      "bottomRight",
+      "bottomRight"
     ),
   };
 
@@ -799,13 +799,13 @@ function checkBorderAlignment(borders: DetectedBorders): AlignmentResult {
   if (DEBUG_GRID_DETECTION) {
     console.log("Border alignment check:");
     console.log(
-      `  Top line: starts at x=${top.runStart}, ends at x=${top.runStart + top.runLength}`,
+      `  Top line: starts at x=${top.runStart}, ends at x=${top.runStart + top.runLength}`
     );
     console.log(
-      `  Left border at x=${left.position}, Right border at x=${right.position}`,
+      `  Left border at x=${left.position}, Right border at x=${right.position}`
     );
     console.log(
-      `  Score: ${(score * 100).toFixed(0)}% (${goodAlignments}/8 within ${tolerance}px)`,
+      `  Score: ${(score * 100).toFixed(0)}% (${goodAlignments}/8 within ${tolerance}px)`
     );
   }
 
@@ -822,7 +822,7 @@ function checkBorderAlignment(borders: DetectedBorders): AlignmentResult {
 function findInternalGridLines(
   ctx: ImageContext,
   bounds: GridBounds,
-  direction: ScanDirection,
+  direction: ScanDirection
 ): number[] {
   const lines: number[] = [];
   const dimension = direction === "horizontal" ? bounds.width : bounds.height;
@@ -868,7 +868,7 @@ function findInternalGridLines(
 
 function analyzeGridLineSpacing(
   lines: number[],
-  spacingTolerance: number,
+  spacingTolerance: number
 ): SpacingAnalysis {
   if (lines.length < GRID_SPACING.MIN_LINES_FOR_ANALYSIS) {
     return { isRegular: false, consistency: 0 };
@@ -884,7 +884,7 @@ function analyzeGridLineSpacing(
   const tolerance = medianSpacing * spacingTolerance;
 
   const consistentCount = spacings.filter(
-    (s) => Math.abs(s - medianSpacing) <= tolerance,
+    (s) => Math.abs(s - medianSpacing) <= tolerance
   ).length;
 
   const consistency = consistentCount / spacings.length;
@@ -903,7 +903,7 @@ function calculateOverallConfidence(
   borders: DetectedBorders,
   validCorners: number,
   alignmentScore: number,
-  gridLineConfidence: number,
+  gridLineConfidence: number
 ): number {
   const borderConfidence =
     (borders.top.confidence +
@@ -924,7 +924,7 @@ function calculateOverallConfidence(
 
 function calculateGridLineConfidence(
   ctx: ImageContext,
-  bounds: GridBounds,
+  bounds: GridBounds
 ): number {
   if (!ctx.config.gridLineVerification.enabled) {
     return 1;
@@ -936,7 +936,7 @@ function calculateGridLineConfidence(
 
   if (DEBUG_GRID_DETECTION) {
     console.log(
-      `Internal lines found: ${hLines.length} horizontal, ${vLines.length} vertical`,
+      `Internal lines found: ${hLines.length} horizontal, ${vLines.length} vertical`
     );
   }
 
@@ -946,11 +946,11 @@ function calculateGridLineConfidence(
 
   const hAnalysis = analyzeGridLineSpacing(
     hLines,
-    ctx.config.gridLineVerification.spacingTolerance,
+    ctx.config.gridLineVerification.spacingTolerance
   );
   const vAnalysis = analyzeGridLineSpacing(
     vLines,
-    ctx.config.gridLineVerification.spacingTolerance,
+    ctx.config.gridLineVerification.spacingTolerance
   );
 
   if (DEBUG_GRID_DETECTION) {
@@ -972,7 +972,7 @@ function calculateGridLineConfidence(
 // =============================================================================
 
 function mergeConfig(
-  userConfig?: Partial<GridDetectionConfig>,
+  userConfig?: Partial<GridDetectionConfig>
 ): GridDetectionConfig {
   if (!userConfig) return DEFAULT_DETECTION_CONFIG;
 
@@ -1003,10 +1003,10 @@ export function extractGridArea(canvas: HTMLCanvasElement): GridBounds {
     x: Math.floor(width * DEFAULT_MARGINS.left),
     y: Math.floor(height * DEFAULT_MARGINS.top),
     width: Math.floor(
-      width * (1 - DEFAULT_MARGINS.left - DEFAULT_MARGINS.right),
+      width * (1 - DEFAULT_MARGINS.left - DEFAULT_MARGINS.right)
     ),
     height: Math.floor(
-      height * (1 - DEFAULT_MARGINS.top - DEFAULT_MARGINS.bottom),
+      height * (1 - DEFAULT_MARGINS.top - DEFAULT_MARGINS.bottom)
     ),
   };
 }
@@ -1014,7 +1014,7 @@ export function extractGridArea(canvas: HTMLCanvasElement): GridBounds {
 /** Detects black borderlines surrounding the grid and crops to inside them */
 export function extractGridWithoutAxisNumbers(
   canvas: HTMLCanvasElement,
-  config?: StitchConfig,
+  config?: StitchConfig
 ): GridBounds {
   const detectionConfig = mergeConfig(config?.gridDetection);
   return detectGridBoundaries(canvas, detectionConfig);
@@ -1023,7 +1023,7 @@ export function extractGridWithoutAxisNumbers(
 /** Crops a canvas to the specified bounds, returning a new canvas */
 export function cropToGrid(
   sourceCanvas: HTMLCanvasElement,
-  bounds: GridBounds,
+  bounds: GridBounds
 ): HTMLCanvasElement {
   const croppedCanvas = document.createElement("canvas");
   croppedCanvas.width = bounds.width;
@@ -1043,7 +1043,7 @@ export function cropToGrid(
     0,
     0,
     bounds.width,
-    bounds.height,
+    bounds.height
   );
 
   if (DEBUG_GRID_DETECTION) {
@@ -1059,7 +1059,7 @@ export function cropToGrid(
 /** Debug: Draws detected bounds on the source canvas */
 export function drawDebugBounds(
   canvas: HTMLCanvasElement,
-  bounds: GridBounds,
+  bounds: GridBounds
 ): void {
   if (!DEBUG_GRID_DETECTION) return;
 
@@ -1084,27 +1084,27 @@ export function drawDebugBounds(
     bounds.x + bounds.width - markerSize,
     bounds.y + bounds.height - 3,
     markerSize,
-    3,
+    3
   );
   ctx.fillRect(
     bounds.x + bounds.width - 3,
     bounds.y + bounds.height - markerSize,
     3,
-    markerSize,
+    markerSize
   );
 
   ctx.font = "16px monospace";
   ctx.fillText(
     `Bounds: (${bounds.x}, ${bounds.y}) ${bounds.width}x${bounds.height}`,
     bounds.x + 10,
-    bounds.y - 10,
+    bounds.y - 10
   );
 }
 
 /** Main grid detection algorithm - detects borders and validates grid structure */
 export function detectGridBoundaries(
   canvas: HTMLCanvasElement,
-  config: GridDetectionConfig = DEFAULT_DETECTION_CONFIG,
+  config: GridDetectionConfig = DEFAULT_DETECTION_CONFIG
 ): GridBounds {
   // Create image context
   const ctx = createImageContext(canvas, config);
@@ -1145,7 +1145,7 @@ export function detectGridBoundaries(
   // Step 3: Resolve vertical borders (use synthetic if needed)
   const resolvedVertical = resolveVerticalBorders(
     { top: horizontalBorders.top, bottom: horizontalBorders.bottom },
-    verticalBorders,
+    verticalBorders
   );
 
   if (!resolvedVertical) {
@@ -1167,7 +1167,7 @@ export function detectGridBoundaries(
 
   if (!alignment.aligned && DEBUG_GRID_DETECTION) {
     console.log(
-      "Detection WARNING - borders poorly aligned, attempting to continue...",
+      "Detection WARNING - borders poorly aligned, attempting to continue..."
     );
   }
 
@@ -1177,7 +1177,7 @@ export function detectGridBoundaries(
   if (validCorners < 2 && !alignment.aligned) {
     if (DEBUG_GRID_DETECTION) {
       console.log(
-        "Detection FAILED - insufficient valid corners and poor alignment",
+        "Detection FAILED - insufficient valid corners and poor alignment"
       );
     }
     return extractGridArea(canvas);
@@ -1205,7 +1205,7 @@ export function detectGridBoundaries(
   // Step 8: Calculate grid line confidence
   const gridLineConfidence = calculateGridLineConfidence(
     ctx,
-    preliminaryBounds,
+    preliminaryBounds
   );
 
   // Step 9: Calculate overall confidence
@@ -1213,7 +1213,7 @@ export function detectGridBoundaries(
     borders,
     validCorners,
     alignment.score,
-    gridLineConfidence,
+    gridLineConfidence
   );
 
   if (DEBUG_GRID_DETECTION) {
@@ -1245,18 +1245,18 @@ export function detectGridBoundaries(
     y: Math.max(0, preliminaryBounds.y - expansion),
     width: Math.min(
       ctx.width - preliminaryBounds.x + expansion,
-      preliminaryBounds.width + expansion * 2,
+      preliminaryBounds.width + expansion * 2
     ),
     height: Math.min(
       ctx.height - preliminaryBounds.y + expansion,
-      preliminaryBounds.height + expansion * 2,
+      preliminaryBounds.height + expansion * 2
     ),
   };
 
   if (DEBUG_GRID_DETECTION) {
     console.log("Detection SUCCESS!");
     console.log(
-      `Final bounds: (${finalBounds.x}, ${finalBounds.y}) ${finalBounds.width}x${finalBounds.height}`,
+      `Final bounds: (${finalBounds.x}, ${finalBounds.y}) ${finalBounds.width}x${finalBounds.height}`
     );
   }
 

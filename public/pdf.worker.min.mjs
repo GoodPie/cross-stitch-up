@@ -363,7 +363,7 @@ function string32(e) {
     (e >> 24) & 255,
     (e >> 16) & 255,
     (e >> 8) & 255,
-    255 & e,
+    255 & e
   );
 }
 function objectSize(e) {
@@ -378,7 +378,7 @@ class FeatureTest {
         const e = new Uint8Array(4);
         e[0] = 1;
         return 1 === new Uint32Array(e.buffer, 0, 1)[0];
-      })(),
+      })()
     );
   }
   static get isEvalSupported() {
@@ -392,35 +392,35 @@ class FeatureTest {
         } catch {
           return !1;
         }
-      })(),
+      })()
     );
   }
   static get isOffscreenCanvasSupported() {
     return shadow(
       this,
       "isOffscreenCanvasSupported",
-      "undefined" != typeof OffscreenCanvas,
+      "undefined" != typeof OffscreenCanvas
     );
   }
   static get isImageDecoderSupported() {
     return shadow(
       this,
       "isImageDecoderSupported",
-      "undefined" != typeof ImageDecoder,
+      "undefined" != typeof ImageDecoder
     );
   }
   static get isFloat16ArraySupported() {
     return shadow(
       this,
       "isFloat16ArraySupported",
-      "undefined" != typeof Float16Array,
+      "undefined" != typeof Float16Array
     );
   }
   static get isSanitizerSupported() {
     return shadow(
       this,
       "isSanitizerSupported",
-      "undefined" != typeof Sanitizer,
+      "undefined" != typeof Sanitizer
     );
   }
   static get platform() {
@@ -437,12 +437,12 @@ class FeatureTest {
     return shadow(
       this,
       "isCSSRoundSupported",
-      globalThis.CSS?.supports?.("width: round(1.5px, 1px)"),
+      globalThis.CSS?.supports?.("width: round(1.5px, 1px)")
     );
   }
 }
 const ta = Array.from(Array(256).keys(), (e) =>
-  e.toString(16).padStart(2, "0"),
+  e.toString(16).padStart(2, "0")
 );
 class Util {
   static makeHexColor(e, t, a) {
@@ -677,7 +677,7 @@ class Util {
       3 * (3 * (a - i) - e + s),
       6 * (e - 2 * a + i),
       3 * (a - e),
-      c,
+      c
     );
     this.#t(
       e,
@@ -691,7 +691,7 @@ class Util {
       3 * (3 * (r - n) - t + o),
       6 * (t - 2 * r + n),
       3 * (r - t),
-      c,
+      c
     );
   }
 }
@@ -1237,7 +1237,7 @@ const ma = [
 function toRomanNumerals(e, t = !1) {
   assert(
     Number.isInteger(e) && e > 0,
-    "The number should be a positive integer.",
+    "The number should be a positive integer."
   );
   const a =
     "M".repeat((e / 1e3) | 0) +
@@ -1318,7 +1318,7 @@ function escapePDFName(e) {
 }
 function escapeString(e) {
   return e.replaceAll(/([()\\\n\r])/g, (e) =>
-    "\n" === e ? "\\n" : "\r" === e ? "\\r" : `\\${e}`,
+    "\n" === e ? "\\n" : "\r" === e ? "\\r" : `\\${e}`
   );
 }
 function _collectJS(e, t, a, r) {
@@ -1445,7 +1445,7 @@ function recoverJsURL(e) {
         .join("|")
         .replaceAll(".", "\\.") +
       ")\\((?:'|\")([^'\"]*)(?:'|\")(?:,\\s*(\\w+)\\)|\\))",
-    "i",
+    "i"
   ).exec(e);
   return t?.[2]
     ? { url: t[2], newWindow: "app.launchURL" === t[1] && "true" === t[3] }
@@ -1632,7 +1632,7 @@ function __wbg_get_imports() {
       (function getStringFromWasm0(e, t) {
         e >>>= 0;
         return wa.decode(getUint8ArrayMemory0().subarray(e, e + t));
-      })(e, t),
+      })(e, t)
     );
   };
   return e;
@@ -1650,7 +1650,7 @@ async function __wbg_init(e) {
     (Object.getPrototypeOf(e) === Object.prototype
       ? ({ module_or_path: e } = e)
       : console.warn(
-          "using deprecated parameters for the initialization function; pass a single object instead",
+          "using deprecated parameters for the initialization function; pass a single object instead"
         ));
   const t = __wbg_get_imports();
   ("string" == typeof e ||
@@ -1666,7 +1666,7 @@ async function __wbg_init(e) {
           if ("application/wasm" == e.headers.get("Content-Type")) throw t;
           console.warn(
             "`WebAssembly.instantiateStreaming` failed because your server does not serve Wasm with `application/wasm` MIME type. Falling back to `WebAssembly.instantiate` which is slower. Original error:\n",
-            t,
+            t
           );
         }
       const a = await e.arrayBuffer();
@@ -1833,7 +1833,7 @@ class AlternateCS extends ColorSpace {
   getOutputLength(e, t) {
     return this.base.getOutputLength(
       (e * this.base.numComps) / this.numComps,
-      t,
+      t
     );
   }
 }
@@ -2085,14 +2085,14 @@ class CalGrayCS extends ColorSpace {
     super("CalGray", 1);
     if (!e)
       throw new FormatError(
-        "WhitePoint missing - required for color space CalGray",
+        "WhitePoint missing - required for color space CalGray"
       );
     [this.XW, this.YW, this.ZW] = e;
     [this.XB, this.YB, this.ZB] = t || [0, 0, 0];
     this.G = a || 1;
     if (this.XW < 0 || this.ZW < 0 || 1 !== this.YW)
       throw new FormatError(
-        `Invalid WhitePoint components for ${this.name}, no fallback available`,
+        `Invalid WhitePoint components for ${this.name}, no fallback available`
       );
     if (this.XB < 0 || this.YB < 0 || this.ZB < 0) {
       info(`Invalid BlackPoint for ${this.name}, falling back to default.`);
@@ -2100,11 +2100,11 @@ class CalGrayCS extends ColorSpace {
     }
     (0 === this.XB && 0 === this.YB && 0 === this.ZB) ||
       warn(
-        `${this.name}, BlackPoint: XB: ${this.XB}, YB: ${this.YB}, ZB: ${this.ZB}, only default values are supported.`,
+        `${this.name}, BlackPoint: XB: ${this.XB}, YB: ${this.YB}, ZB: ${this.ZB}, only default values are supported.`
       );
     if (this.G < 1) {
       info(
-        `Invalid Gamma: ${this.G} for ${this.name}, falling back to default.`,
+        `Invalid Gamma: ${this.G} for ${this.name}, falling back to default.`
       );
       this.G = 1;
     }
@@ -2153,7 +2153,7 @@ class CalRGBCS extends ColorSpace {
     super("CalRGB", 3);
     if (!e)
       throw new FormatError(
-        "WhitePoint missing - required for color space CalRGB",
+        "WhitePoint missing - required for color space CalRGB"
       );
     const [i, n, s] = (this.whitePoint = e),
       [o, c, l] = (this.blackPoint = t || new Float32Array(3));
@@ -2171,17 +2171,17 @@ class CalRGBCS extends ColorSpace {
     ] = r || new Float32Array([1, 0, 0, 0, 1, 0, 0, 0, 1]);
     if (i < 0 || s < 0 || 1 !== n)
       throw new FormatError(
-        `Invalid WhitePoint components for ${this.name}, no fallback available`,
+        `Invalid WhitePoint components for ${this.name}, no fallback available`
       );
     if (o < 0 || c < 0 || l < 0) {
       info(
-        `Invalid BlackPoint for ${this.name} [${o}, ${c}, ${l}], falling back to default.`,
+        `Invalid BlackPoint for ${this.name} [${o}, ${c}, ${l}], falling back to default.`
       );
       this.blackPoint = new Float32Array(3);
     }
     if (this.GR < 0 || this.GG < 0 || this.GB < 0) {
       info(
-        `Invalid Gamma [${this.GR}, ${this.GG}, ${this.GB}] for ${this.name}, falling back to default.`,
+        `Invalid Gamma [${this.GR}, ${this.GG}, ${this.GB}] for ${this.name}, falling back to default.`
       );
       this.GR = this.GG = this.GB = 1;
     }
@@ -2299,14 +2299,14 @@ class LabCS extends ColorSpace {
     super("Lab", 3);
     if (!e)
       throw new FormatError(
-        "WhitePoint missing - required for color space Lab",
+        "WhitePoint missing - required for color space Lab"
       );
     [this.XW, this.YW, this.ZW] = e;
     [this.amin, this.amax, this.bmin, this.bmax] = a || [-100, 100, -100, 100];
     [this.XB, this.YB, this.ZB] = t || [0, 0, 0];
     if (this.XW < 0 || this.ZW < 0 || 1 !== this.YW)
       throw new FormatError(
-        "Invalid WhitePoint components, no fallback available",
+        "Invalid WhitePoint components, no fallback available"
       );
     if (this.XB < 0 || this.YB < 0 || this.ZB < 0) {
       info("Invalid BlackPoint, falling back to default");
@@ -2421,7 +2421,7 @@ class IccColorSpace extends ColorSpace {
             255 * e[t + 1],
             255 * e[t + 2],
             255 * e[t + 3],
-            a,
+            a
           );
         break;
       default:
@@ -2489,7 +2489,7 @@ class IccColorSpace extends ColorSpace {
               (Object.getPrototypeOf(e) === Object.prototype
                 ? ({ module: e } = e)
                 : console.warn(
-                    "using deprecated parameters for `initSync()`; pass a single object instead",
+                    "using deprecated parameters for `initSync()`; pass a single object instead"
                   ));
             const t = __wbg_get_imports();
             e instanceof WebAssembly.Module || (e = new WebAssembly.Module(e));
@@ -2511,10 +2511,10 @@ class CmykICCBasedCS extends IccColorSpace {
   constructor() {
     super(
       new Uint8Array(
-        fetchSync(`${CmykICCBasedCS.#T}CGATS001Compat-v2-micro.icc`),
+        fetchSync(`${CmykICCBasedCS.#T}CGATS001Compat-v2-micro.icc`)
       ),
       "DeviceCMYK",
-      4,
+      4
     );
   }
   static setOptions({ iccUrl: e }) {
@@ -2526,7 +2526,7 @@ class CmykICCBasedCS extends IccColorSpace {
       (this.#T
         ? (e = !0)
         : warn(
-            "No CMYK ICC profile support due to missing `iccUrl` API option",
+            "No CMYK ICC profile support due to missing `iccUrl` API option"
           ));
     return shadow(this, "isUsable", e);
   }
@@ -2578,7 +2578,7 @@ class Stream extends BaseStream {
       this.bytes.buffer,
       this.start,
       this.end - this.start,
-      this.dict.clone(),
+      this.dict.clone()
     );
   }
 }
@@ -2649,7 +2649,7 @@ class ChunkedStream extends Stream {
     if (a > this.numChunks) return;
     const r = Math.min(
       Math.floor((t - 1) / this.chunkSize) + 1,
-      this.numChunks,
+      this.numChunks
     );
     for (let i = a; i < r; ++i)
       if (!this._loadedChunks.has(i)) throw new MissingDataException(e, t);
@@ -3000,7 +3000,7 @@ class ImageResizer {
     return shadow(
       this,
       "canUseImageDecoder",
-      this.#D ? ImageDecoder.isTypeSupported("image/bmp") : Promise.resolve(!1),
+      this.#D ? ImageDecoder.isTypeSupported("image/bmp") : Promise.resolve(!1)
     );
   }
   static needsToBeResized(e, t) {
@@ -3034,7 +3034,7 @@ class ImageResizer {
     return shadow(
       this,
       "MAX_AREA",
-      this._guessMax(this.#O, this.MAX_DIM, 128, 0) ** 2,
+      this._guessMax(this.#O, this.MAX_DIM, 128, 0) ** 2
     );
   }
   static set MAX_AREA(e) {
@@ -3094,7 +3094,7 @@ class ImageResizer {
         .catch((e) => {
           warn(`BMP image decoding failed: ${e}`);
           return createImageBitmap(
-            new Blob([this._encodeBMP().buffer], { type: "image/bmp" }),
+            new Blob([this._encodeBMP().buffer], { type: "image/bmp" })
           );
         })
         .finally(() => {
@@ -3186,7 +3186,7 @@ class ImageResizer {
     b.getContext("2d", { willReadFrequently: !0 }).putImageData(
       new ImageData(new Uint8ClampedArray(d.buffer), o, c),
       0,
-      0,
+      0
     );
     e.data = null;
     e.bitmap = b.transferToImageBitmap();
@@ -3207,7 +3207,7 @@ class ImageResizer {
         n = new Uint8Array(
           this._isMask
             ? [255, 255, 255, 255, 0, 0, 0, 0]
-            : [0, 0, 0, 0, 255, 255, 255, 255],
+            : [0, 0, 0, 0, 255, 255, 255, 255]
         );
         const a = (e + 7) >> 3,
           s = (a + 3) & -4;
@@ -3385,7 +3385,7 @@ class DecodeStream extends BaseStream {
       this.buffer,
       this.start,
       this.end - this.start,
-      this.dict.clone(),
+      this.dict.clone()
     );
   }
 }
@@ -3709,7 +3709,7 @@ function decodeScan(e, t, a, r, i, n, s, o, c, l = !1) {
           if (r > 0 && r !== a.scanLines)
             throw new DNLMarkerError(
               "Found DNL marker (0xFFDC) while parsing scan data",
-              r,
+              r
             );
         } else if (217 === r) {
           if (l) {
@@ -3717,11 +3717,11 @@ function decodeScan(e, t, a, r, i, n, s, o, c, l = !1) {
             if (e > 0 && Math.round(a.scanLines / e) >= 5)
               throw new DNLMarkerError(
                 "Found EOI marker (0xFFD9) while parsing scan data, possibly caused by incorrect `scanLines` parameter",
-                e,
+                e
               );
           }
           throw new EOIMarkerError(
-            "Found EOI marker (0xFFD9) while parsing scan data",
+            "Found EOI marker (0xFFD9) while parsing scan data"
           );
         }
         throw new JpegError(`unexpected marker ${((f << 8) | r).toString(16)}`);
@@ -3916,7 +3916,7 @@ function decodeScan(e, t, a, r, i, n, s, o, c, l = !1) {
     if (!T) break;
     if (T.invalid) {
       warn(
-        `decodeScan - ${a > 0 ? "unexpected" : "excessive"} MCU data, current marker is: ${T.invalid}`,
+        `decodeScan - ${a > 0 ? "unexpected" : "excessive"} MCU data, current marker is: ${T.invalid}`
       );
       t = T.offset;
     }
@@ -4365,19 +4365,19 @@ class JpegImage {
           if (N?.invalid) {
             warn(
               "JpegImage.parse - unexpected data, current marker is: " +
-                N.invalid,
+                N.invalid
             );
             i = N.offset;
             break;
           }
           if (!N || i >= e.length - 1) {
             warn(
-              "JpegImage.parse - reached the end of the image data without finding an EOI marker (0xFFD9).",
+              "JpegImage.parse - reached the end of the image data without finding an EOI marker (0xFFD9)."
             );
             break e;
           }
           throw new JpegError(
-            "JpegImage.parse - unknown marker: " + u.toString(16),
+            "JpegImage.parse - unknown marker: " + u.toString(16)
           );
       }
       u = readUint16(e, i);
@@ -4586,9 +4586,7 @@ class JpegStream extends DecodeStream {
     return shadow(
       this,
       "canUseImageDecoder",
-      this.#D
-        ? ImageDecoder.isTypeSupported("image/jpeg")
-        : Promise.resolve(!1),
+      this.#D ? ImageDecoder.isTypeSupported("image/jpeg") : Promise.resolve(!1)
     );
   }
   static setOptions({ isImageDecoderSupported: e = !1 }) {
@@ -5179,7 +5177,7 @@ class JpxImage {
       isIndexedColormap: a = !1,
       smaskInData: r = !1,
       reducePower: i = 0,
-    } = {},
+    } = {}
   ) {
     if (!this.#L) {
       const { promise: e, resolve: t } = Promise.withResolvers(),
@@ -5326,7 +5324,7 @@ addState(
       e.getContext("2d").putImageData(
         new ImageData(new Uint8ClampedArray(m.buffer), g, p),
         0,
-        0,
+        0
       );
       y.bitmap = e.transferToImageBitmap();
       y.data = null;
@@ -5337,7 +5335,7 @@ addState(
     a.splice(n, 4 * c, _t);
     r.splice(n, 4 * c, [y, h]);
     return n + 1;
-  },
+  }
 );
 addState(
   Pa,
@@ -5423,7 +5421,7 @@ addState(
       r.splice(n, 4 * c, [e]);
     }
     return n + 1;
-  },
+  }
 );
 addState(
   Pa,
@@ -5477,7 +5475,7 @@ addState(
     a.splice(n, 4 * h, Ut);
     r.splice(n, 4 * h, f);
     return n + 1;
-  },
+  }
 );
 addState(
   Pa,
@@ -5538,7 +5536,7 @@ addState(
       g += 2;
     }
     return g + 1;
-  },
+  }
 );
 addState(
   Pa,
@@ -5577,7 +5575,7 @@ addState(
     a.splice(n, 4, qt);
     r.splice(n, 4, o);
     return n + 1;
-  },
+  }
 );
 class NullOptimizer {
   constructor(e) {
@@ -5766,7 +5764,7 @@ class OperatorList {
         length: a,
       },
       1,
-      this._transfers,
+      this._transfers
     );
     this.dependencies.clear();
     this.fnArray.length = 0;
@@ -7406,7 +7404,7 @@ class CCITTFaxDecoder {
       do {
         if ("number" != typeof this.outputBits)
           throw new FormatError(
-            'Invalid /CCITTFaxDecode data, "outputBits" must be a number.',
+            'Invalid /CCITTFaxDecode data, "outputBits" must be a number.'
           );
         if (this.outputBits > n) {
           o <<= n;
@@ -7684,7 +7682,7 @@ class FlateStream extends DecodeStream {
       throw new FormatError(`Invalid header in flate stream: ${a}, ${r}`);
     if (8 != (15 & a))
       throw new FormatError(
-        `Unknown compression method in flate stream: ${a}, ${r}`,
+        `Unknown compression method in flate stream: ${a}, ${r}`
       );
     if (((a << 8) + r) % 31 != 0)
       throw new FormatError(`Bad FCHECK in flate stream: ${a}, ${r}`);
@@ -8072,7 +8070,7 @@ class DecodingContext {
     return shadow(
       this,
       "decoder",
-      new ArithmeticDecoder(this.data, this.start, this.end),
+      new ArithmeticDecoder(this.data, this.start, this.end)
     );
   }
   get contextCache() {
@@ -8484,7 +8482,7 @@ function decodeTextRegion(
   p,
   m,
   b,
-  y,
+  y
 ) {
   if (e && t) throw new Jbig2Error("refinement with Huffman is not supported");
   const w = [];
@@ -8526,7 +8524,7 @@ function decodeTextRegion(
           (t >> 1) + decodeInteger(C, "IARDY", k),
           !1,
           p,
-          m,
+          m
         );
       }
       let R = 0;
@@ -8857,7 +8855,7 @@ function processSegment(e, t) {
       break;
     default:
       throw new Jbig2Error(
-        `segment type ${a.typeName}(${a.type}) is not implemented`,
+        `segment type ${a.typeName}(${a.type}) is not implemented`
       );
   }
   const h = "on" + a.typeName;
@@ -8935,7 +8933,7 @@ class SimpleSegmentVisitor {
         e.prediction,
         null,
         e.at,
-        n,
+        n
       );
     this.drawBitmap(i, s);
   }
@@ -9011,7 +9009,7 @@ class SimpleSegmentVisitor {
       c,
       l,
       h,
-      u,
+      u
     ) {
       if (e && t)
         throw new Jbig2Error("symbol refinement with Huffman is not supported");
@@ -9061,7 +9059,7 @@ class SimpleSegmentVisitor {
                 l,
                 h,
                 0,
-                u,
+                u
               );
             else {
               const e = decodeIAID(m, p, g),
@@ -9076,7 +9074,7 @@ class SimpleSegmentVisitor {
                 i,
                 !1,
                 l,
-                h,
+                h
               );
             }
             d.push(w);
@@ -9145,7 +9143,7 @@ class SimpleSegmentVisitor {
       e.refinementTemplate,
       e.refinementAt,
       h,
-      o,
+      o
     );
   }
   onImmediateTextRegion(e, t, a, r, i) {
@@ -9273,7 +9271,7 @@ class SimpleSegmentVisitor {
         e.refinementAt,
         u,
         e.logStripSize,
-        o,
+        o
       );
     this.drawBitmap(n, d);
   }
@@ -9306,7 +9304,7 @@ class SimpleSegmentVisitor {
       e.patternHeight,
       e.maxPatternIndex,
       e.template,
-      s,
+      s
     );
   }
   onImmediateHalftoneRegion(e, t, a, r, i) {
@@ -9328,12 +9326,12 @@ class SimpleSegmentVisitor {
         u,
         d,
         f,
-        g,
+        g
       ) {
         if (s) throw new Jbig2Error("skip is not supported");
         if (0 !== o)
           throw new Jbig2Error(
-            `operator "${o}" is not supported in halftone region`,
+            `operator "${o}" is not supported in halftone region`
           );
         const p = [];
         let m, b, y;
@@ -9410,7 +9408,7 @@ class SimpleSegmentVisitor {
         e.gridOffsetY,
         e.gridVectorX,
         e.gridVectorY,
-        o,
+        o
       );
     this.drawBitmap(s, c);
   }
@@ -10381,7 +10379,7 @@ class Parser {
         if (2 !== n) continue;
         if (!t) {
           warn(
-            "findDefaultInlineStreamEnd - `lexer.knownCommands` is undefined.",
+            "findDefaultInlineStreamEnd - `lexer.knownCommands` is undefined."
           );
           continue;
         }
@@ -10410,7 +10408,7 @@ class Parser {
       } else n = 0;
     if (-1 === r) {
       warn(
-        "findDefaultInlineStreamEnd: Reached the end of the stream without finding a valid EI marker",
+        "findDefaultInlineStreamEnd: Reached the end of the stream without finding a valid EI marker"
       );
       if (i) {
         warn('... trying to recover by using the last "EI" occurrence.');
@@ -10486,7 +10484,7 @@ class Parser {
     const n = e.pos - t;
     if (-1 === a) {
       warn(
-        "Inline DCTDecode image stream: EOI marker not found, searching for /EI/ instead.",
+        "Inline DCTDecode image stream: EOI marker not found, searching for /EI/ instead."
       );
       e.skip(-n);
       return this.findDefaultInlineStreamEnd(e);
@@ -10517,7 +10515,7 @@ class Parser {
     const r = e.pos - t;
     if (-1 === a) {
       warn(
-        "Inline ASCII85Decode image stream: EOD marker not found, searching for /EI/ instead.",
+        "Inline ASCII85Decode image stream: EOD marker not found, searching for /EI/ instead."
       );
       e.skip(-r);
       return this.findDefaultInlineStreamEnd(e);
@@ -10532,7 +10530,7 @@ class Parser {
     const r = e.pos - t;
     if (-1 === a) {
       warn(
-        "Inline ASCIIHexDecode image stream: EOD marker not found, searching for /EI/ instead.",
+        "Inline ASCIIHexDecode image stream: EOD marker not found, searching for /EI/ instead."
       );
       e.skip(-r);
       return this.findDefaultInlineStreamEnd(e);
@@ -10653,7 +10651,7 @@ class Parser {
             if (i >= t) {
               if (isWhiteSpace(s[c + o + i])) {
                 info(
-                  `Found "${bytesToString([...a, ...e])}" when searching for endstream command.`,
+                  `Found "${bytesToString([...a, ...e])}" when searching for endstream command.`
                 );
                 r = !0;
               }
@@ -10958,7 +10956,7 @@ class Lexer {
         e = this.nextChar();
         if (rr[e]) {
           warn(
-            "Lexer_getName: NUMBER SIGN (#) should be followed by a hexadecimal number.",
+            "Lexer_getName: NUMBER SIGN (#) should be followed by a hexadecimal number."
           );
           a.push("#");
           break;
@@ -10970,7 +10968,7 @@ class Lexer {
           const i = toHexDigit(e);
           if (-1 === i) {
             warn(
-              `Lexer_getName: Illegal digit (${String.fromCharCode(e)}) in hexadecimal number.`,
+              `Lexer_getName: Illegal digit (${String.fromCharCode(e)}) in hexadecimal number.`
             );
             a.push("#", String.fromCharCode(t));
             if (rr[e]) break;
@@ -11125,7 +11123,7 @@ class Linearization {
       const r = e.get(t);
       if (Number.isInteger(r) && (a ? r >= 0 : r > 0)) return r;
       throw new Error(
-        `The "${t}" parameter in the linearization dictionary is invalid.`,
+        `The "${t}" parameter in the linearization dictionary is invalid.`
       );
     }
     const t = new Parser({ lexer: new Lexer(e), xref: null }),
@@ -11147,7 +11145,7 @@ class Linearization {
       return null;
     if ((o = getInt(n, "L")) !== e.length)
       throw new Error(
-        'The "L" parameter in the linearization dictionary does not equal the stream length.',
+        'The "L" parameter in the linearization dictionary does not equal the stream length.'
       );
     return {
       length: o,
@@ -11159,13 +11157,13 @@ class Linearization {
             const a = t[e];
             if (!(Number.isInteger(a) && a > 0))
               throw new Error(
-                `Hint (${e}) in the linearization dictionary is invalid.`,
+                `Hint (${e}) in the linearization dictionary is invalid.`
               );
           }
           return t;
         }
         throw new Error(
-          "Hint array in the linearization dictionary is invalid.",
+          "Hint array in the linearization dictionary is invalid."
         );
       })(n),
       objectNumberFirst: getInt(n, "O"),
@@ -19880,7 +19878,7 @@ class CFFParser {
               "; actual: " +
               i +
               ", expected: " +
-              l.min,
+              l.min
           );
           if (0 === i) {
             t[o - 1] = 14;
@@ -20117,7 +20115,7 @@ class CFFParser {
           let t = (a[e++] << 8) | a[e++];
           if (0 === n && 0 !== t) {
             warn(
-              "parseFDSelect: The first range must have a first GID of 0 -- trying to recover.",
+              "parseFDSelect: The first range must have a first GID of 0 -- trying to recover."
             );
             t = 0;
           }
@@ -20473,7 +20471,7 @@ class CFFCompiler {
       e.charset,
       e.charStrings.count,
       e.strings,
-      e.isCIDFont,
+      e.isCIDFont
     );
     s.setEntryLocation("charset", [t.length], t);
     t.add(l);
@@ -20501,7 +20499,7 @@ class CFFCompiler {
     return shadow(
       this,
       "EncodeFloatRegExp",
-      /\.(\d*?)(?:9{5,20}|0{5,20})\d{0,2}(?:e(.+)|$)/,
+      /\.(\d*?)(?:9{5,20}|0{5,20})\d{0,2}(?:e(.+)|$)/
     );
   }
   encodeFloat(e) {
@@ -20756,7 +20754,7 @@ class CFFCompiler {
                 (c >>> 24) & 255,
                 (c >> 16) & 255,
                 (c >> 8) & 255,
-                255 & c,
+                255 & c
               );
       a[n] && (c += a[n].length);
     }
@@ -22000,7 +21998,7 @@ function compileGlyf(e, t, a) {
             i[a].x,
             i[a].y,
             (i[a].x + i[a + 1].x) / 2,
-            (i[a].y + i[a + 1].y) / 2,
+            (i[a].y + i[a + 1].y) / 2
           );
       u = e + 1;
     }
@@ -22185,7 +22183,7 @@ function compileCharString(e, t, a, r) {
             t.translate(n, s);
             let o = lookupCmap(
               a.cmap,
-              String.fromCharCode(a.glyphNameMap[lr[e]]),
+              String.fromCharCode(a.glyphNameMap[lr[e]])
             );
             compileCharString(a.glyphs[o.glyphId], t, a, o.glyphId);
             t.restore();
@@ -22317,7 +22315,7 @@ function compileCharString(e, t, a, r) {
           else {
             i.push(
               ((e[c] << 24) | (e[c + 1] << 16) | (e[c + 2] << 8) | e[c + 3]) /
-                65536,
+                65536
             );
             c += 4;
           }
@@ -22482,7 +22480,7 @@ class FontRendererFactory {
           return n;
         })(i, n, o),
         r,
-        t,
+        t
       );
     }
     return new Type2Compiled(s, r, e.fontMatrix);
@@ -25787,7 +25785,7 @@ class SimpleGlyph {
     if (this.instructions.length) {
       new Uint8Array(t.buffer, 0, t.buffer.byteLength).set(
         this.instructions,
-        e,
+        e
       );
       e += this.instructions.length;
     }
@@ -25873,7 +25871,7 @@ class CompositeGlyph {
         t.getUint16(e),
         t.getUint16(e + 2),
         t.getUint16(e + 4),
-        t.getUint16(e + 6),
+        t.getUint16(e + 6)
       );
       e += 8;
     }
@@ -25949,7 +25947,7 @@ class CompositeGlyph {
       if (this.instructions.length) {
         new Uint8Array(t.buffer, 0, t.buffer.byteLength).set(
           this.instructions,
-          e,
+          e
         );
         e += this.instructions.length;
       }
@@ -26207,7 +26205,7 @@ class Type1CharString {
                 e[11],
                 e[12],
                 e[13],
-                e[14],
+                e[14]
               );
               o = this.executeCommand(13, Zr, !0);
               this.flexing = !1;
@@ -26251,7 +26249,7 @@ class Type1CharString {
           (t >> 24) & 255,
           (t >> 16) & 255,
           (t >> 8) & 255,
-          255 & t,
+          255 & t
         );
       }
     }
@@ -26324,7 +26322,7 @@ class Type1Parser {
                 }
               }
               return n.slice(a, o);
-            })(t, 55665, 4),
+            })(t, 55665, 4)
       );
     }
     this.seacAnalysisEnabled = !!a;
@@ -26583,7 +26581,7 @@ class Type1Font {
       e.pos = r;
       if (o) return { stream: new Stream(e.getBytes(o)), length: o };
       warn(
-        'Unable to recover "Length1" property in Type1 font -- using as is.',
+        'Unable to recover "Length1" property in Type1 font -- using as is.'
       );
       return { stream: new Stream(e.getBytes(t)), length: t };
     })(t, r);
@@ -26827,7 +26825,7 @@ class fonts_Glyph {
         yr.set(e, r);
         return r;
       })(this.unicode),
-      !0,
+      !0
     );
   }
 }
@@ -27120,7 +27118,7 @@ function createOS2Table(e, t, a) {
       else {
         if (!(l < 123))
           throw new FormatError(
-            "Unicode ranges Bits > 123 are reserved for internal usage",
+            "Unicode ranges Bits > 123 are reserved for internal usage"
           );
         s |= 1 << (l - 96);
       }
@@ -27300,7 +27298,7 @@ class Font {
     [n, s] = getFontFileType(t, a);
     (n === this.type && s === this.subtype) ||
       info(
-        `Inconsistent font file Type/SubType, expected: ${this.type}/${this.subtype} but found: ${n}/${s}.`,
+        `Inconsistent font file Type/SubType, expected: ${this.type}/${this.subtype} but found: ${n}/${s}.`
       );
     let c;
     try {
@@ -27430,7 +27428,7 @@ class Font {
         if (!this.composite) {
           const a = getUnicodeForGlyph(
             this.differences[t] || this.defaultEncoding[t],
-            e,
+            e
           );
           -1 !== a && (r = a);
         }
@@ -27816,7 +27814,7 @@ class Font {
                   return s;
               }
               throw new FormatError(
-                `Invalid TrueType Collection majorVersion: ${a}.`,
+                `Invalid TrueType Collection majorVersion: ${a}.`
               );
             })(e),
           i = t.split("+");
@@ -27827,7 +27825,7 @@ class Font {
             o = readTables(e, a.numTables);
           if (!o.name)
             throw new FormatError(
-              'TrueType Collection font must contain a "name" table.',
+              'TrueType Collection font must contain a "name" table.'
             );
           const [c] = readNameTable(o.name);
           for (let e = 0, r = c.length; e < r; e++)
@@ -27843,12 +27841,12 @@ class Font {
         }
         if (n) {
           warn(
-            `TrueType Collection does not contain "${t}" font, falling back to "${n.name}" font instead.`,
+            `TrueType Collection does not contain "${t}" font, falling back to "${n.name}" font instead.`
           );
           return { header: n.header, tables: n.tables };
         }
         throw new FormatError(
-          `TrueType Collection does not contain "${t}" font.`,
+          `TrueType Collection does not contain "${t}" font.`
         );
       })(t, this.name);
       n = e.header;
@@ -27931,7 +27929,7 @@ class Font {
         writeSignedInt16(
           c,
           a + 2,
-          Math.round(e[t] * signedInt16(c[a + 2], c[a + 3])),
+          Math.round(e[t] * signedInt16(c[a + 2], c[a + 3]))
         );
       }
     }
@@ -28027,7 +28025,7 @@ class Font {
       }
       if (o > i) {
         info(
-          `The numOfMetrics (${o}) should not be greater than the numGlyphs (${i}).`,
+          `The numOfMetrics (${o}) should not be greater than the numGlyphs (${i}).`
         );
         o = i;
         t.data[34] = (65280 & o) >> 8;
@@ -28660,7 +28658,7 @@ class Font {
         "ÿ" +
         safeString16(r.ascent) +
         string16(r.italicAngle ? 2 : 0) +
-        "\0\0\0\0\0\0\0",
+        "\0\0\0\0\0\0\0"
     );
     d.addTable(
       "hhea",
@@ -28671,7 +28669,7 @@ class Font {
         safeString16(r.capHeight) +
         safeString16(Math.tan(r.italicAngle) * r.xHeight) +
         "\0\0\0\0\0\0\0\0\0\0\0\0" +
-        string16(l),
+        string16(l)
     );
     d.addTable(
       "hmtx",
@@ -28688,7 +28686,7 @@ class Font {
           r += string16(i) + string16(0);
         }
         return r;
-      })(),
+      })()
     );
     d.addTable("maxp", "\0\0P\0" + string16(l));
     d.addTable("name", createNameTable(e));
@@ -29218,7 +29216,7 @@ class FontInfo {
     }
     assert(
       h === FontInfo.#$,
-      "FontInfo.write: Boolean properties offset mismatch",
+      "FontInfo.write: Boolean properties offset mismatch"
     );
     for (const t of FontInfo.numbers) {
       l.setFloat64(h, e[t]);
@@ -29226,7 +29224,7 @@ class FontInfo {
     }
     assert(
       h === FontInfo.#G,
-      "FontInfo.write: Number properties offset mismatch",
+      "FontInfo.write: Number properties offset mismatch"
     );
     if (e.bbox) {
       l.setUint8(h++, 4);
@@ -29240,7 +29238,7 @@ class FontInfo {
     }
     assert(
       h === FontInfo.#V,
-      "FontInfo.write: BBox properties offset mismatch",
+      "FontInfo.write: BBox properties offset mismatch"
     );
     if (e.fontMatrix) {
       l.setUint8(h++, 6);
@@ -29254,7 +29252,7 @@ class FontInfo {
     }
     assert(
       h === FontInfo.#K,
-      "FontInfo.write: FontMatrix properties offset mismatch",
+      "FontInfo.write: FontMatrix properties offset mismatch"
     );
     if (e.defaultVMetrics) {
       l.setUint8(h++, 1);
@@ -29268,7 +29266,7 @@ class FontInfo {
     }
     assert(
       h === FontInfo.#J,
-      "FontInfo.write: DefaultVMetrics properties offset mismatch",
+      "FontInfo.write: DefaultVMetrics properties offset mismatch"
     );
     l.setUint32(FontInfo.#J, 0);
     h += 4;
@@ -29285,7 +29283,7 @@ class FontInfo {
       l.setUint32(h, e);
       assert(
         h + 4 + e <= o.byteLength,
-        "FontInfo.write: Buffer overflow at systemFontInfo",
+        "FontInfo.write: Buffer overflow at systemFontInfo"
       );
       c.set(new Uint8Array(t), h + 4);
       h += 4 + e;
@@ -29298,7 +29296,7 @@ class FontInfo {
       l.setUint32(h, e);
       assert(
         h + 4 + e <= o.byteLength,
-        "FontInfo.write: Buffer overflow at cssFontInfo",
+        "FontInfo.write: Buffer overflow at cssFontInfo"
       );
       c.set(new Uint8Array(a), h + 4);
       h += 4 + e;
@@ -29375,7 +29373,7 @@ class PatternInfo {
       void 0 !== e.verticesPerRow && (f += 4);
     }
     const g = new ArrayBuffer(
-        20 + 8 * l + 3 * h + 8 * u + (a ? 16 : 0) + (c ? 3 : 0) + f,
+        20 + 8 * l + 3 * h + 8 * u + (a ? 16 : 0) + (c ? 3 : 0) + f
       ),
       p = new DataView(g),
       m = new Uint8Array(g);
@@ -29777,7 +29775,7 @@ function getB(e) {
       const r = a / e,
         i = 1 - r;
       t.push(
-        new Float32Array([i ** 3, 3 * r * i ** 2, 3 * r ** 2 * i, r ** 3]),
+        new Float32Array([i ** 3, 3 * r * i ** 2, 3 * r ** 2 * i, r ** 3])
       );
     }
     return t;
@@ -30202,21 +30200,21 @@ class MeshShading extends BaseShading {
       l = Math.max(a[i[0]][1], a[i[3]][1], a[i[12]][1], a[i[15]][1]);
     let h = Math.ceil(
       ((c - s) * MeshShading.TRIANGLE_DENSITY) /
-        (this.bounds[2] - this.bounds[0]),
+        (this.bounds[2] - this.bounds[0])
     );
     h = MathClamp(
       h,
       MeshShading.MIN_SPLIT_PATCH_CHUNKS_AMOUNT,
-      MeshShading.MAX_SPLIT_PATCH_CHUNKS_AMOUNT,
+      MeshShading.MAX_SPLIT_PATCH_CHUNKS_AMOUNT
     );
     let u = Math.ceil(
       ((l - o) * MeshShading.TRIANGLE_DENSITY) /
-        (this.bounds[3] - this.bounds[1]),
+        (this.bounds[3] - this.bounds[1])
     );
     u = MathClamp(
       u,
       MeshShading.MIN_SPLIT_PATCH_CHUNKS_AMOUNT,
-      MeshShading.MAX_SPLIT_PATCH_CHUNKS_AMOUNT,
+      MeshShading.MAX_SPLIT_PATCH_CHUNKS_AMOUNT
     );
     const d = h + 1,
       f = new Int32Array((u + 1) * d),
@@ -32093,7 +32091,7 @@ class PostScriptParser {
   expect(e) {
     if (this.accept(e)) return !0;
     throw new FormatError(
-      `Unexpected symbol: found ${this.token.type} expected ${e}.`,
+      `Unexpected symbol: found ${this.token.type} expected ${e}.`
     );
   }
   parse() {
@@ -32275,7 +32273,7 @@ class LocalColorSpaceCache extends BaseLocalCache {
   set(e = null, t = null, a) {
     if ("string" != typeof e && !t)
       throw new Error(
-        'LocalColorSpaceCache.set - expected "name" and/or "ref" argument.',
+        'LocalColorSpaceCache.set - expected "name" and/or "ref" argument.'
       );
     if (t) {
       if (this._imageCache.has(t)) return;
@@ -32392,7 +32390,7 @@ class GlobalImageCache {
   setData(e, t) {
     if (!this._refCache.has(e))
       throw new Error(
-        'GlobalImageCache.setData - expected "shouldCache" to have been called.',
+        'GlobalImageCache.setData - expected "shouldCache" to have been called.'
       );
     this._imageCache.has(e) ||
       (this.#le
@@ -32427,7 +32425,7 @@ class PDFFunctionFactory {
     if (Array.isArray(i)) {
       if (!t)
         throw new Error(
-          'PDFFunctionFactory.create - expected "parseArray" argument.',
+          'PDFFunctionFactory.create - expected "parseArray" argument.'
         );
       r = PDFFunction.parseArray(this, i);
     } else r = PDFFunction.parse(this, i);
@@ -33009,7 +33007,7 @@ class ExpressionBuilderVisitor {
       e.max,
       ", src[srcOffset + ",
       e.index,
-      "]))",
+      "]))"
     );
   }
   visitVariable(e) {
@@ -33064,7 +33062,7 @@ function buildMulOperation(e, t) {
       e.min * t.min,
       e.min * t.max,
       e.max * t.min,
-      e.max * t.max,
+      e.max * t.max
     ),
     r = Math.max(e.min * t.min, e.min * t.max, e.max * t.min, e.max * t.max);
   return new AstBinaryOperation("*", e, t, a, r);
@@ -34129,7 +34127,7 @@ function generateFont(
   o,
   c = !0,
   l = !0,
-  h = "",
+  h = ""
 ) {
   const u = { style: null, ultimate: null };
   if (t) {
@@ -34378,7 +34376,7 @@ class PDFImage {
         const e = ImageResizer.getReducePowerForJPX(
           a.width,
           a.height,
-          a.numComps,
+          a.numComps
         );
         this.jpxDecoderOptions = {
           numComponents: 0,
@@ -34406,7 +34404,7 @@ class PDFImage {
       (a.width !== f || a.height !== g)
     ) {
       warn(
-        "PDFImage - using the Width/Height of the image data, rather than the image dictionary.",
+        "PDFImage - using the Width/Height of the image data, rather than the image dictionary."
       );
       f = a.width;
       g = a.height;
@@ -34417,7 +34415,7 @@ class PDFImage {
         if (!a.fallbackDims)
           throw new FormatError(`Invalid image width: ${f} or height: ${g}`);
         warn(
-          "PDFImage - using the Width/Height of the parent image, for SMask/Mask data.",
+          "PDFImage - using the Width/Height of the parent image, for SMask/Mask data."
         );
         e || (f = a.fallbackDims.width);
         t || (g = a.fallbackDims.height);
@@ -34434,7 +34432,7 @@ class PDFImage {
       if (!p) {
         if (!this.imageMask)
           throw new FormatError(
-            `Bits per component missing in image: ${this.imageMask}`,
+            `Bits per component missing in image: ${this.imageMask}`
           );
         p = 1;
       }
@@ -34459,7 +34457,7 @@ class PDFImage {
             break;
           default:
             throw new Error(
-              `Images with ${a.numComps} color components not supported.`,
+              `Images with ${a.numComps} color components not supported.`
             );
         }
       this.colorSpace = ColorSpaceUtils.parse({
@@ -34626,7 +34624,7 @@ class PDFImage {
     return Math.max(
       this.height,
       this.smask?.height || 0,
-      this.mask?.height || 0,
+      this.mask?.height || 0
     );
   }
   decodeBuffer(e) {
@@ -34826,7 +34824,7 @@ class PDFImage {
                   height: r,
                   interpolate: this.interpolate,
                 },
-                this.needsDecode,
+                this.needsDecode
               )
             : this.createBitmap(e, s, o, c);
         i.kind = e;
@@ -34834,7 +34832,7 @@ class PDFImage {
         if (this.needsDecode) {
           assert(
             e === F,
-            "PDFImage.createImageData: The image must be grayscale.",
+            "PDFImage.createImageData: The image must be grayscale."
           );
           const t = i.data;
           for (let e = 0, a = t.length; e < a; e++) t[e] ^= 255;
@@ -34911,7 +34909,7 @@ class PDFImage {
         g = 0;
       } else {
         new Uint32Array(w.buffer).fill(
-          FeatureTest.isLittleEndian ? 4278190080 : 255,
+          FeatureTest.isLittleEndian ? 4278190080 : 255
         );
         g = 1;
       }
@@ -35000,7 +34998,7 @@ class PDFImage {
       forceRGBA: r = !1,
       forceRGB: i = !1,
       internal: n = !1,
-    },
+    }
   ) {
     this.image.reset();
     this.image.drawWidth = t || this.width;
@@ -35011,7 +35009,7 @@ class PDFImage {
     if (n || this.image instanceof DecodeStream) return s;
     assert(
       s instanceof Uint8Array,
-      'PDFImage.getImageBytes: Unsupported "imageBytes" type.',
+      'PDFImage.getImageBytes: Unsupported "imageBytes" type.'
     );
     return new Uint8Array(s);
   }
@@ -35087,7 +35085,7 @@ function normalizeBlendMode(e, t = !1) {
 }
 function addCachedImageOps(
   e,
-  { objId: t, fn: a, args: r, optionalContent: i, hasMask: n },
+  { objId: t, fn: a, args: r, optionalContent: i, hasMask: n }
 ) {
   t && e.addDependency(t);
   e.addImageOps(a, r, i, n);
@@ -35145,7 +35143,7 @@ class PartialEvaluator {
       new PDFFunctionFactory({
         xref: this.xref,
         isEvalSupported: this.options.isEvalSupported,
-      }),
+      })
     );
   }
   get parsingType3Font() {
@@ -35612,7 +35610,7 @@ class PartialEvaluator {
       r,
       i.state.clone({ newPath: !0 }),
       n,
-      s,
+      s
     );
   }
   handleTransferFunction(e) {
@@ -35691,7 +35689,7 @@ class PartialEvaluator {
   ensureStateFont(e) {
     if (e.font) return;
     const t = new FormatError(
-      "Missing setFont (Tf) operator before text rendering operator.",
+      "Missing setFont (Tf) operator before text rendering operator."
     );
     if (!this.options.ignoreErrors) throw t;
     warn(`ensureStateFont: "${t}".`);
@@ -35738,7 +35736,7 @@ class PartialEvaluator {
             this.handleSetFont(e, null, s[0], a, i, n.state).then(function (e) {
               a.addDependency(e);
               u.push([r, [e, s[1]]]);
-            }),
+            })
           );
           break;
         case "BM":
@@ -35809,7 +35807,7 @@ class PartialEvaluator {
         return errorFont();
       }
       warn(
-        `Font "${e}" is not available -- attempting to fallback to a default font.`,
+        `Font "${e}" is not available -- attempting to fallback to a default font.`
       );
       t = i || PartialEvaluator.fallbackFontDict;
     }
@@ -35868,7 +35866,7 @@ class PartialEvaluator {
             loadedName: t.loadedName,
             font: new ErrorFont(e?.message),
             dict: t,
-          }),
+          })
         );
       });
     return o;
@@ -35976,7 +35974,7 @@ class PartialEvaluator {
         t,
         this._pdfFunctionFactory,
         this.globalColorSpaceCache,
-        a,
+        a
       ).getIR();
     } catch (t) {
       if (t instanceof AbortException) return null;
@@ -36192,7 +36190,7 @@ class PartialEvaluator {
                   if ("Image" !== s.name) {
                     if ("PS" !== s.name)
                       throw new FormatError(
-                        `Unhandled XObject subtype ${s.name}`,
+                        `Unhandled XObject subtype ${s.name}`
                       );
                     info("Ignored XObject subtype PS");
                     e();
@@ -36215,7 +36213,7 @@ class PartialEvaluator {
                     t,
                     y.state.clone({ newPath: !0 }),
                     d,
-                    c,
+                    c
                   ).then(function () {
                     y.restore();
                     e();
@@ -36226,7 +36224,7 @@ class PartialEvaluator {
                   if (!l.options.ignoreErrors) throw e;
                   warn(`getOperatorList - ignoring XObject: "${e}".`);
                 }
-              }),
+              })
             );
             return;
           case ze:
@@ -36235,7 +36233,7 @@ class PartialEvaluator {
               l.handleSetFont(a, e, null, r, t, y.state, n).then(function (e) {
                 r.addDependency(e);
                 r.addOp(ze, [e, s]);
-              }),
+              })
             );
             return;
           case wt:
@@ -36257,7 +36255,7 @@ class PartialEvaluator {
                 cacheKey: o,
                 localImageCache: u,
                 localColorSpaceCache: d,
-              }),
+              })
             );
             return;
           case Ze:
@@ -36313,7 +36311,7 @@ class PartialEvaluator {
             next(
               l._handleColorSpace(t).then((e) => {
                 y.state.fillColorSpace = e || ColorSpaceUtils.gray;
-              }),
+              })
             );
             return;
           }
@@ -36326,7 +36324,7 @@ class PartialEvaluator {
             next(
               l._handleColorSpace(t).then((e) => {
                 y.state.strokeColorSpace = e || ColorSpaceUtils.gray;
-              }),
+              })
             );
             return;
           }
@@ -36468,7 +36466,7 @@ class PartialEvaluator {
                   if (!l.options.ignoreErrors) throw e;
                   warn(`getOperatorList - ignoring ExtGState: "${e}".`);
                 }
-              }),
+              })
             );
             return;
           case he: {
@@ -36550,11 +36548,11 @@ class PartialEvaluator {
                     if (!(e instanceof AbortException)) {
                       if (!l.options.ignoreErrors) throw e;
                       warn(
-                        `getOperatorList - ignoring beginMarkedContentProps: "${e}".`,
+                        `getOperatorList - ignoring beginMarkedContentProps: "${e}".`
                       );
                       r.addOp(Ct, ["OC", null]);
                     }
-                  }),
+                  })
               );
               return;
             }
@@ -36580,7 +36578,7 @@ class PartialEvaluator {
       if (!(e instanceof AbortException)) {
         if (!this.options.ignoreErrors) throw e;
         warn(
-          `getOperatorList - ignoring errors during "${t.name}" task: "${e}".`,
+          `getOperatorList - ignoring errors during "${t.name}" task: "${e}".`
         );
         closePendingRestoreOPS();
       }
@@ -36752,7 +36750,7 @@ class PartialEvaluator {
             ia = new Map([["ﬅ", "ſt"]]);
           }
           return e.replaceAll(ra, (e, t, a) =>
-            t ? t.normalize("NFKC") : ia.get(a),
+            t ? t.normalize("NFKC") : ia.get(a)
           );
         })(t));
       const a = bidi(t, -1, e.vertical);
@@ -37192,7 +37190,7 @@ class PartialEvaluator {
                   if (!S.options.ignoreErrors) throw e;
                   warn(`getTextContent - ignoring XObject: "${e}".`);
                 }
-              }),
+              })
             );
             return;
           case be:
@@ -37224,7 +37222,7 @@ class PartialEvaluator {
                   if (!S.options.ignoreErrors) throw e;
                   warn(`getTextContent - ignoring ExtGState: "${e}".`);
                 }
-              }),
+              })
             );
             return;
           case kt:
@@ -37282,7 +37280,7 @@ class PartialEvaluator {
       if (!(e instanceof AbortException)) {
         if (!this.options.ignoreErrors) throw e;
         warn(
-          `getTextContent - ignoring errors during "${a.name}" task: "${e}".`,
+          `getTextContent - ignoring errors during "${a.name}" task: "${e}".`
         );
         flushTextContentItem();
         enqueueChunk();
@@ -37326,7 +37324,7 @@ class PartialEvaluator {
             else {
               if (!(e instanceof Name))
                 throw new FormatError(
-                  `Invalid entry in 'Differences' array: ${e}`,
+                  `Invalid entry in 'Differences' array: ${e}`
                 );
               n[t++] = e.name;
             }
@@ -37829,7 +37827,7 @@ class PartialEvaluator {
             this.options.standardFontDataUrl,
             e,
             f,
-            n,
+            n
           ));
         const p = await this.extractDataStructures(a, u);
         if (Array.isArray(d)) {
@@ -37855,7 +37853,7 @@ class PartialEvaluator {
     if (h) f || (u = Name.get(n));
     else if (f !== g) {
       info(
-        `The FontDescriptor's FontName is "${f}" but should be the same as the Font's BaseFont "${g}".`,
+        `The FontDescriptor's FontName is "${f}" but should be the same as the Font's BaseFont "${g}".`
       );
       f &&
         g &&
@@ -37913,13 +37911,13 @@ class PartialEvaluator {
           this.options.standardFontDataUrl,
           u.name,
           e,
-          n,
+          n
         ));
     }
     const C = lookupMatrix(a.getArray("FontMatrix"), t),
       v = lookupNormalRect(
         e.getArray("FontBBox") || a.getArray("FontBBox"),
-        h ? [0, 0, 0, 0] : void 0,
+        h ? [0, 0, 0, 0] : void 0
       );
     let F = e.get("Ascent");
     "number" != typeof F && (F = void 0);
@@ -38034,7 +38032,7 @@ class TranslatedFont {
         this.font,
         this.font.glyphCacheValues,
         e,
-        t,
+        t
       );
     }
   }
@@ -38360,7 +38358,7 @@ class EvaluatorPreprocessor {
         nu: null,
         nul: null,
         null: null,
-      }),
+      })
     );
   }
   static MAX_INVALID_PATH_OPS = 10;
@@ -38396,7 +38394,7 @@ class EvaluatorPreprocessor {
         if (i.variableArgs)
           o > s &&
             info(
-              `Command ${r}: expected [0, ${s}] args, but received ${o} args.`,
+              `Command ${r}: expected [0, ${s}] args, but received ${o} args.`
             );
         else {
           if (o !== s) {
@@ -38581,7 +38579,7 @@ class AppearanceStreamEvaluator extends EvaluatorPreprocessor {
       new PDFFunctionFactory({
         xref: this.xref,
         isEvalSupported: this.evaluatorOptions.isEvalSupported,
-      }),
+      })
     );
   }
 }
@@ -38606,7 +38604,7 @@ class FakeUnicodeFont {
     this.ctxMeasure = a.getContext("2d", { willReadFrequently: !0 });
     FakeUnicodeFont._fontNameId || (FakeUnicodeFont._fontNameId = 1);
     this.fontName = Name.get(
-      `InvalidPDFjsFont_${t}_${FakeUnicodeFont._fontNameId++}`,
+      `InvalidPDFjsFont_${t}_${FakeUnicodeFont._fontNameId++}`
     );
   }
   get fontDescriptorRef() {
@@ -38950,7 +38948,7 @@ class FileSpec {
       t instanceof BaseStream
         ? (e = t.getBytes())
         : warn(
-            "Embedded file specification points to non-existing/invalid content",
+            "Embedded file specification points to non-existing/invalid content"
           );
     } else warn("Embedded file specification does not have any content");
     return e;
@@ -39363,7 +39361,7 @@ class MetadataParser {
       a = this._getSequence(t) || [];
     this._metadataMap.set(
       e.nodeName,
-      a.map((e) => e.textContent.trim()),
+      a.map((e) => e.textContent.trim())
     );
   }
   _parse(e) {
@@ -39677,7 +39675,7 @@ class StructTreeRoot {
   }
   static #we(
     e,
-    { type: t, title: a, lang: r, alt: i, expanded: n, actualText: s },
+    { type: t, title: a, lang: r, alt: i, expanded: n, actualText: s }
   ) {
     e.set("S", Name.get(t));
     a && e.set("T", stringToAsciiOrUTF16BE(a));
@@ -40100,7 +40098,7 @@ class Catalog {
     return shadow(
       this,
       "lang",
-      e && "string" == typeof e ? stringToPDFString(e) : null,
+      e && "string" == typeof e ? stringToPDFString(e) : null
     );
   }
   get needsRendering() {
@@ -40430,7 +40428,7 @@ class Catalog {
     const e = this.toplevelPagesDict.get("Count");
     if (!Number.isInteger(e))
       throw new FormatError(
-        "Page count in top-level pages dictionary is not an integer.",
+        "Page count in top-level pages dictionary is not an integer."
       );
     return shadow(this, "_pagesCount", e);
   }
@@ -40542,7 +40540,7 @@ class Catalog {
         default:
           if (a)
             throw new FormatError(
-              `Invalid style "${a}" in PageLabel dictionary.`,
+              `Invalid style "${a}" in PageLabel dictionary.`
             );
           i = "";
       }
@@ -40668,7 +40666,7 @@ class Catalog {
                 Number.isInteger(e) &&
                 e > 0 &&
                 (0 === t || e >= a[t - 1]) &&
-                e <= this.numPages,
+                e <= this.numPages
             ) && (e = r);
           }
           break;
@@ -40809,7 +40807,7 @@ class Catalog {
       }
       if (!(r instanceof Dict))
         throw new FormatError(
-          "Page dictionary kid reference points to wrong type of object.",
+          "Page dictionary kid reference points to wrong type of object."
         );
       const { objId: l } = r;
       let h = r.getRaw("Count");
@@ -40879,7 +40877,7 @@ class Catalog {
         }
       if (!Array.isArray(n)) {
         addPageError(
-          new FormatError("Page dictionary kids object is not an array."),
+          new FormatError("Page dictionary kids object is not an array.")
         );
         break;
       }
@@ -40892,7 +40890,7 @@ class Catalog {
       if (o instanceof Ref) {
         if (r.has(o)) {
           addPageError(
-            new FormatError("Pages tree contains circular reference."),
+            new FormatError("Pages tree contains circular reference.")
           );
           break;
         }
@@ -40907,8 +40905,8 @@ class Catalog {
       if (!(c instanceof Dict)) {
         addPageError(
           new FormatError(
-            "Page dictionary kid reference points to wrong type of object.",
-          ),
+            "Page dictionary kid reference points to wrong type of object."
+          )
         );
         break;
       }
@@ -40945,7 +40943,7 @@ class Catalog {
               !(a instanceof Dict && !a.has("Type") && a.has("Contents"))
             )
               throw new FormatError(
-                "The reference does not point to a /Page dictionary.",
+                "The reference does not point to a /Page dictionary."
               );
             if (!a) return null;
             if (!(a instanceof Dict))
@@ -40975,12 +40973,12 @@ class Catalog {
                   if (!(e instanceof Dict))
                     throw new FormatError("Kid node must be a dictionary.");
                   e.has("Count") ? (i += e.get("Count")) : i++;
-                }),
+                })
               );
             }
             if (!s)
               throw new FormatError(
-                "Kid reference not found in parent's kids.",
+                "Kid reference not found in parent's kids."
               );
             return Promise.all(n).then(() => [i, r]);
           });
@@ -41760,7 +41758,7 @@ function parseExpression(e, t, a = !0) {
       case "[":
         if (a) {
           warn(
-            "XFA - SOM expression contains a FormCalc subexpression which is not supported for now.",
+            "XFA - SOM expression contains a FormCalc subexpression which is not supported for now."
           );
           return null;
         }
@@ -41769,7 +41767,7 @@ function parseExpression(e, t, a = !0) {
       case "(":
         if (a) {
           warn(
-            "XFA - SOM expression contains a JavaScript subexpression which is not supported for now.",
+            "XFA - SOM expression contains a JavaScript subexpression which is not supported for now."
           );
           return null;
         }
@@ -42586,7 +42584,7 @@ const Bo = {
         t.currentColumn = 0;
       } else {
         n = Math.sumPrecise(
-          t.columnWidths.slice(t.currentColumn, t.currentColumn + i),
+          t.columnWidths.slice(t.currentColumn, t.currentColumn + i)
         );
         t.currentColumn = (t.currentColumn + e.colSpan) % t.columnWidths.length;
       }
@@ -42754,7 +42752,7 @@ function fixDimensions(e) {
       -1 === r
         ? Math.sumPrecise(a.columnWidths.slice(a.currentColumn))
         : Math.sumPrecise(
-            a.columnWidths.slice(a.currentColumn, a.currentColumn + r),
+            a.columnWidths.slice(a.currentColumn, a.currentColumn + r)
           );
     isNaN(i) || (e.w = i);
   }
@@ -44592,7 +44590,7 @@ class Draw extends XFAObject {
       "rotate",
       "anchorType",
       "border",
-      "margin",
+      "margin"
     );
     setMinMaxDimensions(this, s);
     if (s.margin) {
@@ -45047,7 +45045,7 @@ class ExclGroup extends XFAObject {
         "presence",
         "border",
         "margin",
-        "hAlign",
+        "hAlign"
       ),
       s = ["xfaExclgroup"],
       o = layoutClass(this);
@@ -45319,14 +45317,14 @@ class Field extends XFAObject {
         t += i;
         this.w = Math.min(
           this.maxW <= 0 ? 1 / 0 : this.maxW,
-          this.minW + 1 < t ? t : this.minW,
+          this.minW + 1 < t ? t : this.minW
         );
       }
       if (a && "" === this.h) {
         a += n;
         this.h = Math.min(
           this.maxH <= 0 ? 1 / 0 : this.maxH,
-          this.minH + 1 < a ? a : this.minH,
+          this.minH + 1 < a ? a : this.minH
         );
       }
     }
@@ -45349,7 +45347,7 @@ class Field extends XFAObject {
       "anchorType",
       "presence",
       "margin",
-      "hAlign",
+      "hAlign"
     );
     setMinMaxDimensions(this, o);
     const c = ["xfaField"];
@@ -46334,15 +46332,15 @@ class PageSet extends XFAObject {
       t = e % 2 == 0 ? "even" : "odd",
       a = 0 === e ? "first" : "rest";
     let r = this.pageArea.children.find(
-      (e) => e.oddOrEven === t && e.pagePosition === a,
+      (e) => e.oddOrEven === t && e.pagePosition === a
     );
     if (r) return r;
     r = this.pageArea.children.find(
-      (e) => "any" === e.oddOrEven && e.pagePosition === a,
+      (e) => "any" === e.oddOrEven && e.pagePosition === a
     );
     if (r) return r;
     r = this.pageArea.children.find(
-      (e) => "any" === e.oddOrEven && "any" === e.pagePosition,
+      (e) => "any" === e.oddOrEven && "any" === e.pagePosition
     );
     return r || this.pageArea.children[0];
   }
@@ -46800,7 +46798,7 @@ class Stipple extends XFAObject {
     return Util.makeHexColor(
       Math.round(e.value.r * (1 - t) + this.value.r * t),
       Math.round(e.value.g * (1 - t) + this.value.g * t),
-      Math.round(e.value.b * (1 - t) + this.value.b * t),
+      Math.round(e.value.b * (1 - t) + this.value.b * t)
     );
   }
 }
@@ -46996,7 +46994,7 @@ class Subform extends XFAObject {
     (this.breakBefore.children.length > 1 ||
       this.breakAfter.children.length > 1) &&
       warn(
-        "XFA - Several breakBefore or breakAfter in subforms: please file a bug.",
+        "XFA - Several breakBefore or breakAfter in subforms: please file a bug."
       );
     if (this.breakBefore.children.length >= 1) {
       const e = this.breakBefore.children[0];
@@ -47051,7 +47049,7 @@ class Subform extends XFAObject {
         "presence",
         "border",
         "margin",
-        "hAlign",
+        "hAlign"
       ),
       c = ["xfaSubform"],
       l = layoutClass(this);
@@ -47179,7 +47177,7 @@ class SubjectDN extends ContentObject {
       this[Gn].split(this.delimiter).map((e) => {
         (e = e.split("=", 2))[0] = e[0].trim();
         return e;
-      }),
+      })
     );
   }
 }
@@ -47349,7 +47347,7 @@ class Template extends XFAObject {
       }
       const i = r.contentArea.children,
         n = t.children.filter((e) =>
-          e.attributes.class.includes("xfaContentarea"),
+          e.attributes.class.includes("xfaContentarea")
         );
       h = !1;
       this[Jn].firstUnsplittable = null;
@@ -47482,7 +47480,7 @@ class Text extends ContentObject {
           .map((e) =>
             e
               .split(/[\u2028\n]/)
-              .flatMap((e) => [{ name: "span", value: e }, { name: "br" }]),
+              .flatMap((e) => [{ name: "span", value: e }, { name: "br" }])
           )
           .forEach((t) => {
             e.children.push({ name: "p", children: t });
@@ -48246,13 +48244,13 @@ class Binder {
         const l = c[ds]();
         if (c instanceof SetProperty || l instanceof SetProperty) {
           warn(
-            "XFA - Invalid target: cannot be a setProperty or one of its properties.",
+            "XFA - Invalid target: cannot be a setProperty or one of its properties."
           );
           continue;
         }
         if (c instanceof BindItems || l instanceof BindItems) {
           warn(
-            "XFA - Invalid target: cannot be a bindItems or one of its properties.",
+            "XFA - Invalid target: cannot be a bindItems or one of its properties."
           );
           continue;
         }
@@ -48653,7 +48651,7 @@ class BehaviorOverride extends ContentObject {
       this[Gn].trim()
         .split(/\s+/)
         .filter((e) => e.includes(":"))
-        .map((e) => e.split(":", 2)),
+        .map((e) => e.split(":", 2))
     );
   }
 }
@@ -48899,7 +48897,7 @@ class Exclude extends ContentObject {
             "initialize",
             "ready",
             "validate",
-          ].includes(e),
+          ].includes(e)
       );
   }
 }
@@ -49103,7 +49101,7 @@ class Packets extends StringObject {
       (this[Gn] = this[Gn].trim()
         .split(/\s+/)
         .filter((e) =>
-          ["config", "datasets", "template", "xfdf", "xslt"].includes(e),
+          ["config", "datasets", "template", "xfdf", "xslt"].includes(e)
         ));
   }
 }
@@ -50623,7 +50621,7 @@ function mapStyle(e, t, a) {
       },
       t,
       t[gs].fontFinder,
-      r,
+      r
     );
   if (a && r.verticalAlign && "0px" !== r.verticalAlign && r.fontSize) {
     const e = 0.583,
@@ -50631,7 +50629,7 @@ function mapStyle(e, t, a) {
       a = getMeasurement(r.fontSize);
     r.fontSize = measureToString(a * e);
     r.verticalAlign = measureToString(
-      Math.sign(getMeasurement(r.verticalAlign)) * a * t,
+      Math.sign(getMeasurement(r.verticalAlign)) * a * t
     );
   }
   a &&
@@ -51274,7 +51272,7 @@ class AnnotationFactory {
       (e) => {
         warn(`createGlobals: "${e}".`);
         return null;
-      },
+      }
     );
   }
   static async create(e, t, a, r, i, n, s, o) {
@@ -51322,7 +51320,7 @@ class AnnotationFactory {
             return new SignatureWidgetAnnotation(g);
         }
         warn(
-          `Unimplemented widget field type "${e}", falling back to base field type.`,
+          `Unimplemented widget field type "${e}", falling back to base field type.`
         );
         return new WidgetAnnotation(g);
       case "Popup":
@@ -51360,7 +51358,7 @@ class AnnotationFactory {
           warn(
             h
               ? `Unimplemented annotation type "${h}", falling back to base annotation.`
-              : "Annotation is missing the required /Subtype.",
+              : "Annotation is missing the required /Subtype."
           );
         return new Annotation(g);
     }
@@ -51391,7 +51389,7 @@ class AnnotationFactory {
   static generateImages(e, t, a) {
     if (!a) {
       warn(
-        "generateImages: OffscreenCanvas is not supported, cannot save or print some annotations with images.",
+        "generateImages: OffscreenCanvas is not supported, cannot save or print some annotations with images."
       );
       return null;
     }
@@ -51426,7 +51424,7 @@ class AnnotationFactory {
                 evaluator: e,
                 task: t,
                 baseFontRef: s,
-              }),
+              })
             );
             break;
           case p:
@@ -51470,7 +51468,7 @@ class AnnotationFactory {
                 evaluator: t,
                 task: a,
                 evaluatorOptions: n,
-              }),
+              })
             );
             break;
           case p:
@@ -51478,19 +51476,19 @@ class AnnotationFactory {
               ? o.push(
                   HighlightAnnotation.createNewPrintAnnotation(e, s, c, {
                     evaluatorOptions: n,
-                  }),
+                  })
                 )
               : o.push(
                   InkAnnotation.createNewPrintAnnotation(e, s, c, {
                     evaluatorOptions: n,
-                  }),
+                  })
                 );
             break;
           case b:
             o.push(
               InkAnnotation.createNewPrintAnnotation(e, s, c, {
                 evaluatorOptions: n,
-              }),
+              })
             );
             break;
           case m:
@@ -51507,14 +51505,14 @@ class AnnotationFactory {
               StampAnnotation.createNewPrintAnnotation(e, s, c, {
                 image: r,
                 evaluatorOptions: n,
-              }),
+              })
             );
             break;
           case y:
             o.push(
               StampAnnotation.createNewPrintAnnotation(e, s, c, {
                 evaluatorOptions: n,
-              }),
+              })
             );
         }
     return Promise.all(o);
@@ -51694,7 +51692,7 @@ class Annotation {
         getInheritableProperty({ dict: t, key: "DA" }) || a.acroForm.get("DA");
     this._defaultAppearance = "string" == typeof r ? r : "";
     this.data.defaultAppearanceData = parseDefaultAppearance(
-      this._defaultAppearance,
+      this._defaultAppearance
     );
   }
   setTitle(e) {
@@ -52384,7 +52382,7 @@ class WidgetAnnotation extends Annotation {
           ? s.map(stringToAsciiOrUTF16BE)
           : stringToAsciiOrUTF16BE(s),
         u,
-        r,
+        r
       );
     this.amendSavedDict(a, p || f);
     const m = this._getMKDict(o);
@@ -52450,7 +52448,7 @@ class WidgetAnnotation extends Annotation {
     (90 !== o && 270 !== o) || ([d, f] = [f, d]);
     this._defaultAppearance ||
       (this.data.defaultAppearanceData = parseDefaultAppearance(
-        (this._defaultAppearance = "/Helvetica 0 Tf 0 g"),
+        (this._defaultAppearance = "/Helvetica 0 Tf 0 g")
       ));
     let g,
       p,
@@ -52459,7 +52457,7 @@ class WidgetAnnotation extends Annotation {
         e,
         t,
         this.data.defaultAppearanceData,
-        this._fieldResources.mergedResources,
+        this._fieldResources.mergedResources
       );
     const y = [];
     let w = !1;
@@ -52483,13 +52481,13 @@ class WidgetAnnotation extends Annotation {
         e,
         t,
         { fontName: o, fontSize: 0 },
-        i,
+        i
       );
       for (let e = 0, t = y.length; e < t; e++)
         y[e] = stringToUTF16String(h[e]);
       const c = Object.assign(
         Object.create(null),
-        this.data.defaultAppearanceData,
+        this.data.defaultAppearanceData
       );
       this.data.defaultAppearanceData.fontSize = 0;
       this.data.defaultAppearanceData.fontName = o;
@@ -52498,7 +52496,7 @@ class WidgetAnnotation extends Annotation {
     } else {
       this._isOffscreenCanvasSupported ||
         warn(
-          "_getAppearance: OffscreenCanvas is not supported, annotation may not render correctly.",
+          "_getAppearance: OffscreenCanvas is not supported, annotation may not render correctly."
         );
       [g, p, m] = this._computeFontSize(f - 2, d - 4, s, b, u);
     }
@@ -52788,7 +52786,7 @@ class TextWidgetAnnotation extends WidgetAnnotation {
     const i = r.join("\n");
     if (i === this.data.fieldValue) return;
     const n = i.replaceAll(/([.*+?^${}()|[\]\\])|(\s+)/g, (e, t) =>
-      t ? `\\${t}` : "\\s+",
+      t ? `\\${t}` : "\\s+"
     );
     new RegExp(`^\\s*${n}\\s*$`).test(this.data.fieldValue) &&
       (this.data.textContent = this.data.fieldValue.split("\n"));
@@ -53160,13 +53158,13 @@ class ChoiceWidgetAnnotation extends WidgetAnnotation {
     }
     this._defaultAppearance ||
       (this.data.defaultAppearanceData = parseDefaultAppearance(
-        (this._defaultAppearance = "/Helvetica 0 Tf 0 g"),
+        (this._defaultAppearance = "/Helvetica 0 Tf 0 g")
       ));
     const d = await WidgetAnnotation._getFontData(
       e,
       t,
       this.data.defaultAppearanceData,
-      this._fieldResources.mergedResources,
+      this._fieldResources.mergedResources
     );
     let f,
       { fontSize: g } = this.data.defaultAppearanceData;
@@ -53335,7 +53333,7 @@ class FreeTextAnnotation extends MarkupAnnotation {
         e,
         t,
         a,
-        r,
+        r
       ) {
         return new AppearanceStreamEvaluator(e, t, a, r).parse();
       })(this.appearance, a, r, t.globalColorSpaceCache);
@@ -53355,7 +53353,7 @@ class FreeTextAnnotation extends MarkupAnnotation {
         } = FakeUnicodeFont.getFirstPositionInfo(
           this.rectangle,
           this.rotation,
-          a,
+          a
         );
         this.data.textPosition = this._transformPoint(e, t, r);
       }
@@ -53368,12 +53366,12 @@ class FreeTextAnnotation extends MarkupAnnotation {
           this.rotation,
           a,
           t,
-          i,
+          i
         );
         this._streams.push(this.appearance);
       } else
         warn(
-          "FreeTextAnnotation: OffscreenCanvas is not supported, annotation may not render correctly.",
+          "FreeTextAnnotation: OffscreenCanvas is not supported, annotation may not render correctly."
         );
     }
   }
@@ -53431,7 +53429,7 @@ class FreeTextAnnotation extends MarkupAnnotation {
         n,
         s,
         { fontName: "Helv", fontSize: c },
-        d,
+        d
       ),
       [p, m, b, y] = l;
     let w = b - p,
@@ -53616,7 +53614,7 @@ class CircleAnnotation extends MarkupAnnotation {
             `${n} ${l - u} ${c + h} ${r} ${c} ${r} c`,
             `${c - h} ${r} ${a} ${l - u} ${a} ${l} c`,
             `${a} ${l + u} ${c - h} ${o} ${c} ${o} c`,
-            "h",
+            "h"
           );
           i ? e.push("B") : e.push("S");
           return [t[0], t[7], t[2], t[3]];
@@ -53727,7 +53725,7 @@ class InkAnnotation extends MarkupAnnotation {
               e[t + 1] - n,
               e[t] + n,
               e[t + 1] + n,
-              s,
+              s
             );
         Util.intersect(this.rectangle, s) || (this.rectangle = s);
         this._setDefaultAppearance({
@@ -53891,7 +53889,7 @@ class HighlightAnnotation extends MarkupAnnotation {
               `${t[2]} ${t[3]} l`,
               `${t[6]} ${t[7]} l`,
               `${t[4]} ${t[5]} l`,
-              "f",
+              "f"
             );
             return [t[0], t[7], t[2], t[3]];
           },
@@ -54050,7 +54048,7 @@ class StrikeOutAnnotation extends MarkupAnnotation {
             e.push(
               (t[0] + t[4]) / 2 + " " + (t[1] + t[5]) / 2 + " m",
               (t[2] + t[6]) / 2 + " " + (t[3] + t[7]) / 2 + " l",
-              "S",
+              "S"
             );
             return [t[0], t[7], t[2], t[3]];
           },
@@ -54094,7 +54092,7 @@ class StampAnnotation extends MarkupAnnotation {
       c = o.some(
         FeatureTest.isLittleEndian
           ? (e) => e >>> 24 != 255
-          : (e) => !!(255 & ~e),
+          : (e) => !!(255 & ~e)
       );
     if (c) {
       n.fillStyle = "white";
@@ -54233,7 +54231,7 @@ const ac = {
         20, 5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20, 4, 11, 16, 23, 4, 11, 16,
         23, 4, 11, 16, 23, 4, 11, 16, 23, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10,
         15, 21, 6, 10, 15, 21,
-      ]),
+      ])
     );
   },
   get k() {
@@ -54252,7 +54250,7 @@ const ac = {
         -198630844, 1126891415, -1416354905, -57434055, 1700485571, -1894986606,
         -1051523, -2054922799, 1873313359, -30611744, -1560198380, 1309151649,
         -145523070, -1120210379, 718787259, -343485551,
-      ]),
+      ])
     );
   },
 };
@@ -54356,7 +54354,7 @@ class DatasetReader {
   constructor(e) {
     if (e.datasets)
       this.node = new SimpleXMLParser({ hasAttributes: !0 }).parseFromString(
-        e.datasets,
+        e.datasets
       ).documentElement;
     else {
       const t = new DatasetXMLParser({ hasAttributes: !0 });
@@ -54860,7 +54858,7 @@ const nc = {
         430227734, 506948616, 659060556, 883997877, 958139571, 1322822218,
         1537002063, 1747873779, 1955562222, 2024104815, 2227730452, 2361852424,
         2428436474, 2756734187, 3204031479, 3329325298,
-      ],
+      ]
     );
   },
 };
@@ -55156,7 +55154,7 @@ class AESBaseCipher {
     2370213795,
   ]);
   _mixCol = new Uint8Array(256).map((e, t) =>
-    t < 128 ? t << 1 : (t << 1) ^ 27,
+    t < 128 ? t << 1 : (t << 1) ^ 27
   );
   constructor() {
     this.buffer = new Uint8Array(16);
@@ -55592,7 +55590,7 @@ class CipherTransformFactory {
       new Uint8Array([
         40, 191, 78, 94, 78, 117, 138, 65, 100, 0, 78, 86, 255, 250, 1, 8, 46,
         46, 0, 182, 208, 104, 62, 128, 47, 12, 169, 254, 100, 83, 105, 122,
-      ]),
+      ])
     );
   }
   #Ye(e, t, a, r, i, n, s, o, c, l, h, u) {
@@ -55765,7 +55763,7 @@ class CipherTransformFactory {
           a = utf8StringToString(a);
         } catch {
           warn(
-            "CipherTransformFactory: Unable to convert UTF8 encoded password.",
+            "CipherTransformFactory: Unable to convert UTF8 encoded password."
           );
         }
       g = stringToBytes(a);
@@ -55805,7 +55803,7 @@ class CipherTransformFactory {
     if (4 === this.algorithm || 5 === this.algorithm)
       return new CipherTransform(
         this.#tt(this.cf, this.strf, e, t, this.encryptionKey),
-        this.#tt(this.cf, this.stmf, e, t, this.encryptionKey),
+        this.#tt(this.cf, this.stmf, e, t, this.encryptionKey)
       );
     const a = this.#et(e, t, this.encryptionKey, !1),
       cipherConstructor = function () {
@@ -55908,13 +55906,13 @@ class XRef {
       });
     if (!isCmd(this.readXRefTable(e), "trailer"))
       throw new FormatError(
-        "Invalid XRef table: could not find trailer dictionary",
+        "Invalid XRef table: could not find trailer dictionary"
       );
     let t = e.getObj();
     t instanceof Dict || !t.dict || (t = t.dict);
     if (!(t instanceof Dict))
       throw new FormatError(
-        "Invalid XRef table: could not parse trailer dictionary",
+        "Invalid XRef table: could not parse trailer dictionary"
       );
     delete this.tableState;
     return t;
@@ -55936,7 +55934,7 @@ class XRef {
       const n = a.entryCount;
       if (!Number.isInteger(i) || !Number.isInteger(n))
         throw new FormatError(
-          "Invalid XRef table: wrong types in subsection header",
+          "Invalid XRef table: wrong types in subsection header"
         );
       for (let r = a.entryNum; r < n; r++) {
         a.streamPos = t.pos;
@@ -56133,7 +56131,7 @@ class XRef {
           i = e.lastIndex + 1 - h;
           if ("endobj" !== f[1]) {
             warn(
-              `indexObjects: Found "${f[1]}" inside of another "obj", caused by missing "endobj" -- trying to recover.`,
+              `indexObjects: Found "${f[1]}" inside of another "obj", caused by missing "endobj" -- trying to recover.`
             );
             i -= f[1].length + 1;
           }
@@ -56158,7 +56156,7 @@ class XRef {
           a = t.lastIndex + 1 - h;
           if ("startxref" !== r[1]) {
             warn(
-              `indexObjects: Found "${r[1]}" after "trailer", caused by missing "startxref" -- trying to recover.`,
+              `indexObjects: Found "${r[1]}" after "trailer", caused by missing "startxref" -- trying to recover.`
             );
             a -= r[1].length + 1;
           }
@@ -56367,12 +56365,12 @@ class XRef {
       const t = o.getObj();
       if (!Number.isInteger(t))
         throw new FormatError(
-          `invalid object number in the ObjStm stream: ${t}`,
+          `invalid object number in the ObjStm stream: ${t}`
         );
       const a = o.getObj();
       if (!Number.isInteger(a))
         throw new FormatError(
-          `invalid object offset in the ObjStm stream: ${a}`,
+          `invalid object offset in the ObjStm stream: ${a}`
         );
       c[e] = t;
       const i = this.getEntry(t);
@@ -56511,7 +56509,7 @@ class Page {
     return shadow(
       this,
       "cropBox",
-      this.getBoundingBox("CropBox") || this.mediaBox,
+      this.getBoundingBox("CropBox") || this.mediaBox
     );
   }
   get userUnit() {
@@ -56555,7 +56553,7 @@ class Page {
       "xfaData",
       this.xfaFactory
         ? { bbox: this.xfaFactory.getBoundingBox(this.pageIndex) }
-        : null,
+        : null
     );
   }
   async #ot(e, t, a) {
@@ -56588,8 +56586,8 @@ class Page {
             },
             () => {
               warn(`Cannot fetch \`oldAnnotation\` for: ${e}.`);
-            },
-          ),
+            }
+          )
         );
         delete i.id;
       }
@@ -56619,10 +56617,10 @@ class Page {
       s.push(
         e.save(i, t, a, r).catch(function (e) {
           warn(
-            `save - ignoring annotation data during "${t.name}" task: "${e}".`,
+            `save - ignoring annotation data during "${t.name}" task: "${e}".`
           );
           return null;
-        }),
+        })
       );
     return Promise.all(s);
   }
@@ -56671,7 +56669,7 @@ class Page {
       } else t = AnnotationFactory.generateImages(y, this.xref, i);
       x = new RefSet();
       w = Promise.all([e, this.#ot(y, x, null)]).then(([e]) =>
-        e ? AnnotationFactory.printNewAnnotations(e, m, a, y, t) : null,
+        e ? AnnotationFactory.printNewAnnotations(e, m, a, y, t) : null
       );
     }
     const S = Promise.all([g, p]).then(async ([n]) => {
@@ -56697,7 +56695,7 @@ class Page {
         const a = v[e];
         if (a.refToReplace) {
           const r = C.findIndex(
-            (e) => e.ref && isRefsEqual(e.ref, a.refToReplace),
+            (e) => e.ref && isRefsEqual(e.ref, a.refToReplace)
           );
           if (r >= 0) {
             C.splice(r, 1, a);
@@ -56725,10 +56723,10 @@ class Page {
         R.push(
           e.getOperatorList(m, a, r, c).catch(function (e) {
             warn(
-              `getOperatorList - ignoring annotation data during "${a.name}" task: "${e}".`,
+              `getOperatorList - ignoring annotation data during "${a.name}" task: "${e}".`
             );
             return { opList: null, separateForm: !1, separateCanvas: !1 };
-          }),
+          })
         );
     const N = await Promise.all(R);
     let E = !1,
@@ -56803,9 +56801,9 @@ class Page {
             .extractTextContent(l, t, [-1 / 0, -1 / 0, 1 / 0, 1 / 0])
             .catch(function (e) {
               warn(
-                `getAnnotationsData - ignoring textContent during "${t.name}" task: "${e}".`,
+                `getAnnotationsData - ignoring textContent during "${t.name}" task: "${e}".`
               );
-            }),
+            })
         );
       } else a.overlaysTextContent && r && f.push(a);
     }
@@ -56823,7 +56821,7 @@ class Page {
           intersector: a,
         }).then(() => {
           a.setText();
-        }),
+        })
       );
     }
     await Promise.all(c);
@@ -56853,11 +56851,11 @@ class Page {
             !1,
             r,
             null,
-            this.ref,
+            this.ref
           ).catch(function (e) {
             warn(`_parsedAnnotations: "${e}".`);
             return null;
-          }),
+          })
         );
       const n = [];
       let s, o;
@@ -56879,7 +56877,7 @@ class Page {
     return shadow(
       this,
       "jsActions",
-      collectActions(this.xref, this.pageDict, se),
+      collectActions(this.xref, this.pageDict, se)
     );
   }
   async collectAnnotationsByType(e, t, a, r, i) {
@@ -56904,7 +56902,7 @@ class Page {
           !1,
           null,
           a,
-          this.ref,
+          this.ref
         )
           .then(async (a) => {
             if (!a) return null;
@@ -56918,7 +56916,7 @@ class Page {
           .catch(function (e) {
             warn(`collectAnnotationsByType: "${e}".`);
             return null;
-          }),
+          })
       );
   }
 }
@@ -56962,7 +56960,7 @@ class PDFDocument {
   constructor(e, t) {
     if (t.length <= 0)
       throw new InvalidPDFException(
-        "The PDF file is empty, i.e. its size is zero bytes.",
+        "The PDF file is empty, i.e. its size is zero bytes."
       );
     this.pdfManager = e;
     this.stream = t;
@@ -57098,7 +57096,7 @@ class PDFDocument {
           "localeSet",
           "stylesheet",
           "/xdp:xdp",
-        ].map((e) => [e, null]),
+        ].map((e) => [e, null])
       );
     if (t instanceof BaseStream && !t.isEmpty) {
       a.set("xdp:xdp", t);
@@ -57174,7 +57172,7 @@ class PDFDocument {
     const n = Object.assign(
         Object.create(null),
         this.pdfManager.evaluatorOptions,
-        { useSystemFonts: !1 },
+        { useSystemFonts: !1 }
       ),
       {
         builtInCMapCache: s,
@@ -57245,7 +57243,7 @@ class PDFDocument {
               fontFamily: e,
               fontWeight: t.fontWeight,
               italicAngle: t.italicAngle,
-            }),
+            })
           );
         }
     await Promise.all(f);
@@ -57382,7 +57380,7 @@ class PDFDocument {
         }
       }
       throw new FormatError(
-        "The Linearization dictionary doesn't point to a valid Page dictionary.",
+        "The Linearization dictionary doesn't point to a valid Page dictionary."
       );
     } catch (a) {
       warn(`_getLinearizationPage: "${a.message}".`);
@@ -57416,7 +57414,7 @@ class PDFDocument {
           systemFontCache: a.systemFontCache,
           nonBlendModesSet: a.nonBlendModesSet,
           xfaFactory: i,
-        }),
+        })
     );
     this.#lt.set(e, n);
     return n;
@@ -57485,7 +57483,7 @@ class PDFDocument {
               systemFontCache: t.systemFontCache,
               nonBlendModesSet: t.nonBlendModesSet,
               xfaFactory: null,
-            }),
+            })
           );
         this.#lt.set(e, n);
       }
@@ -57539,7 +57537,7 @@ class PDFDocument {
         .catch(function (e) {
           warn(`#collectFieldObjects: "${e}".`);
           return null;
-        }),
+        })
     );
     if (!c.has("Kids")) return;
     const h = await c.getAsync("Kids");
@@ -57566,18 +57564,18 @@ class PDFDocument {
           o.push(
             Promise.all(t).then((t) => {
               (t = t.filter((e) => !!e)).length > 0 && (i[e] = t);
-            }),
+            })
           );
         await Promise.all(o);
         return { allFields: objectSize(i) > 0 ? i : null, orphanFields: s };
-      }),
+      })
     );
   }
   get hasJSActions() {
     return shadow(
       this,
       "hasJSActions",
-      this.pdfManager.ensureDoc("_parseHasJSActions"),
+      this.pdfManager.ensureDoc("_parseHasJSActions")
     );
   }
   async _parseHasJSActions() {
@@ -57589,7 +57587,7 @@ class PDFDocument {
       !!e ||
       (!!t?.allFields &&
         Object.values(t.allFields).some((e) =>
-          e.some((e) => null !== e.actions),
+          e.some((e) => null !== e.actions)
         ))
     );
   }
@@ -57605,7 +57603,7 @@ class PDFDocument {
     return shadow(
       this,
       "annotationGlobals",
-      AnnotationFactory.createGlobals(this.pdfManager),
+      AnnotationFactory.createGlobals(this.pdfManager)
     );
   }
 }
@@ -57762,7 +57760,7 @@ function wrapReason(e) {
   e instanceof Error ||
     ("object" == typeof e && null !== e) ||
     unreachable(
-      'wrapReason: Expected "reason" to be a (possibly cloned) Error.',
+      'wrapReason: Expected "reason" to be a (possibly cloned) Error.'
     );
   switch (e.name) {
     case "AbortException":
@@ -57836,7 +57834,7 @@ class MessageHandler {
             callbackId: e.callbackId,
             reason: wrapReason(t),
           });
-        },
+        }
       );
       return;
     }
@@ -57855,7 +57853,7 @@ class MessageHandler {
         action: e,
         data: t,
       },
-      a,
+      a
     );
   }
   sendWithPromise(e, t, a) {
@@ -57871,7 +57869,7 @@ class MessageHandler {
           callbackId: r,
           data: t,
         },
-        a,
+        a
       );
     } catch (e) {
       i.reject(e);
@@ -57903,7 +57901,7 @@ class MessageHandler {
               data: t,
               desiredSize: a.desiredSize,
             },
-            r,
+            r
           );
           return c.promise;
         },
@@ -57934,7 +57932,7 @@ class MessageHandler {
           return t.promise;
         },
       },
-      a,
+      a
     );
   }
   #wt(e) {
@@ -57955,7 +57953,7 @@ class MessageHandler {
           }
           i.postMessage(
             { sourceName: a, targetName: r, stream: pc, streamId: t, chunk: e },
-            s,
+            s
           );
         },
         close() {
@@ -58011,7 +58009,7 @@ class MessageHandler {
           streamId: t,
           reason: wrapReason(e),
         });
-      },
+      }
     );
   }
   #yt(e) {
@@ -58063,7 +58061,7 @@ class MessageHandler {
               streamId: t,
               reason: wrapReason(e),
             });
-          },
+          }
         );
         break;
       case pc:
@@ -58110,7 +58108,7 @@ class MessageHandler {
               streamId: t,
               reason: wrapReason(e),
             });
-          },
+          }
         );
         s.sinkCapability.reject(o);
         s.isCancelled = !0;
@@ -58137,7 +58135,7 @@ async function writeObject(
   e,
   t,
   a,
-  { encrypt: r = null, encryptRef: i = null },
+  { encrypt: r = null, encryptRef: i = null }
 ) {
   const n = r && i !== e ? r.createCipherTransform(e.num, e.gen) : null;
   a.push(`${e.num} ${e.gen} obj\n`);
@@ -58183,7 +58181,7 @@ async function writeValue(e, t, a) {
                 ]),
                 o = isName(
                   Array.isArray(n) ? await i.xref.fetchIfRefAsync(n[0]) : n,
-                  "FlateDecode",
+                  "FlateDecode"
                 );
               if (r.length >= 256 && !o)
                 try {
@@ -58221,7 +58219,7 @@ async function writeValue(e, t, a) {
           : null === e
             ? t.push("null")
             : warn(
-                `Unhandled value in writer: ${typeof e}, please file a bug.`,
+                `Unhandled value in writer: ${typeof e}, please file a bug.`
               );
 }
 function writeInt(e, t, a, r) {
@@ -58412,14 +58410,14 @@ async function incrementalUpdate({
           }
           if (null !== r) {
             i.push(
-              `${t.toString().padStart(10, "0")} ${Math.min(e.gen, 65535).toString().padStart(5, "0")} n\r\n`,
+              `${t.toString().padStart(10, "0")} ${Math.min(e.gen, 65535).toString().padStart(5, "0")} n\r\n`
             );
             t += r.length;
           } else
             i.push(
               `0000000000 ${Math.min(e.gen + 1, 65535)
                 .toString()
-                .padStart(5, "0")} f\r\n`,
+                .padStart(5, "0")} f\r\n`
             );
         }
         computeIDs(t, e, r);
@@ -58738,7 +58736,7 @@ class PDFEditor {
         t.push(
           i.getPage(r).then((t) => {
             this.oldPages[s] = new PageData(t, e);
-          }),
+          })
         );
       }
     }
@@ -58818,7 +58816,7 @@ class PDFEditor {
               }
             }
           } else o[a] = e;
-        }),
+        })
       );
     }
     await Promise.all(s);
@@ -59208,7 +59206,7 @@ class PDFEditor {
   }
   #Et(e, t) {
     const a = e.sort(
-        t ? ([e], [t]) => e.localeCompare(t) : ([e], [t]) => e - t,
+        t ? ([e], [t]) => e.localeCompare(t) : ([e], [t]) => e - t
       ),
       [r, i] = this.newDict,
       n = [{ dict: i, entries: a }],
@@ -59418,7 +59416,7 @@ class PDFWorkerStream {
   getFullReader() {
     assert(
       !this._fullRequestReader,
-      "PDFWorkerStream.getFullReader can only be called once.",
+      "PDFWorkerStream.getFullReader can only be called once."
     );
     this._fullRequestReader = new PDFWorkerStreamReader(this._msgHandler);
     return this._fullRequestReader;
@@ -59544,7 +59542,7 @@ class WorkerMessageHandler {
       l = "5.4.449";
     if (c !== l)
       throw new Error(
-        `The API version "${c}" does not match the Worker version "${l}".`,
+        `The API version "${c}" does not match the Worker version "${l}".`
       );
     const buildMsg = (e, t) =>
       `The \`${e}.prototype\` contains unexpected enumerable property "${t}", thus breaking e.g. \`for...in\` iteration of ${e}s.`;
@@ -59796,8 +59794,8 @@ class WorkerMessageHandler {
                   .getPage(c)
                   .then(
                     async (t) =>
-                      (t && t.collectAnnotationsByType(u, o, e, s, i)) || [],
-                  ),
+                      (t && t.collectAnnotationsByType(u, o, e, s, i)) || []
+                  )
               );
             }
           await Promise.all(n);
@@ -59805,7 +59803,7 @@ class WorkerMessageHandler {
         } finally {
           o && finishWorkerTask(o);
         }
-      },
+      }
     );
     u.on("GetOutline", function (e) {
       return a.ensureCatalog("documentOutline");
@@ -59841,7 +59839,7 @@ class WorkerMessageHandler {
           (e) => {
             finishWorkerTask(r);
             throw e;
-          },
+          }
         );
       });
     });
@@ -59890,13 +59888,13 @@ class WorkerMessageHandler {
                 warn("extractPages: XRefParseException.");
               } else if (t instanceof PasswordException) {
                 const a = new WorkerTask(
-                  `PasswordException: response ${t.code}`,
+                  `PasswordException: response ${t.code}`
                 );
                 startWorkerTask(a);
                 try {
                   const { password: a } = await u.sendWithPromise(
                     "PasswordRequest",
-                    t,
+                    t
                   );
                   e.updatePassword(a);
                 } catch {
@@ -59961,7 +59959,7 @@ class WorkerMessageHandler {
           const e = AnnotationFactory.generateImages(
               r.values(),
               g,
-              a.evaluatorOptions.isOffscreenCanvasSupported,
+              a.evaluatorOptions.isOffscreenCanvasSupported
             ),
             t = void 0 === b ? o : [];
           for (const [r, i] of c)
@@ -59972,7 +59970,7 @@ class WorkerMessageHandler {
                 return t.saveNewAnnotations(u, a, i, e, s).finally(function () {
                   finishWorkerTask(a);
                 });
-              }),
+              })
             );
           null === b
             ? o.push(
@@ -59984,7 +59982,7 @@ class WorkerMessageHandler {
                     pdfManager: a,
                     changes: s,
                   });
-                }),
+                })
               )
             : b &&
               o.push(
@@ -59994,7 +59992,7 @@ class WorkerMessageHandler {
                     pdfManager: a,
                     changes: s,
                   });
-                }),
+                })
               );
         }
         if (e) o.push(a.ensureDoc("serializeXfaData", [r]));
@@ -60007,7 +60005,7 @@ class WorkerMessageHandler {
                 return t.save(u, a, r, s).finally(function () {
                   finishWorkerTask(a);
                 });
-              }),
+              })
             );
         const y = await Promise.all(o);
         let w = null;
@@ -60062,7 +60060,7 @@ class WorkerMessageHandler {
         }).finally(() => {
           g.resetNewTemporaryRef();
         });
-      },
+      }
     );
     u.on("GetOperatorList", function (e, t) {
       const r = e.pageIndex;
@@ -60083,14 +60081,14 @@ class WorkerMessageHandler {
             finishWorkerTask(i);
             n &&
               info(
-                `page=${r + 1} - getOperatorList: time=${Date.now() - n}ms, len=${e.length}`,
+                `page=${r + 1} - getOperatorList: time=${Date.now() - n}ms, len=${e.length}`
               );
             t.close();
           },
           function (e) {
             finishWorkerTask(i);
             i.terminated || t.error(e);
-          },
+          }
         );
       });
     });
@@ -60117,14 +60115,14 @@ class WorkerMessageHandler {
               info(
                 `page=${r + 1} - getTextContent: time=` +
                   (Date.now() - o) +
-                  "ms",
+                  "ms"
               );
             t.close();
           },
           function (e) {
             finishWorkerTask(a);
             a.terminated || t.error(e);
-          },
+          }
         );
       });
     });

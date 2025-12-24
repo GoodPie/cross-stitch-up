@@ -1,0 +1,21 @@
+# Dependencies
+node_modules
+
+# Build outputs
+.next
+out
+build
+dist
+
+# Generated files
+next-env.d.ts
+pnpm-lock.yaml
+
+# Playwright
+test-results
+playwright-report
+
+# Misc
+.vercel
+*.min.js
+eslint.config.mts

@@ -19,10 +19,10 @@ export function ResultsState({ result, onReset }: ResultsStateProps) {
   return (
     <div className="space-y-6">
       {/* Success header */}
-      <div className="text-center space-y-2">
-        <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-chart-2/20 text-chart-2 mb-2">
+      <div className="space-y-2 text-center">
+        <div className="bg-chart-2/20 text-chart-2 mb-2 inline-flex h-12 w-12 items-center justify-center rounded-full">
           <svg
-            className="w-6 h-6"
+            className="h-6 w-6"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -35,7 +35,7 @@ export function ResultsState({ result, onReset }: ResultsStateProps) {
             />
           </svg>
         </div>
-        <h2 className="text-2xl font-serif font-bold text-foreground">
+        <h2 className="text-foreground font-serif text-2xl font-bold">
           Pattern merged successfully!
         </h2>
         <p className="text-muted-foreground">
@@ -43,11 +43,11 @@ export function ResultsState({ result, onReset }: ResultsStateProps) {
         </p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid gap-6 md:grid-cols-2">
         {/* Preview Panel */}
-        <Card className="p-4 space-y-4">
+        <Card className="space-y-4 p-4">
           <div className="flex items-center justify-between">
-            <h3 className="font-medium text-foreground">Preview</h3>
+            <h3 className="text-foreground font-medium">Preview</h3>
             <div className="flex items-center gap-1">
               <Button
                 variant="ghost"
@@ -57,7 +57,7 @@ export function ResultsState({ result, onReset }: ResultsStateProps) {
               >
                 <ZoomOut className="h-4 w-4" />
               </Button>
-              <span className="text-sm text-muted-foreground w-12 text-center">
+              <span className="text-muted-foreground w-12 text-center text-sm">
                 {Math.round(zoom * 100)}%
               </span>
               <Button
@@ -71,9 +71,9 @@ export function ResultsState({ result, onReset }: ResultsStateProps) {
             </div>
           </div>
 
-          <div className="relative overflow-auto bg-accent/30 rounded-xl p-4 max-h-80">
+          <div className="bg-accent/30 relative max-h-80 overflow-auto rounded-xl p-4">
             <div
-              className="mx-auto transition-transform duration-200 shadow-lg rounded-lg overflow-hidden"
+              className="mx-auto overflow-hidden rounded-lg shadow-lg transition-transform duration-200"
               style={{
                 transform: `scale(${zoom})`,
                 transformOrigin: "center center",
@@ -83,36 +83,36 @@ export function ResultsState({ result, onReset }: ResultsStateProps) {
               <img
                 src={result.imageUrl || "/placeholder.svg"}
                 alt="Merged cross stitch pattern"
-                className="max-w-full h-auto"
+                className="h-auto max-w-full"
               />
             </div>
           </div>
 
-          <p className="text-center text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-center text-sm">
             {result.dimensions.width} × {result.dimensions.height} stitches
           </p>
         </Card>
 
         {/* Actions Panel */}
         <div className="space-y-4">
-          <Card className="p-4 space-y-3">
-            <h3 className="font-medium text-foreground">Pattern Info</h3>
+          <Card className="space-y-3 p-4">
+            <h3 className="text-foreground font-medium">Pattern Info</h3>
             <div className="space-y-2 text-sm">
-              <div className="flex justify-between py-2 border-b border-border/50">
+              <div className="border-border/50 flex justify-between border-b py-2">
                 <span className="text-muted-foreground">Original file</span>
-                <span className="font-medium text-foreground truncate max-w-40">
+                <span className="text-foreground max-w-40 truncate font-medium">
                   {result.originalFilename ?? "Unknown"}
                 </span>
               </div>
-              <div className="flex justify-between py-2 border-b border-border/50">
+              <div className="border-border/50 flex justify-between border-b py-2">
                 <span className="text-muted-foreground">Pages merged</span>
-                <span className="font-medium text-foreground">
+                <span className="text-foreground font-medium">
                   {result.pagesMerged}
                 </span>
               </div>
               <div className="flex justify-between py-2">
                 <span className="text-muted-foreground">Dimensions</span>
-                <span className="font-medium text-foreground">
+                <span className="text-foreground font-medium">
                   {result.dimensions.width} × {result.dimensions.height}
                 </span>
               </div>
@@ -121,19 +121,19 @@ export function ResultsState({ result, onReset }: ResultsStateProps) {
 
           <div className="space-y-3">
             <Button
-              className="w-full gap-2 h-12 text-base rounded-xl"
+              className="h-12 w-full gap-2 rounded-xl text-base"
               onClick={() => setExportDialogOpen(true)}
             >
-              <Download className="w-5 h-5" />
+              <Download className="h-5 w-5" />
               Export Pattern
             </Button>
           </div>
 
           <button
             onClick={onReset}
-            className="w-full flex items-center justify-center gap-2 py-2 text-muted-foreground hover:text-foreground transition-colors"
+            className="text-muted-foreground hover:text-foreground flex w-full items-center justify-center gap-2 py-2 transition-colors"
           >
-            <RotateCcw className="w-4 h-4" />
+            <RotateCcw className="h-4 w-4" />
             Start over with a new pattern
           </button>
         </div>

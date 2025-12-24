@@ -45,7 +45,7 @@ export function PageSelector({ pages, onBack, onMerge }: PageSelectorProps) {
         ];
       });
     },
-    [pages],
+    [pages]
   );
 
   const handleCellRemove = useCallback((row: number, col: number) => {
@@ -84,25 +84,25 @@ export function PageSelector({ pages, onBack, onMerge }: PageSelectorProps) {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <Button variant="ghost" onClick={onBack}>
-          <ArrowLeft className="w-4 h-4 mr-2" />
+          <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
-        <h2 className="text-lg font-serif font-semibold">
+        <h2 className="font-serif text-lg font-semibold">
           Arrange Pattern Pages
         </h2>
         <div className="w-20" /> {/* Spacer for centering */}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Left panel: PDF pages */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="font-medium text-foreground">PDF Pages</h3>
-            <span className="text-sm text-muted-foreground">
+            <h3 className="text-foreground font-medium">PDF Pages</h3>
+            <span className="text-muted-foreground text-sm">
               {pages.length} pages
             </span>
           </div>
-          <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 max-h-[60vh] overflow-y-auto p-1">
+          <div className="grid max-h-[60vh] grid-cols-3 gap-3 overflow-y-auto p-1 sm:grid-cols-4">
             {pages.map((page) => (
               <PageThumbnail
                 key={page.pageNumber}
@@ -111,7 +111,7 @@ export function PageSelector({ pages, onBack, onMerge }: PageSelectorProps) {
               />
             ))}
           </div>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             Drag pages to the grid on the right to arrange your pattern
           </p>
         </div>
@@ -119,14 +119,14 @@ export function PageSelector({ pages, onBack, onMerge }: PageSelectorProps) {
         {/* Right panel: Grid canvas */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="font-medium text-foreground">Pattern Grid</h3>
-            <span className="text-sm text-muted-foreground">
+            <h3 className="text-foreground font-medium">Pattern Grid</h3>
+            <span className="text-muted-foreground text-sm">
               {filledSlots} of {totalSlots} slots filled
             </span>
           </div>
 
           {/* Grid dimension controls */}
-          <div className="flex items-center gap-6 p-3 bg-accent/50 rounded-lg">
+          <div className="bg-accent/50 flex items-center gap-6 rounded-lg p-3">
             <div className="flex items-center gap-2">
               <Label className="text-sm">Rows:</Label>
               <Button
@@ -135,7 +135,7 @@ export function PageSelector({ pages, onBack, onMerge }: PageSelectorProps) {
                 onClick={() => handleRowsChange(-1)}
                 disabled={gridDimensions.rows <= 1}
               >
-                <Minus className="w-3 h-3" />
+                <Minus className="h-3 w-3" />
               </Button>
               <span className="w-6 text-center font-medium">
                 {gridDimensions.rows}
@@ -146,7 +146,7 @@ export function PageSelector({ pages, onBack, onMerge }: PageSelectorProps) {
                 onClick={() => handleRowsChange(1)}
                 disabled={gridDimensions.rows >= 5}
               >
-                <Plus className="w-3 h-3" />
+                <Plus className="h-3 w-3" />
               </Button>
             </div>
             <div className="flex items-center gap-2">
@@ -157,7 +157,7 @@ export function PageSelector({ pages, onBack, onMerge }: PageSelectorProps) {
                 onClick={() => handleColsChange(-1)}
                 disabled={gridDimensions.cols <= 1}
               >
-                <Minus className="w-3 h-3" />
+                <Minus className="h-3 w-3" />
               </Button>
               <span className="w-6 text-center font-medium">
                 {gridDimensions.cols}
@@ -168,7 +168,7 @@ export function PageSelector({ pages, onBack, onMerge }: PageSelectorProps) {
                 onClick={() => handleColsChange(1)}
                 disabled={gridDimensions.cols >= 5}
               >
-                <Plus className="w-3 h-3" />
+                <Plus className="h-3 w-3" />
               </Button>
             </div>
           </div>
@@ -187,22 +187,22 @@ export function PageSelector({ pages, onBack, onMerge }: PageSelectorProps) {
       </div>
 
       {/* Action buttons */}
-      <div className="flex justify-end gap-3 pt-4 border-t">
+      <div className="flex justify-end gap-3 border-t pt-4">
         <Button variant="outline" onClick={onBack}>
           Cancel
         </Button>
         <Button onClick={handleMerge} disabled={!canMerge}>
           Merge Pattern
-          <ArrowRight className="w-4 h-4 ml-2" />
+          <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
       </div>
 
       {/* Tips */}
-      <div className="bg-accent/50 rounded-xl p-4 border border-border/50">
-        <h3 className="font-medium text-foreground mb-2 flex items-center gap-2">
+      <div className="bg-accent/50 border-border/50 rounded-xl border p-4">
+        <h3 className="text-foreground mb-2 flex items-center gap-2 font-medium">
           <span className="text-lg">💡</span> Tips
         </h3>
-        <ul className="text-sm text-muted-foreground space-y-1">
+        <ul className="text-muted-foreground space-y-1 text-sm">
           <li>• Drag pages from the left into the grid positions</li>
           <li>• Adjust rows and columns to match your pattern layout</li>
           <li>• Click × on a placed page to remove it from the grid</li>

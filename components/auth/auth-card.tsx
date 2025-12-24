@@ -27,19 +27,19 @@ export function AuthCard({
   className,
 }: AuthCardProps) {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 bg-linear-to-br from-background via-background to-muted/30">
+    <div className="from-background via-background to-muted/30 flex min-h-screen flex-col items-center justify-center bg-linear-to-br px-4 py-8">
       <Link
         href="/"
-        className="flex items-center gap-3 mb-8 hover:opacity-80 transition-opacity"
+        className="mb-8 flex items-center gap-3 transition-opacity hover:opacity-80"
       >
-        <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-primary text-primary-foreground">
-          <Scissors className="w-6 h-6" />
+        <div className="bg-primary text-primary-foreground flex h-12 w-12 items-center justify-center rounded-xl">
+          <Scissors className="h-6 w-6" />
         </div>
         <div>
-          <h1 className="text-2xl font-serif font-bold text-foreground">
+          <h1 className="text-foreground font-serif text-2xl font-bold">
             Cross Stitch-up
           </h1>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-muted-foreground text-xs">
             Tools for cross stitch enthusiasts
           </p>
         </div>
@@ -47,12 +47,12 @@ export function AuthCard({
 
       <Card className={cn("w-full max-w-md", className)}>
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-serif">{title}</CardTitle>
+          <CardTitle className="font-serif text-2xl">{title}</CardTitle>
           {description && <CardDescription>{description}</CardDescription>}
         </CardHeader>
         <CardContent>{children}</CardContent>
         {footer && (
-          <CardFooter className="flex flex-col gap-4 text-center text-sm text-muted-foreground">
+          <CardFooter className="text-muted-foreground flex flex-col gap-4 text-center text-sm">
             {footer}
           </CardFooter>
         )}

@@ -64,7 +64,7 @@ export default function MergePage() {
       setError(
         err instanceof Error
           ? err.message
-          : "Failed to load PDF. Please try a different file.",
+          : "Failed to load PDF. Please try a different file."
       );
       setMergeState("error");
     }
@@ -98,7 +98,7 @@ export default function MergePage() {
           stitchConfig,
           (stage) => {
             setProcessingStage(stage);
-          },
+          }
         );
 
         setResult({
@@ -114,12 +114,12 @@ export default function MergePage() {
         setError(
           err instanceof Error
             ? err.message
-            : "Failed to process PDF. Please try again.",
+            : "Failed to process PDF. Please try again."
         );
         setMergeState("error");
       }
     },
-    [pdfPages, stitchConfig, originalFilename],
+    [pdfPages, stitchConfig, originalFilename]
   );
 
   const handleReset = useCallback(() => {
@@ -141,10 +141,10 @@ export default function MergePage() {
         <div className="space-y-4">
           <button
             onClick={handleBackToConfig}
-            className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1"
+            className="text-muted-foreground hover:text-foreground flex items-center gap-1 text-sm"
           >
             <svg
-              className="w-4 h-4"
+              className="h-4 w-4"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -159,7 +159,7 @@ export default function MergePage() {
             Back to dimensions
           </button>
           {stitchConfig && (
-            <div className="text-sm text-muted-foreground mb-4">
+            <div className="text-muted-foreground mb-4 text-sm">
               Pattern size: {stitchConfig.width} × {stitchConfig.height}{" "}
               stitches
             </div>
@@ -181,10 +181,10 @@ export default function MergePage() {
         <ResultsState result={result} onReset={handleReset} />
       )}
       {mergeState === "error" && (
-        <div className="text-center space-y-4">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-destructive/10">
+        <div className="space-y-4 text-center">
+          <div className="bg-destructive/10 inline-flex h-16 w-16 items-center justify-center rounded-full">
             <svg
-              className="w-8 h-8 text-destructive"
+              className="text-destructive h-8 w-8"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -197,13 +197,13 @@ export default function MergePage() {
               />
             </svg>
           </div>
-          <h2 className="text-xl font-serif font-semibold text-foreground">
+          <h2 className="text-foreground font-serif text-xl font-semibold">
             Oops! Something went wrong
           </h2>
           <p className="text-muted-foreground">{error}</p>
           <button
             onClick={handleReset}
-            className="inline-flex items-center px-6 py-2 rounded-xl bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-all hover:shadow-md"
+            className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center rounded-xl px-6 py-2 font-medium transition-all hover:shadow-md"
           >
             Start Over
           </button>
