@@ -56,7 +56,7 @@ export function UserMenu({ user }: UserMenuProps) {
         <Button
           variant="ghost"
           size="sm"
-          className="relative h-9 w-9 rounded-full"
+          className="relative h-9 w-9 rounded-full p-0"
         >
           {user.image ? (
             <Image
@@ -67,7 +67,7 @@ export function UserMenu({ user }: UserMenuProps) {
               className="h-9 w-9 rounded-full object-cover"
             />
           ) : (
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-medium">
+            <div className="flex object-cover w-full h-full items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-medium">
               {initials}
             </div>
           )}
