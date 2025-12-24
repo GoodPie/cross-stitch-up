@@ -1,10 +1,10 @@
 "use client";
 
-import {useMemo, useState} from "react";
-import type {ThreadColour} from "@/lib/tools/threads/types";
-import {filterByBrand, filterBySearch, hexToRgb, sortByColorSimilarity} from "@/lib/tools/threads/color-utils";
-import {ThreadFilters} from "./thread-filters";
-import {ThreadGrid} from "./thread-grid";
+import { useMemo, useState } from "react";
+import type { ThreadColour } from "@/lib/tools/threads/types";
+import { filterByBrand, filterBySearch, hexToRgb, sortByColorSimilarity } from "@/lib/tools/threads/color-utils";
+import { ThreadFilters } from "./thread-filters";
+import { ThreadGrid } from "./thread-grid";
 
 interface ThreadsClientProps {
     readonly threads: ThreadColour[];
