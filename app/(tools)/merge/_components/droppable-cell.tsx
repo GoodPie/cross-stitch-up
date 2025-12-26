@@ -23,7 +23,7 @@ export function DroppableCell({ row, col, isOccupied, children }: DroppableCellP
         <div
             ref={setNodeRef}
             aria-label={`Drop zone row ${row + 1} column ${col + 1}`}
-            className={`aspect-3/4 rounded-lg border-2 border-dashed transition-all duration-200 ${isOccupied ? "border-border border-solid p-0" : "border-muted-foreground/30"} ${isOver && !isOccupied ? "scale-[1.02] border-primary bg-primary/10" : ""} ${!isOccupied ? "flex items-center justify-center" : ""} `}
+            className={`aspect-3/4 rounded-lg border-2 border-dashed transition-all duration-200 ${isOccupied ? "border-border border-solid p-0" : "border-muted-foreground/30"} ${isOver && !isOccupied ? "border-primary bg-primary/10 scale-[1.02]" : ""} ${!isOccupied ? "flex items-center justify-center" : ""} `}
         >
             {isOccupied ? (
                 children

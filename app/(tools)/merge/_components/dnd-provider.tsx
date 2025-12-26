@@ -82,14 +82,14 @@ function DragOverlayContent({ page }: { readonly page: PageRenderResult }) {
     const imageUrl = page.canvas.toDataURL("image/jpeg", 0.8);
 
     return (
-        <div className="relative aspect-3/4 w-24 rounded-lg border-2 border-primary bg-background shadow-lg">
+        <div className="border-primary bg-background relative aspect-3/4 w-24 rounded-lg border-2 shadow-lg">
             {/* eslint-disable-next-line @next/next/no-img-element -- canvas data URL for drag preview */}
             <img
                 src={imageUrl}
                 alt={`Page ${page.pageNumber}`}
                 className="h-full w-full rounded-lg object-cover opacity-90"
             />
-            <div className="absolute top-1 left-1 rounded bg-background/90 px-1.5 py-0.5 text-xs font-medium">
+            <div className="bg-background/90 absolute top-1 left-1 rounded px-1.5 py-0.5 text-xs font-medium">
                 Page {page.pageNumber}
             </div>
         </div>
