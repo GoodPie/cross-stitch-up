@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { PageThumbnail } from "@/components/shared/page-thumbnail";
 import { GridCanvas } from "./grid-canvas";
+import { MergeDndProvider } from "./dnd-provider";
 import type { PageRenderResult } from "@/lib/shared/types";
 import type { GridCell, GridArrangement } from "@/lib/tools/merge/types";
 
@@ -81,8 +82,9 @@ export function PageSelector({ pages, onBack, onMerge }: PageSelectorProps) {
     const canMerge = filledSlots > 0;
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-center justify-between">
+        <MergeDndProvider pages={pages} onDrop={handleCellAdd}>
+            <div className="space-y-6">
+                <div className="flex items-center justify-between">
                 <Button variant="ghost" onClick={onBack}>
                     <ArrowLeft className="mr-2 h-4 w-4" />
                     Back
@@ -170,7 +172,6 @@ export function PageSelector({ pages, onBack, onMerge }: PageSelectorProps) {
                         <GridCanvas
                             cells={cells}
                             pages={pages}
-                            onCellAdd={handleCellAdd}
                             onCellRemove={handleCellRemove}
                             gridDimensions={gridDimensions}
                         />
@@ -201,6 +202,7 @@ export function PageSelector({ pages, onBack, onMerge }: PageSelectorProps) {
                     <li>• Skip cover pages, color keys, and instruction pages</li>
                 </ul>
             </div>
-        </div>
+            </div>
+        </MergeDndProvider>
     );
 }
