@@ -122,7 +122,7 @@ supabase/
 
 ### State Flow (Merge Tool)
 
-Uses a state machine pattern: `config -> upload -> selecting -> processing -> success/error`
+Uses a state machine pattern: `config → upload → selecting → processing → success/error`
 
 - `config`: Enter pattern dimensions
 - `upload`: Drag-and-drop PDF upload
