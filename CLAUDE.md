@@ -305,7 +305,3 @@ SENTRY_AUTH_TOKEN=           # Sentry auth token (build-time)
 - TypeScript 5.x with Next.js 16 (React 19) + React 19, Tailwind CSS 4, shadcn/ui (new-york style) (001-grid-creator)
 - N/A (client-side only, no persistence for this iteration) (001-grid-creator)
 - TypeScript 5.x with Next.js 16 (React 19) + React 19, Tailwind CSS 4, shadcn/ui (new-york style), HTML5 Canvas API (001-grid-creator)
-
-## Recent Changes
-
-- 001-grid-creator: Added TypeScript 5.x with Next.js 16 (React 19) + React 19, Tailwind CSS 4, shadcn/ui (new-york style)
