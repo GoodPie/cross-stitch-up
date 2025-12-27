@@ -99,7 +99,7 @@ export type ToolMode = "select" | "paint" | "erase" | "eyedropper";
  */
 export type ViewMode = "color" | "symbol" | "both";
 
-export const DEFAULT_VIEW_MODE: ViewMode = "color";
+export const DEFAULT_VIEW_MODE: ViewMode = "both";
 
 /**
  * Selected thread color for painting.
