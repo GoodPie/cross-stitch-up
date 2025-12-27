@@ -20,7 +20,7 @@ import type {
     SelectedColor,
     SymbolDefinition,
 } from "@/lib/tools/grid-creator";
-import { PALETTE_CONSTRAINTS, DEFAULT_VIEW_MODE } from "@/lib/tools/grid-creator";
+import { PALETTE_CONSTRAINTS, DEFAULT_VIEW_MODE, DEFAULT_SELECTED_COLOR } from "@/lib/tools/grid-creator";
 import type { ThreadColour } from "@/lib/tools/threads/types";
 
 interface GridCreatorClientProps {
@@ -41,8 +41,8 @@ export function GridCreatorClient({ threads, brands }: GridCreatorClientProps) {
 
     // Tool mode and color state
     const [toolMode, setToolMode] = useState<ToolMode>("select");
-    const [selectedColor, setSelectedColor] = useState<SelectedColor | null>(null);
-    const [recentColors, setRecentColors] = useState<SelectedColor[]>([]);
+    const [selectedColor, setSelectedColor] = useState<SelectedColor | null>(DEFAULT_SELECTED_COLOR);
+    const [recentColors, setRecentColors] = useState<SelectedColor[]>([DEFAULT_SELECTED_COLOR]);
 
     // View mode for symbol/color display
     const [viewMode, setViewMode] = useState<ViewMode>(DEFAULT_VIEW_MODE);

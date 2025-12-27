@@ -127,9 +127,20 @@ export interface ColorPaletteState {
     recentColors: SelectedColor[];
 }
 
+/**
+ * Default color for painting: Black (DMC 310).
+ * This is the most commonly used color in cross-stitch patterns.
+ */
+export const DEFAULT_SELECTED_COLOR: SelectedColor = {
+    hex: "#000000",
+    threadCode: "DMC 310",
+    name: "Black",
+    brand: "DMC",
+};
+
 export const DEFAULT_PALETTE_STATE: ColorPaletteState = {
-    selectedColor: null,
-    recentColors: [],
+    selectedColor: DEFAULT_SELECTED_COLOR,
+    recentColors: [DEFAULT_SELECTED_COLOR],
 };
 
 export const PALETTE_CONSTRAINTS = {
