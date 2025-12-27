@@ -88,8 +88,8 @@ interface InteractionState {
  * Returns a cleanup function to remove all event listeners.
  *
  * @param canvas - Canvas element to attach handlers to
- * @param viewport - Current viewport state (getter)
- * @param renderConfig - Render configuration (getter)
+ * @param getViewport - Function to retrieve current viewport state
+ * @param getRenderConfig - Function to retrieve current render configuration
  * @param gridConfig - Grid configuration
  * @param callbacks - Callback functions for interactions
  * @returns Object with cleanup function
