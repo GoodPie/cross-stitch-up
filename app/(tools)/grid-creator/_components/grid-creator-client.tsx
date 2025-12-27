@@ -281,7 +281,7 @@ export function GridCreatorClient({ threads, brands }: GridCreatorClientProps) {
 
             {/* Color Palette Sidebar - Desktop: always visible, Mobile: toggle */}
             {phase === "interactive" && config && (
-                <div className={`${showPalette ? "fixed inset-0 z-50 md:relative md:inset-auto" : "hidden md:block"}`}>
+                <div className={`${showPalette ? "fixed inset-x-0 top-[72px] bottom-0 z-50 md:relative md:inset-auto md:top-auto" : "hidden md:block"}`}>
                     {/* Mobile backdrop */}
                     {showPalette && (
                         <button
@@ -293,8 +293,8 @@ export function GridCreatorClient({ threads, brands }: GridCreatorClientProps) {
                     )}
 
                     {/* Palette */}
-                    <div className="relative z-10 h-full md:static">
-                        <div className="absolute right-0 h-full md:static">
+                    <div className="pointer-events-none relative h-full md:static">
+                        <div className="pointer-events-auto absolute right-0 h-full md:static">
                             <ColorPalette
                                 threads={threads}
                                 brands={brands}

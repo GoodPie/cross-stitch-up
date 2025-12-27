@@ -174,7 +174,7 @@ export function clampViewport(viewport: ViewportState): ViewportState {
 }
 
 /**
- * Range of cells currently visible in viewport.
+ * Range of cells currently visible in view-port.
  * Used for render culling - only draw visible cells.
  */
 export interface VisibleRange {
