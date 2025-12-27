@@ -62,20 +62,22 @@ export function GridCreatorClient({ threads, brands }: GridCreatorClientProps) {
     const isInteractive = phase === "interactive";
     const isRendering = phase === "rendering";
 
+    // Config phase - centered layout matching merge tool
+    if (phase === "config") {
+        return (
+            <div className="container mx-auto max-w-4xl">
+                <GridConfigForm onSubmit={handleConfigSubmit} />
+            </div>
+        );
+    }
+
+    // Rendering/Interactive phase - workspace layout
     return (
         <div className="flex h-[calc(100vh-12rem)] min-h-[600px] gap-0 md:gap-4 lg:gap-6">
             {/* Main Content */}
             <div className="flex min-w-0 flex-1 flex-col">
                 <GridCreatorHeader />
 
-                {/* Config Phase */}
-                {phase === "config" && (
-                    <div className="mx-auto w-full max-w-md">
-                        <GridConfigForm onSubmit={handleConfigSubmit} />
-                    </div>
-                )}
-
-                {/* Rendering/Interactive Phase */}
                 {(isRendering || isInteractive) && config && (
                     <div className="flex min-h-0 flex-1 flex-col space-y-4">
                         <GridCreatorToolbar
