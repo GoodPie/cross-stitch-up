@@ -17,4 +17,12 @@ export const tools: ToolMetadata[] = [
         href: "/threads",
         status: "stable",
     },
+    {
+        id: "grid-creator",
+        name: "Grid Creator",
+        description: "Create a blank cross-stitch grid for designing patterns",
+        icon: "Grid3X3",
+        href: "/grid-creator",
+        status: "beta",
+    },
 ];
