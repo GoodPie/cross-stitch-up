@@ -37,7 +37,7 @@ export function GridCreatorToolbar({
     onTogglePalette,
 }: GridCreatorToolbarProps) {
     return (
-        <div className="flex flex-wrap items-center justify-between gap-4 px-4">
+        <div className="flex flex-wrap items-center justify-between gap-4 px-4 md:gap-6">
             <div className="flex items-center gap-4">
                 <div className="text-muted-foreground text-sm">
                     <span className="text-foreground font-medium">

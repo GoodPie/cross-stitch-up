@@ -110,7 +110,7 @@ export default function MergePage() {
     }, []);
 
     return (
-        <>
+        <div className="container mx-auto max-w-4xl px-4 py-8">
             {mergeState === "config" && <StitchConfigForm onContinue={handleConfigContinue} />}
             {mergeState === "upload" && (
                 <div className="space-y-4">
@@ -158,6 +158,6 @@ export default function MergePage() {
                     </button>
                 </div>
             )}
-        </>
+        </div>
     );
 }

@@ -43,7 +43,7 @@ export default async function GridCreatorPage() {
     const { threads, brands } = await getThreads();
 
     return (
-        <main className="container mx-auto max-w-7xl px-4 py-4">
+        <main className="w-full px-4 py-8 md:px-6 lg:px-8">
             <GridCreatorClient threads={threads} brands={brands} />
         </main>
     );

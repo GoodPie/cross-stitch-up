@@ -63,7 +63,7 @@ export function GridCreatorClient({ threads, brands }: GridCreatorClientProps) {
     const isRendering = phase === "rendering";
 
     return (
-        <div className="flex h-[calc(100vh-12rem)] min-h-[600px] gap-0">
+        <div className="flex h-[calc(100vh-12rem)] min-h-[600px] gap-0 md:gap-4 lg:gap-6">
             {/* Main Content */}
             <div className="flex min-w-0 flex-1 flex-col">
                 <GridCreatorHeader />

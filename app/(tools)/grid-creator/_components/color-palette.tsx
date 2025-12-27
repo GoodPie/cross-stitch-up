@@ -25,7 +25,7 @@ export function ColorPalette({
     onSymbolSelect,
 }: ColorPaletteProps) {
     return (
-        <div className="bg-background flex h-full w-64 flex-col border-l">
+        <div className="bg-background flex h-full w-64 flex-col border-l lg:w-72 xl:w-80">
             {/* Header */}
             <div className="border-b p-3">
                 <div className="flex items-center gap-2">
