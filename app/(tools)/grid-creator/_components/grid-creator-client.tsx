@@ -8,6 +8,7 @@ import { GridCanvas, DEFAULT_VIEWPORT, VIEWPORT_CONSTRAINTS } from "./grid-canva
 import { GridControls } from "./grid-controls";
 import { GridCellTooltip } from "./grid-cell-tooltip";
 import { ToolModeSelector } from "./tool-mode-selector";
+import { ViewModeSelector } from "./view-mode-selector";
 import { ColorPalette } from "./color-palette";
 import type {
     GridConfig,
@@ -15,9 +16,11 @@ import type {
     ViewportState,
     GridCreatorPhase,
     ToolMode,
+    ViewMode,
     SelectedColor,
+    SymbolDefinition,
 } from "@/lib/tools/grid-creator";
-import { PALETTE_CONSTRAINTS } from "@/lib/tools/grid-creator";
+import { PALETTE_CONSTRAINTS, DEFAULT_VIEW_MODE } from "@/lib/tools/grid-creator";
 import type { ThreadColour } from "@/lib/tools/threads/types";
 
 interface GridCreatorClientProps {
@@ -41,6 +44,12 @@ export function GridCreatorClient({ threads, brands }: GridCreatorClientProps) {
     const [selectedColor, setSelectedColor] = useState<SelectedColor | null>(null);
     const [recentColors, setRecentColors] = useState<SelectedColor[]>([]);
 
+    // View mode for symbol/color display
+    const [viewMode, setViewMode] = useState<ViewMode>(DEFAULT_VIEW_MODE);
+
+    // Color-to-symbol mapping (hex -> symbol character)
+    const [colorSymbolMap, setColorSymbolMap] = useState<Map<string, string>>(new Map());
+
     // Sidebar visibility on mobile
     const [showPalette, setShowPalette] = useState(false);
 
@@ -61,20 +70,50 @@ export function GridCreatorClient({ threads, brands }: GridCreatorClientProps) {
         setToolMode("select");
     }, []);
 
-    // Color selection handler - updates recent colors
-    const handleColorSelect = useCallback((color: SelectedColor) => {
-        setSelectedColor(color);
+    // Color selection handler - updates recent colors and includes symbol
+    const handleColorSelect = useCallback(
+        (color: SelectedColor) => {
+            // Include symbol from the map if one exists for this color
+            const symbol = colorSymbolMap.get(color.hex);
+            const colorWithSymbol = symbol ? { ...color, symbol } : color;
 
-        // Add to recent colors (avoid duplicates, max 16)
-        setRecentColors((prev) => {
-            const filtered = prev.filter((c) => c.hex !== color.hex);
-            const updated = [color, ...filtered];
-            return updated.slice(0, PALETTE_CONSTRAINTS.MAX_RECENT_COLORS);
-        });
+            setSelectedColor(colorWithSymbol);
 
-        // Auto-switch to paint mode when selecting a color
-        setToolMode("paint");
-    }, []);
+            // Add to recent colors (avoid duplicates, max 16)
+            setRecentColors((prev) => {
+                const filtered = prev.filter((c) => c.hex !== colorWithSymbol.hex);
+                const updated = [colorWithSymbol, ...filtered];
+                return updated.slice(0, PALETTE_CONSTRAINTS.MAX_RECENT_COLORS);
+            });
+
+            // Auto-switch to paint mode when selecting a color
+            setToolMode("paint");
+        },
+        [colorSymbolMap]
+    );
+
+    // Symbol selection handler - updates the color-symbol mapping
+    const handleSymbolSelect = useCallback(
+        (symbol: SymbolDefinition) => {
+            if (!selectedColor) return;
+
+            // Update the color-symbol mapping
+            setColorSymbolMap((prev) => {
+                const newMap = new Map(prev);
+                newMap.set(selectedColor.hex, symbol.character);
+                return newMap;
+            });
+
+            // Update current selected color with the symbol
+            setSelectedColor((prev) => (prev ? { ...prev, symbol: symbol.character } : null));
+
+            // Also update recent colors to include the new symbol
+            setRecentColors((prev) =>
+                prev.map((c) => (c.hex === selectedColor.hex ? { ...c, symbol: symbol.character } : c))
+            );
+        },
+        [selectedColor]
+    );
 
     // Eyedropper handler - picks color from cell
     const handleEyedrop = useCallback((color: SelectedColor | null) => {
@@ -163,6 +202,11 @@ export function GridCreatorClient({ threads, brands }: GridCreatorClientProps) {
                                         hasSelectedColor={selectedColor !== null}
                                     />
                                 )}
+
+                                {/* View Mode Selector */}
+                                {phase === "interactive" && (
+                                    <ViewModeSelector mode={viewMode} onModeChange={setViewMode} />
+                                )}
                             </div>
 
                             <div className="flex items-center gap-2">
@@ -210,6 +254,7 @@ export function GridCreatorClient({ threads, brands }: GridCreatorClientProps) {
                             <GridCanvas
                                 config={config}
                                 viewport={viewport}
+                                viewMode={viewMode}
                                 toolMode={toolMode}
                                 selectedColor={selectedColor}
                                 onReady={handleGridReady}
@@ -256,6 +301,7 @@ export function GridCreatorClient({ threads, brands }: GridCreatorClientProps) {
                                 selectedColor={selectedColor}
                                 recentColors={recentColors}
                                 onColorSelect={handleColorSelect}
+                                onSymbolSelect={handleSymbolSelect}
                             />
                         </div>
                     </div>

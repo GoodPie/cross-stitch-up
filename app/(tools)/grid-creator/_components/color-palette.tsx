@@ -9,7 +9,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import type { SelectedColor } from "@/lib/tools/grid-creator";
+import { SymbolPicker } from "./symbol-picker";
+import type { SelectedColor, SymbolDefinition } from "@/lib/tools/grid-creator";
 import type { ThreadColour } from "@/lib/tools/threads/types";
 import { filterBySearch, filterByBrand, getContrastColor } from "@/lib/tools/threads/color-utils";
 import { cn } from "@/lib/utils";
@@ -20,11 +21,19 @@ interface ColorPaletteProps {
     readonly selectedColor: SelectedColor | null;
     readonly recentColors: SelectedColor[];
     readonly onColorSelect: (color: SelectedColor) => void;
+    readonly onSymbolSelect: (symbol: SymbolDefinition) => void;
 }
 
 const MAX_VISIBLE_THREADS = 50;
 
-export function ColorPalette({ threads, brands, selectedColor, recentColors, onColorSelect }: ColorPaletteProps) {
+export function ColorPalette({
+    threads,
+    brands,
+    selectedColor,
+    recentColors,
+    onColorSelect,
+    onSymbolSelect,
+}: ColorPaletteProps) {
     const [search, setSearch] = useState("");
     const [brand, setBrand] = useState("all");
     const [isThreadsOpen, setIsThreadsOpen] = useState(false);
@@ -70,14 +79,26 @@ export function ColorPalette({ threads, brands, selectedColor, recentColors, onC
             <div className="border-b p-3">
                 <Label className="text-muted-foreground mb-2 block text-xs uppercase">Selected Color</Label>
                 {selectedColor ? (
-                    <div className="flex items-center gap-3">
-                        <div
-                            className="h-10 w-10 rounded-md border shadow-sm"
-                            style={{ backgroundColor: selectedColor.hex }}
-                        />
-                        <div className="flex-1 overflow-hidden">
-                            <p className="truncate text-sm font-medium">{selectedColor.name}</p>
-                            <p className="text-muted-foreground truncate text-xs">{selectedColor.threadCode}</p>
+                    <div className="space-y-3">
+                        <div className="flex items-center gap-3">
+                            <div
+                                className="h-10 w-10 rounded-md border shadow-sm"
+                                style={{ backgroundColor: selectedColor.hex }}
+                            />
+                            <div className="flex-1 overflow-hidden">
+                                <p className="truncate text-sm font-medium">{selectedColor.name}</p>
+                                <p className="text-muted-foreground truncate text-xs">{selectedColor.threadCode}</p>
+                            </div>
+                        </div>
+
+                        {/* Symbol Assignment */}
+                        <div className="flex items-center gap-2">
+                            <span className="text-muted-foreground text-xs">Symbol:</span>
+                            <SymbolPicker
+                                selectedSymbol={selectedColor.symbol || null}
+                                onSymbolSelect={onSymbolSelect}
+                                backgroundColor={selectedColor.hex}
+                            />
                         </div>
                     </div>
                 ) : (

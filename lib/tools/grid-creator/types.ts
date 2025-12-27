@@ -75,7 +75,7 @@ export interface CellState {
     /** Thread code for display (e.g., "DMC 310") */
     threadCode?: string;
 
-    /** Symbol for pattern display (future use) */
+    /** Symbol character for pattern display */
     symbol?: string;
 }
 
@@ -92,6 +92,16 @@ export const DEFAULT_CELL_STATE: CellState = {
 export type ToolMode = "select" | "paint" | "erase" | "eyedropper";
 
 /**
+ * View modes for displaying cells.
+ * - color: Show cell colors only
+ * - symbol: Show symbols only (on light gray background)
+ * - both: Show symbols overlaid on colors
+ */
+export type ViewMode = "color" | "symbol" | "both";
+
+export const DEFAULT_VIEW_MODE: ViewMode = "color";
+
+/**
  * Selected thread color for painting.
  */
 export interface SelectedColor {
@@ -103,6 +113,8 @@ export interface SelectedColor {
     name: string;
     /** Brand name */
     brand: string;
+    /** Symbol character for pattern display (assigned per color) */
+    symbol?: string;
 }
 
 /**
@@ -279,6 +291,9 @@ export interface RenderConfig {
 
     /** Colors for rendering */
     colors: RenderColors;
+
+    /** Current view mode for cell display */
+    viewMode: ViewMode;
 }
 
 export const DEFAULT_RENDER_COLORS: RenderColors = {

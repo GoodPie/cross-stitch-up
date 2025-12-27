@@ -9,7 +9,9 @@ import type {
     RenderConfig,
     ToolMode,
     SelectedColor,
+    ViewMode,
 } from "@/lib/tools/grid-creator";
+import { DEFAULT_VIEW_MODE } from "@/lib/tools/grid-creator";
 import {
     DEFAULT_VIEWPORT,
     VIEWPORT_CONSTRAINTS,
@@ -23,6 +25,7 @@ import {
 interface GridCanvasProps {
     readonly config: GridConfig;
     readonly viewport?: ViewportState;
+    readonly viewMode?: ViewMode;
     readonly toolMode?: ToolMode;
     readonly selectedColor?: SelectedColor | null;
     readonly onCellClick?: (position: CellPosition) => void;
@@ -35,6 +38,7 @@ interface GridCanvasProps {
 export function GridCanvas({
     config,
     viewport: externalViewport,
+    viewMode = DEFAULT_VIEW_MODE,
     toolMode = "select",
     selectedColor,
     onCellClick,
@@ -79,8 +83,8 @@ export function GridCanvas({
         if (containerSize.width === 0 || containerSize.height === 0) {
             return null;
         }
-        return calculateRenderConfig(config, containerSize.width, containerSize.height);
-    }, [config, containerSize]);
+        return calculateRenderConfig(config, containerSize.width, containerSize.height, viewMode);
+    }, [config, containerSize, viewMode]);
 
     // Update renderConfigRef
     useEffect(() => {
@@ -188,13 +192,13 @@ export function GridCanvas({
         // Re-render previous hovered cell (remove highlight)
         if (prevHovered) {
             const prevCellState = currentCells.get(cellKey(prevHovered));
-            renderCell(ctx, prevHovered, prevCellState, currentRenderConfig, false);
+            renderCell(ctx, prevHovered, prevCellState, currentRenderConfig, false, currentViewport.scale);
         }
 
         // Render new hovered cell (add highlight)
         if (currentHovered) {
             const currentCellState = currentCells.get(cellKey(currentHovered));
-            renderCell(ctx, currentHovered, currentCellState, currentRenderConfig, true);
+            renderCell(ctx, currentHovered, currentCellState, currentRenderConfig, true, currentViewport.scale);
         }
 
         ctx.restore();
@@ -224,7 +228,7 @@ export function GridCanvas({
                     break;
 
                 case "paint":
-                    // Apply selected color to cell
+                    // Apply selected color and symbol to cell
                     if (selectedColor) {
                         setCells((prev) => {
                             const newCells = new Map(prev);
@@ -232,6 +236,7 @@ export function GridCanvas({
                                 active: true,
                                 color: selectedColor.hex,
                                 threadCode: selectedColor.threadCode,
+                                symbol: selectedColor.symbol,
                             });
                             return newCells;
                         });
@@ -248,7 +253,7 @@ export function GridCanvas({
                     break;
 
                 case "eyedropper":
-                    // Pick color from cell
+                    // Pick color and symbol from cell
                     {
                         const cellState = cellsRef.current.get(key);
                         if (cellState?.color && cellState?.threadCode) {
@@ -259,6 +264,7 @@ export function GridCanvas({
                                 threadCode: cellState.threadCode,
                                 name: `${brand} ${codeParts.join(" ")}`,
                                 brand: brand || "Unknown",
+                                symbol: cellState.symbol,
                             });
                         } else {
                             onEyedrop?.(null);
