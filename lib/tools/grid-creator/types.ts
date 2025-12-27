@@ -80,13 +80,6 @@ export interface CellState {
 }
 
 /**
- * Default cell state (not stored in Map).
- */
-export const DEFAULT_CELL_STATE: CellState = {
-    active: false,
-};
-
-/**
  * Tool modes for grid interaction.
  */
 export type ToolMode = "select" | "paint" | "erase" | "eyedropper";
@@ -136,11 +129,6 @@ export const DEFAULT_SELECTED_COLOR: SelectedColor = {
     threadCode: "DMC 310",
     name: "Black",
     brand: "DMC",
-};
-
-export const DEFAULT_PALETTE_STATE: ColorPaletteState = {
-    selectedColor: DEFAULT_SELECTED_COLOR,
-    recentColors: [DEFAULT_SELECTED_COLOR],
 };
 
 export const PALETTE_CONSTRAINTS = {
