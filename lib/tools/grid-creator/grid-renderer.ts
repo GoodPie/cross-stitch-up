@@ -89,8 +89,7 @@ function renderCells(
 ): void {
     const { cellSize, colors } = renderConfig;
 
-    // First pass: render active cells
-    ctx.fillStyle = colors.activeCell;
+    // First pass: render active cells with their colors
     for (const [key, state] of cells.entries()) {
         if (!state.active) continue;
 
@@ -106,12 +105,15 @@ function renderCells(
             continue;
         }
 
+        // Use cell's color if available, otherwise use default active color
+        ctx.fillStyle = state.color || colors.activeCell;
+
         const x = col * cellSize;
         const y = row * cellSize;
         ctx.fillRect(x, y, cellSize, cellSize);
     }
 
-    // Second pass: render hovered cell (on top of active)
+    // Second pass: render hovered cell (semi-transparent overlay)
     if (hoveredCell) {
         const { row, col } = hoveredCell;
         if (
@@ -189,7 +191,8 @@ export function renderCell(
     // Determine fill color based on state
     let fillColor = colors.background;
     if (state?.active) {
-        fillColor = colors.activeCell;
+        // Use cell's color if available, otherwise use default active color
+        fillColor = state.color || colors.activeCell;
     }
     if (isHovered) {
         fillColor = colors.hoverHighlight;
@@ -209,4 +212,3 @@ export function renderCell(
     ctx.lineWidth = renderConfig.lineWidth;
     ctx.strokeRect(x + 0.5, y + 0.5, cellSize, cellSize);
 }
-

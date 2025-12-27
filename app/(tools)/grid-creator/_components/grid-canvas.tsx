@@ -1,7 +1,15 @@
 "use client";
 
 import React, { useRef, useEffect, useState, useCallback, useMemo } from "react";
-import type { GridConfig, ViewportState, CellState, CellPosition, RenderConfig } from "@/lib/tools/grid-creator";
+import type {
+    GridConfig,
+    ViewportState,
+    CellState,
+    CellPosition,
+    RenderConfig,
+    ToolMode,
+    SelectedColor,
+} from "@/lib/tools/grid-creator";
 import {
     DEFAULT_VIEWPORT,
     VIEWPORT_CONSTRAINTS,
@@ -15,19 +23,25 @@ import {
 interface GridCanvasProps {
     readonly config: GridConfig;
     readonly viewport?: ViewportState;
+    readonly toolMode?: ToolMode;
+    readonly selectedColor?: SelectedColor | null;
     readonly onCellClick?: (position: CellPosition) => void;
     readonly onHoveredCellChange?: (position: CellPosition | null) => void;
     readonly onViewportChange?: (viewport: ViewportState) => void;
     readonly onReady?: () => void;
+    readonly onEyedrop?: (color: SelectedColor | null) => void;
 }
 
 export function GridCanvas({
     config,
     viewport: externalViewport,
+    toolMode = "select",
+    selectedColor,
     onCellClick,
     onHoveredCellChange,
     onViewportChange,
     onReady,
+    onEyedrop,
 }: GridCanvasProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -161,13 +175,13 @@ export function GridCanvas({
         const ctx = canvas.getContext("2d", { alpha: false });
         if (!ctx) return;
 
-        const dpr = window.devicePixelRatio || 1;
         const currentViewport = viewportRef.current;
         const currentCells = cellsRef.current;
 
         // Apply transformations
+        // Note: dpr scale is already applied by main render and persists on the canvas
+        // Only apply viewport transforms here
         ctx.save();
-        ctx.scale(dpr, dpr);
         ctx.scale(currentViewport.scale, currentViewport.scale);
         ctx.translate(-currentViewport.offsetX, -currentViewport.offsetY);
 
@@ -189,23 +203,73 @@ export function GridCanvas({
         prevHoveredCellRef.current = currentHovered;
     }, [hoveredCell, isReady]);
 
-    // Handle cell click (toggle active state)
+    // Handle cell click based on current tool mode
     const handleCellClick = useCallback(
         (position: CellPosition) => {
             const key = cellKey(position);
-            setCells((prev) => {
-                const newCells = new Map(prev);
-                const current = newCells.get(key);
-                if (current?.active) {
-                    newCells.delete(key);
-                } else {
-                    newCells.set(key, { active: true });
-                }
-                return newCells;
-            });
+
+            switch (toolMode) {
+                case "select":
+                    // Toggle cell on/off (legacy behavior)
+                    setCells((prev) => {
+                        const newCells = new Map(prev);
+                        const current = newCells.get(key);
+                        if (current?.active) {
+                            newCells.delete(key);
+                        } else {
+                            newCells.set(key, { active: true });
+                        }
+                        return newCells;
+                    });
+                    break;
+
+                case "paint":
+                    // Apply selected color to cell
+                    if (selectedColor) {
+                        setCells((prev) => {
+                            const newCells = new Map(prev);
+                            newCells.set(key, {
+                                active: true,
+                                color: selectedColor.hex,
+                                threadCode: selectedColor.threadCode,
+                            });
+                            return newCells;
+                        });
+                    }
+                    break;
+
+                case "erase":
+                    // Remove cell
+                    setCells((prev) => {
+                        const newCells = new Map(prev);
+                        newCells.delete(key);
+                        return newCells;
+                    });
+                    break;
+
+                case "eyedropper":
+                    // Pick color from cell
+                    {
+                        const cellState = cellsRef.current.get(key);
+                        if (cellState?.color && cellState?.threadCode) {
+                            // Extract brand and name from threadCode (e.g., "DMC 310")
+                            const [brand, ...codeParts] = cellState.threadCode.split(" ");
+                            onEyedrop?.({
+                                hex: cellState.color,
+                                threadCode: cellState.threadCode,
+                                name: `${brand} ${codeParts.join(" ")}`,
+                                brand: brand || "Unknown",
+                            });
+                        } else {
+                            onEyedrop?.(null);
+                        }
+                    }
+                    break;
+            }
+
             onCellClick?.(position);
         },
-        [onCellClick]
+        [toolMode, selectedColor, onCellClick, onEyedrop]
     );
 
     // Handle hover change

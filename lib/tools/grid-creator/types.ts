@@ -66,13 +66,17 @@ export function parseKey(key: string): CellPosition {
  * Sparse storage - only non-default cells are stored.
  */
 export interface CellState {
-    /** Whether the cell has been activated (clicked) */
+    /** Whether the cell has been activated (filled) */
     active: boolean;
 
-    // Future expansion:
-    // color?: string;
-    // symbol?: string;
-    // threadCode?: string;
+    /** Hex color of the cell (e.g., "#FF5733") */
+    color?: string;
+
+    /** Thread code for display (e.g., "DMC 310") */
+    threadCode?: string;
+
+    /** Symbol for pattern display (future use) */
+    symbol?: string;
 }
 
 /**
@@ -81,6 +85,44 @@ export interface CellState {
 export const DEFAULT_CELL_STATE: CellState = {
     active: false,
 };
+
+/**
+ * Tool modes for grid interaction.
+ */
+export type ToolMode = "select" | "paint" | "erase" | "eyedropper";
+
+/**
+ * Selected thread color for painting.
+ */
+export interface SelectedColor {
+    /** Hex color value */
+    hex: string;
+    /** Thread code (e.g., "DMC 310") */
+    threadCode: string;
+    /** Color name */
+    name: string;
+    /** Brand name */
+    brand: string;
+}
+
+/**
+ * Color palette state - recent colors and selection.
+ */
+export interface ColorPaletteState {
+    /** Currently selected color for painting */
+    selectedColor: SelectedColor | null;
+    /** Recently used colors (max 16) */
+    recentColors: SelectedColor[];
+}
+
+export const DEFAULT_PALETTE_STATE: ColorPaletteState = {
+    selectedColor: null,
+    recentColors: [],
+};
+
+export const PALETTE_CONSTRAINTS = {
+    MAX_RECENT_COLORS: 16,
+} as const;
 
 /**
  * Viewport state for canvas navigation.
@@ -180,6 +222,12 @@ export interface GridState {
 
     /** Currently hovered cell (null if none) */
     hoveredCell: CellPosition | null;
+
+    /** Current tool mode */
+    toolMode: ToolMode;
+
+    /** Color palette state */
+    colorPalette: ColorPaletteState;
 }
 
 /**
