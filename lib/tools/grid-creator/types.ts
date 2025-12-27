@@ -131,7 +131,7 @@ export const DEFAULT_VIEWPORT: ViewportState = {
 };
 
 export const VIEWPORT_CONSTRAINTS = {
-    MIN_SCALE: 0.1,
+    MIN_SCALE: 1.0,
     MAX_SCALE: 4.0,
     SCALE_STEP: 0.1,
 } as const;

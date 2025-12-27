@@ -2,6 +2,11 @@ import Link from "next/link";
 import { AuthCard } from "@/components/auth/auth-card";
 import { ForgotPasswordForm } from "@/components/auth/forgot-password-form";
 
+export const metadata = {
+    title: "Forgot Password - Cross Stitch-up",
+    description: "Reset your Cross Stitch-up password",
+};
+
 export default function ForgotPasswordPage() {
     return (
         <AuthCard
