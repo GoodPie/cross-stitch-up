@@ -137,6 +137,11 @@ function renderSymbol(
  * Render all cells within the visible range.
  * Respects viewMode to show colors, symbols, or both.
  *
+ * @param ctx Grid context
+ * @param cells Cells and their states
+ * @param hoveredCell Currently hovered cell position (or null)
+ * @param renderConfig Render configuration
+ * @param visibleRange Visible range for viewport culling
  * @param scale - Viewport scale factor for symbol size calculations
  */
 function renderCells(
