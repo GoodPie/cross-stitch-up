@@ -73,7 +73,9 @@ export function SymbolPicker({ selectedSymbol, onSymbolSelect, backgroundColor, 
                             >
                                 {selectedSymbol}
                             </span>
-                            <span className="text-xs">{currentSymbol?.name || "Symbol"}</span>
+                            <span className="flex-1 min-w-0 truncate text-xs text-left">
+                                {currentSymbol?.name || "Symbol"}
+                            </span>
                         </>
                     ) : (
                         <>
