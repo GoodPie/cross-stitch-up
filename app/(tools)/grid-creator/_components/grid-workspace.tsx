@@ -3,6 +3,7 @@ import { GridCellTooltip } from "./grid-cell-tooltip";
 import type {
     GridConfig,
     CellPosition,
+    CellState,
     ViewportState,
     ViewMode,
     ToolMode,
@@ -18,9 +19,11 @@ interface GridWorkspaceProps {
     readonly toolMode: ToolMode;
     readonly selectedColor: SelectedColor | null;
     readonly hoveredCell: CellPosition | null;
+    readonly initialCells?: Map<string, CellState>;
     readonly onReady: () => void;
     readonly onViewportChange: (viewport: ViewportState) => void;
     readonly onHoveredCellChange: (cell: CellPosition | null) => void;
+    readonly onCellsChange?: (cells: Map<string, CellState>) => void;
     readonly onEyedrop: (color: SelectedColor | null) => void;
 }
 
@@ -33,9 +36,11 @@ export function GridWorkspace({
     toolMode,
     selectedColor,
     hoveredCell,
+    initialCells,
     onReady,
     onViewportChange,
     onHoveredCellChange,
+    onCellsChange,
     onEyedrop,
 }: GridWorkspaceProps) {
     return (
@@ -46,9 +51,11 @@ export function GridWorkspace({
                 viewMode={viewMode}
                 toolMode={toolMode}
                 selectedColor={selectedColor}
+                initialCells={initialCells}
                 onReady={onReady}
                 onViewportChange={onViewportChange}
                 onHoveredCellChange={onHoveredCellChange}
+                onCellsChange={onCellsChange}
                 onEyedrop={onEyedrop}
             />
 

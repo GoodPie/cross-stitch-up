@@ -28,9 +28,13 @@ interface GridCanvasProps {
     readonly viewMode?: ViewMode;
     readonly toolMode?: ToolMode;
     readonly selectedColor?: SelectedColor | null;
+    /** Initial cells for state restoration */
+    readonly initialCells?: Map<string, CellState>;
     readonly onCellClick?: (position: CellPosition) => void;
     readonly onHoveredCellChange?: (position: CellPosition | null) => void;
     readonly onViewportChange?: (viewport: ViewportState) => void;
+    /** Called when cells change (for persistence) */
+    readonly onCellsChange?: (cells: Map<string, CellState>) => void;
     readonly onReady?: () => void;
     readonly onEyedrop?: (color: SelectedColor | null) => void;
 }
@@ -41,9 +45,11 @@ export function GridCanvas({
     viewMode = DEFAULT_VIEW_MODE,
     toolMode = "select",
     selectedColor,
+    initialCells,
     onCellClick,
     onHoveredCellChange,
     onViewportChange,
+    onCellsChange,
     onReady,
     onEyedrop,
 }: GridCanvasProps) {
@@ -52,7 +58,7 @@ export function GridCanvas({
 
     // State - internal viewport only used when uncontrolled
     const [internalViewport, setInternalViewport] = useState<ViewportState>(DEFAULT_VIEWPORT);
-    const [cells, setCells] = useState<Map<string, CellState>>(new Map());
+    const [cells, setCells] = useState<Map<string, CellState>>(() => initialCells ?? new Map());
     const [hoveredCell, setHoveredCell] = useState<CellPosition | null>(null);
     const [containerSize, setContainerSize] = useState<{
         width: number;
@@ -77,6 +83,11 @@ export function GridCanvas({
     useEffect(() => {
         cellsRef.current = cells;
     }, [cells]);
+
+    // Notify parent when cells change (for persistence)
+    useEffect(() => {
+        onCellsChange?.(cells);
+    }, [cells, onCellsChange]);
 
     // Memoized render config
     const renderConfig = useMemo(() => {

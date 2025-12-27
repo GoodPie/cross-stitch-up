@@ -2,7 +2,14 @@ import { useState, useCallback } from "react";
 import type { SelectedColor, SymbolDefinition, ToolMode } from "@/lib/tools/grid-creator";
 import { PALETTE_CONSTRAINTS, DEFAULT_SELECTED_COLOR } from "@/lib/tools/grid-creator";
 
-interface UseColorSelectionOptions {
+export interface UseColorSelectionOptions {
+    /** Initial selected color for restoration */
+    initialSelectedColor?: SelectedColor | null;
+    /** Initial recent colors for restoration */
+    initialRecentColors?: SelectedColor[];
+    /** Initial color-symbol map for restoration */
+    initialColorSymbolMap?: Map<string, string>;
+    /** Callback when tool mode should change */
     onToolModeChange?: (mode: ToolMode) => void;
 }
 
@@ -26,9 +33,15 @@ interface UseColorSelectionReturn {
  * - Eyedropper picking from canvas
  */
 export function useColorSelection(options?: UseColorSelectionOptions): UseColorSelectionReturn {
-    const [selectedColor, setSelectedColor] = useState<SelectedColor | null>(DEFAULT_SELECTED_COLOR);
-    const [recentColors, setRecentColors] = useState<SelectedColor[]>([DEFAULT_SELECTED_COLOR]);
-    const [colorSymbolMap, setColorSymbolMap] = useState<Map<string, string>>(new Map());
+    const [selectedColor, setSelectedColor] = useState<SelectedColor | null>(
+        options?.initialSelectedColor ?? DEFAULT_SELECTED_COLOR
+    );
+    const [recentColors, setRecentColors] = useState<SelectedColor[]>(
+        options?.initialRecentColors ?? [DEFAULT_SELECTED_COLOR]
+    );
+    const [colorSymbolMap, setColorSymbolMap] = useState<Map<string, string>>(
+        options?.initialColorSymbolMap ?? new Map()
+    );
 
     const handleColorSelect = useCallback(
         (color: SelectedColor) => {

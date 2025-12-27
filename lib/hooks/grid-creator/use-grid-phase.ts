@@ -1,7 +1,12 @@
 import { useState, useCallback } from "react";
 import type { GridConfig, GridCreatorPhase } from "@/lib/tools/grid-creator";
 
-interface UseGridPhaseOptions {
+export interface UseGridPhaseOptions {
+    /** Initial phase for restoration (default: "config") */
+    initialPhase?: GridCreatorPhase;
+    /** Initial config for restoration */
+    initialConfig?: GridConfig | null;
+    /** Callback when reset is triggered */
     onReset?: () => void;
 }
 
@@ -22,8 +27,8 @@ interface UseGridPhaseReturn {
  * - interactive: Grid ready for interaction
  */
 export function useGridPhase(options?: UseGridPhaseOptions): UseGridPhaseReturn {
-    const [phase, setPhase] = useState<GridCreatorPhase>("config");
-    const [config, setConfig] = useState<GridConfig | null>(null);
+    const [phase, setPhase] = useState<GridCreatorPhase>(options?.initialPhase ?? "config");
+    const [config, setConfig] = useState<GridConfig | null>(options?.initialConfig ?? null);
 
     const handleConfigSubmit = useCallback((newConfig: GridConfig) => {
         setConfig(newConfig);

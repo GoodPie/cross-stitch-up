@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { useGridPhase, useGridViewport, useColorSelection } from "@/lib/hooks/grid-creator";
+import { useState, useCallback, useEffect, useRef } from "react";
+import { useGridPhase, useGridViewport, useColorSelection, useGridPersistence } from "@/lib/hooks/grid-creator";
 import { GridConfigForm } from "./grid-config-form";
 import { GridCreatorHeader } from "./grid-creator-header";
 import { GridCreatorToolbar } from "./grid-creator-toolbar";
 import { GridWorkspace } from "./grid-workspace";
 import { PaletteSidebar } from "./palette-sidebar";
-import type { CellPosition, ToolMode, ViewMode } from "@/lib/tools/grid-creator";
+import type { CellPosition, CellState, ToolMode, ViewMode } from "@/lib/tools/grid-creator";
 import { DEFAULT_VIEW_MODE } from "@/lib/tools/grid-creator";
 import type { ThreadColour } from "@/lib/tools/threads/types";
 
@@ -17,11 +17,14 @@ interface GridCreatorClientProps {
 }
 
 export function GridCreatorClient({ threads, brands }: GridCreatorClientProps) {
+    // Persistence hook - must be called first to get initial state
+    const { initialState, saveState, clearPersistedState } = useGridPersistence();
+
     // Tool mode state
-    const [toolMode, setToolMode] = useState<ToolMode>("paint");
+    const [toolMode, setToolMode] = useState<ToolMode>(initialState?.toolMode ?? "paint");
 
     // View mode for symbol/color display
-    const [viewMode, setViewMode] = useState<ViewMode>(DEFAULT_VIEW_MODE);
+    const [viewMode, setViewMode] = useState<ViewMode>(initialState?.viewMode ?? DEFAULT_VIEW_MODE);
 
     // Hovered cell for tooltip
     const [hoveredCell, setHoveredCell] = useState<CellPosition | null>(null);
@@ -29,21 +32,43 @@ export function GridCreatorClient({ threads, brands }: GridCreatorClientProps) {
     // Sidebar visibility on mobile
     const [showPalette, setShowPalette] = useState(false);
 
-    // Custom hooks for state management
-    const { viewport, handleZoomIn, handleZoomOut, handleResetView, handleViewportChange, resetViewport } =
-        useGridViewport();
+    // Track cells for persistence (lifted from GridCanvas)
+    const cellsRef = useRef<Map<string, CellState>>(initialState?.cells ?? new Map());
 
-    const { selectedColor, recentColors, handleColorSelect, handleSymbolSelect, handleEyedrop, resetColorSelection } =
-        useColorSelection({
-            onToolModeChange: setToolMode,
+    // Custom hooks for state management with initial values from persistence
+    const { viewport, handleZoomIn, handleZoomOut, handleResetView, handleViewportChange, resetViewport } =
+        useGridViewport({
+            initialViewport: initialState?.viewport,
         });
 
+    const {
+        selectedColor,
+        recentColors,
+        colorSymbolMap,
+        handleColorSelect,
+        handleSymbolSelect,
+        handleEyedrop,
+        resetColorSelection,
+    } = useColorSelection({
+        initialSelectedColor: initialState?.selectedColor,
+        initialRecentColors: initialState?.recentColors,
+        initialColorSymbolMap: initialState?.colorSymbolMap,
+        onToolModeChange: setToolMode,
+    });
+
     const { phase, config, handleConfigSubmit, handleGridReady, handleReset } = useGridPhase({
+        // If we have a saved config, skip to interactive phase
+        initialPhase: initialState?.config ? "interactive" : "config",
+        initialConfig: initialState?.config,
         onReset: () => {
             resetViewport();
             resetColorSelection();
             setHoveredCell(null);
             setToolMode("select");
+            setViewMode(DEFAULT_VIEW_MODE);
+            cellsRef.current = new Map();
+            // Clear persisted state when resetting
+            clearPersistedState();
         },
     });
 
@@ -58,6 +83,35 @@ export function GridCreatorClient({ threads, brands }: GridCreatorClientProps) {
     const handleClosePalette = useCallback(() => {
         setShowPalette(false);
     }, []);
+
+    // Handle cells change from canvas (for persistence)
+    const handleCellsChange = useCallback(
+        (cells: Map<string, CellState>) => {
+            cellsRef.current = cells;
+            // Save cells to persistence
+            if (config) {
+                saveState({ cells });
+            }
+        },
+        [config, saveState]
+    );
+
+    // Save state when any persisted value changes
+    useEffect(() => {
+        // Don't save if no config (still in config phase)
+        if (!config) return;
+
+        saveState({
+            config,
+            viewport,
+            selectedColor,
+            recentColors,
+            colorSymbolMap,
+            toolMode,
+            viewMode,
+            cells: cellsRef.current,
+        });
+    }, [config, viewport, selectedColor, recentColors, colorSymbolMap, toolMode, viewMode, saveState]);
 
     const isInteractive = phase === "interactive";
     const isRendering = phase === "rendering";
@@ -105,9 +159,11 @@ export function GridCreatorClient({ threads, brands }: GridCreatorClientProps) {
                             toolMode={toolMode}
                             selectedColor={selectedColor}
                             hoveredCell={hoveredCell}
+                            initialCells={initialState?.cells}
                             onReady={handleGridReady}
                             onViewportChange={handleViewportChange}
                             onHoveredCellChange={handleHoveredCellChange}
+                            onCellsChange={handleCellsChange}
                             onEyedrop={handleEyedrop}
                         />
                     </div>

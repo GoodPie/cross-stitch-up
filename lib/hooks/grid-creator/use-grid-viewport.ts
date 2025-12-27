@@ -2,6 +2,11 @@ import { useState, useCallback } from "react";
 import type { ViewportState } from "@/lib/tools/grid-creator";
 import { DEFAULT_VIEWPORT, VIEWPORT_CONSTRAINTS, clampViewport } from "@/lib/tools/grid-creator";
 
+export interface UseGridViewportOptions {
+    /** Initial viewport for restoration */
+    initialViewport?: ViewportState;
+}
+
 interface UseGridViewportReturn {
     viewport: ViewportState;
     handleZoomIn: () => void;
@@ -20,8 +25,8 @@ interface UseGridViewportReturn {
  * - External viewport changes (from pan/zoom gestures)
  * - Clamping values to valid ranges
  */
-export function useGridViewport(): UseGridViewportReturn {
-    const [viewport, setViewport] = useState<ViewportState>(DEFAULT_VIEWPORT);
+export function useGridViewport(options?: UseGridViewportOptions): UseGridViewportReturn {
+    const [viewport, setViewport] = useState<ViewportState>(options?.initialViewport ?? DEFAULT_VIEWPORT);
 
     const handleZoomIn = useCallback(() => {
         setViewport((prev) =>
