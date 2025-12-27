@@ -3,9 +3,12 @@
 import React, { useState } from "react";
 import { ArrowRight, Grid3X3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ConfigFormCard } from "@/components/shared/config-form-card";
+import { ConfigFormHeader } from "@/components/shared/config-form-header";
+import { DimensionPresetSelect } from "@/components/shared/dimension-preset-select";
+import { DimensionInputs } from "@/components/shared/dimension-inputs";
+import { TipsCard } from "@/components/shared/tips-card";
+import { parsePreset, validateDimension } from "@/lib/shared/dimension-utils";
 import type { GridConfig } from "@/lib/tools/grid-creator";
 import { GRID_CONFIG_CONSTRAINTS } from "@/lib/tools/grid-creator";
 
@@ -26,20 +29,22 @@ const PRESETS = [
     { label: "500 x 500 (Max)", value: "500x500" },
 ];
 
-function parsePreset(value: string): { width: number; height: number } | null {
-    if (value === "custom") return null;
-    const [w, h] = value.split("x").map(Number);
-    return { width: w, height: h };
-}
+const TIPS = [
+    "Start with a smaller grid (50x50) to practice your design",
+    "Maximum grid size is 500x500 for optimal performance",
+    "You can zoom and pan to navigate larger grids",
+];
+
+const CONSTRAINTS = {
+    min: GRID_CONFIG_CONSTRAINTS.MIN_DIMENSION,
+    max: GRID_CONFIG_CONSTRAINTS.MAX_DIMENSION,
+};
 
 export function GridConfigForm({ onSubmit }: GridConfigFormProps) {
     const [width, setWidth] = useState<string>(String(GRID_CONFIG_CONSTRAINTS.DEFAULT_WIDTH));
     const [height, setHeight] = useState<string>(String(GRID_CONFIG_CONSTRAINTS.DEFAULT_HEIGHT));
     const [preset, setPreset] = useState<string>("50x50");
-    const [errors, setErrors] = useState<{
-        width?: string;
-        height?: string;
-    }>({});
+    const [errors, setErrors] = useState<{ width?: string; height?: string }>({});
 
     const handlePresetChange = (value: string) => {
         setPreset(value);
@@ -51,38 +56,17 @@ export function GridConfigForm({ onSubmit }: GridConfigFormProps) {
         }
     };
 
-    const validateDimension = (value: string, fieldName: string): string | undefined => {
-        const trimmed = value.trim();
-
-        // Check for non-numeric characters (parseInt would accept "50abc" as 50)
-        if (!/^\d+$/.test(trimmed)) {
-            return `${fieldName} must be a valid number`;
-        }
-
-        const num = Number.parseInt(trimmed, 10);
-        if (Number.isNaN(num)) {
-            return `${fieldName} must be a number`;
-        }
-        if (num < GRID_CONFIG_CONSTRAINTS.MIN_DIMENSION) {
-            return `${fieldName} must be at least ${GRID_CONFIG_CONSTRAINTS.MIN_DIMENSION}`;
-        }
-        if (num > GRID_CONFIG_CONSTRAINTS.MAX_DIMENSION) {
-            return `${fieldName} must be at most ${GRID_CONFIG_CONSTRAINTS.MAX_DIMENSION}`;
-        }
-        return undefined;
-    };
-
     const handleWidthChange = (value: string) => {
         setWidth(value);
         setPreset("custom");
-        const error = validateDimension(value, "Width");
+        const error = validateDimension(value, "Width", CONSTRAINTS);
         setErrors((prev) => ({ ...prev, width: error }));
     };
 
     const handleHeightChange = (value: string) => {
         setHeight(value);
         setPreset("custom");
-        const error = validateDimension(value, "Height");
+        const error = validateDimension(value, "Height", CONSTRAINTS);
         setErrors((prev) => ({ ...prev, height: error }));
     };
 
@@ -91,10 +75,10 @@ export function GridConfigForm({ onSubmit }: GridConfigFormProps) {
     const isValid =
         !errors.width &&
         !errors.height &&
-        widthNum >= GRID_CONFIG_CONSTRAINTS.MIN_DIMENSION &&
-        widthNum <= GRID_CONFIG_CONSTRAINTS.MAX_DIMENSION &&
-        heightNum >= GRID_CONFIG_CONSTRAINTS.MIN_DIMENSION &&
-        heightNum <= GRID_CONFIG_CONSTRAINTS.MAX_DIMENSION;
+        widthNum >= CONSTRAINTS.min &&
+        widthNum <= CONSTRAINTS.max &&
+        heightNum >= CONSTRAINTS.min &&
+        heightNum <= CONSTRAINTS.max;
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -105,110 +89,33 @@ export function GridConfigForm({ onSubmit }: GridConfigFormProps) {
 
     return (
         <div className="space-y-6">
-            <div className="relative">
-                <div className="border-muted-foreground/30 rounded-2xl border-2 p-8 text-center md:p-12">
-                    {/* Cross-stitch corner decorations */}
-                    <div className="border-secondary-foreground/20 absolute top-3 left-3 h-6 w-6 rounded-tl border-t-2 border-l-2" />
-                    <div className="border-secondary-foreground/20 absolute top-3 right-3 h-6 w-6 rounded-tr border-t-2 border-r-2" />
-                    <div className="border-secondary-foreground/20 absolute bottom-3 left-3 h-6 w-6 rounded-bl border-b-2 border-l-2" />
-                    <div className="border-secondary-foreground/20 absolute right-3 bottom-3 h-6 w-6 rounded-br border-r-2 border-b-2" />
-
-                    <form onSubmit={handleSubmit} className="space-y-8">
-                        <div className="space-y-4">
-                            <div className="bg-accent text-accent-foreground inline-flex h-16 w-16 items-center justify-center rounded-2xl">
-                                <Grid3X3 className="h-8 w-8" />
-                            </div>
-
-                            <div className="space-y-2">
-                                <h2 className="text-foreground font-serif text-xl font-semibold md:text-2xl">
-                                    Grid Dimensions
-                                </h2>
-                                <p className="text-muted-foreground">
-                                    Enter the size of your cross stitch grid in stitches (1-500)
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="mx-auto max-w-md space-y-6">
-                            {/* Preset selector */}
-                            <div className="space-y-2">
-                                <Label htmlFor="preset">Common Sizes</Label>
-                                <Select value={preset} onValueChange={handlePresetChange}>
-                                    <SelectTrigger className="w-full">
-                                        <SelectValue placeholder="Select a preset..." />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {PRESETS.map((p) => (
-                                            <SelectItem key={p.value} value={p.value}>
-                                                {p.label}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </div>
-
-                            {/* Dimension inputs */}
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                    <Label htmlFor="width">Width (stitches)</Label>
-                                    <Input
-                                        id="width"
-                                        type="number"
-                                        min={GRID_CONFIG_CONSTRAINTS.MIN_DIMENSION}
-                                        max={GRID_CONFIG_CONSTRAINTS.MAX_DIMENSION}
-                                        placeholder="e.g., 50"
-                                        value={width}
-                                        onChange={(e) => handleWidthChange(e.target.value)}
-                                        aria-invalid={!!errors.width}
-                                        aria-describedby={errors.width ? "width-error" : undefined}
-                                    />
-                                    {errors.width && (
-                                        <p id="width-error" className="text-destructive text-sm">
-                                            {errors.width}
-                                        </p>
-                                    )}
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="height">Height (stitches)</Label>
-                                    <Input
-                                        id="height"
-                                        type="number"
-                                        min={GRID_CONFIG_CONSTRAINTS.MIN_DIMENSION}
-                                        max={GRID_CONFIG_CONSTRAINTS.MAX_DIMENSION}
-                                        placeholder="e.g., 50"
-                                        value={height}
-                                        onChange={(e) => handleHeightChange(e.target.value)}
-                                        aria-invalid={!!errors.height}
-                                        aria-describedby={errors.height ? "height-error" : undefined}
-                                    />
-                                    {errors.height && (
-                                        <p id="height-error" className="text-destructive text-sm">
-                                            {errors.height}
-                                        </p>
-                                    )}
-                                </div>
-                            </div>
-
-                            <Button type="submit" size="lg" disabled={!isValid} className="w-full">
-                                Create Grid
-                                <ArrowRight className="ml-2 h-4 w-4" />
-                            </Button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            {/* Tips section */}
-            <div className="border-border/50 bg-accent/50 rounded-xl border p-4">
-                <h3 className="text-foreground mb-2 flex items-center gap-2 font-medium">
-                    <span className="text-lg">💡</span> Grid Creation Tips
-                </h3>
-                <ul className="text-muted-foreground space-y-1 text-sm">
-                    <li>• Start with a smaller grid (50x50) to practice your design</li>
-                    <li>• Maximum grid size is 500x500 for optimal performance</li>
-                    <li>• You can zoom and pan to navigate larger grids</li>
-                </ul>
-            </div>
+            <ConfigFormCard>
+                <form onSubmit={handleSubmit} className="space-y-8">
+                    <ConfigFormHeader
+                        icon={<Grid3X3 className="h-8 w-8" />}
+                        title="Grid Dimensions"
+                        description="Enter the size of your cross stitch grid in stitches (1-500)"
+                    />
+                    <div className="mx-auto max-w-md space-y-6">
+                        <DimensionPresetSelect presets={PRESETS} value={preset} onValueChange={handlePresetChange} />
+                        <DimensionInputs
+                            width={width}
+                            height={height}
+                            onWidthChange={handleWidthChange}
+                            onHeightChange={handleHeightChange}
+                            widthError={errors.width}
+                            heightError={errors.height}
+                            min={CONSTRAINTS.min}
+                            max={CONSTRAINTS.max}
+                        />
+                        <Button type="submit" size="lg" disabled={!isValid} className="w-full">
+                            Create Grid
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                    </div>
+                </form>
+            </ConfigFormCard>
+            <TipsCard title="Grid Creation Tips" tips={TIPS} />
         </div>
     );
 }
