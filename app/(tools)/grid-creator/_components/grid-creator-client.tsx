@@ -33,16 +33,10 @@ export function GridCreatorClient({ threads, brands }: GridCreatorClientProps) {
     const { viewport, handleZoomIn, handleZoomOut, handleResetView, handleViewportChange, resetViewport } =
         useGridViewport();
 
-    const {
-        selectedColor,
-        recentColors,
-        handleColorSelect,
-        handleSymbolSelect,
-        handleEyedrop,
-        resetColorSelection,
-    } = useColorSelection({
-        onToolModeChange: setToolMode,
-    });
+    const { selectedColor, recentColors, handleColorSelect, handleSymbolSelect, handleEyedrop, resetColorSelection } =
+        useColorSelection({
+            onToolModeChange: setToolMode,
+        });
 
     const { phase, config, handleConfigSubmit, handleGridReady, handleReset } = useGridPhase({
         onReset: () => {

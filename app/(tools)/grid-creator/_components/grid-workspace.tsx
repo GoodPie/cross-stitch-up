@@ -1,6 +1,13 @@
 import { GridCanvas } from "./grid-canvas";
 import { GridCellTooltip } from "./grid-cell-tooltip";
-import type { GridConfig, CellPosition, ViewportState, ViewMode, ToolMode, SelectedColor } from "@/lib/tools/grid-creator";
+import type {
+    GridConfig,
+    CellPosition,
+    ViewportState,
+    ViewMode,
+    ToolMode,
+    SelectedColor,
+} from "@/lib/tools/grid-creator";
 
 interface GridWorkspaceProps {
     readonly config: GridConfig;

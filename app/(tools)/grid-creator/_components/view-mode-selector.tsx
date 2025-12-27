@@ -81,7 +81,7 @@ export function ViewModeSelector({ mode, onModeChange }: ViewModeSelectorProps) 
                                 <ToggleGroupItem
                                     value={viewMode}
                                     aria-label={label}
-                                    className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground h-8 w-8"
+                                    className="aria-checked:bg-primary aria-checked:text-primary-foreground aria-checked:ring-primary/30 h-8 w-8 transition-all aria-checked:shadow-sm aria-checked:ring-2 aria-checked:ring-offset-1"
                                 >
                                     <Icon className="h-4 w-4" />
                                 </ToggleGroupItem>

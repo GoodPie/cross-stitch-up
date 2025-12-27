@@ -48,7 +48,11 @@ export function GridCreatorToolbar({
 
                 {/* Tool Mode Selector */}
                 {isInteractive && (
-                    <ToolModeSelector mode={toolMode} onModeChange={onToolModeChange} hasSelectedColor={selectedColor !== null} />
+                    <ToolModeSelector
+                        mode={toolMode}
+                        onModeChange={onToolModeChange}
+                        hasSelectedColor={selectedColor !== null}
+                    />
                 )}
 
                 {/* View Mode Selector */}
@@ -59,7 +63,10 @@ export function GridCreatorToolbar({
                 {/* Selected Color Indicator (mobile) */}
                 {isInteractive && selectedColor && (
                     <div className="flex items-center gap-2 md:hidden">
-                        <div className="h-8 w-8 rounded border shadow-sm" style={{ backgroundColor: selectedColor.hex }} />
+                        <div
+                            className="h-8 w-8 rounded border shadow-sm"
+                            style={{ backgroundColor: selectedColor.hex }}
+                        />
                     </div>
                 )}
 

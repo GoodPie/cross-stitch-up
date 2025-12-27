@@ -144,9 +144,7 @@ test.describe("Grid Creator", () => {
         await expect(page.getByLabel(/Zoom level: 130%/)).toBeVisible();
 
         // Reset zoom
-        await page
-            .getByRole("button", { name: "Reset view to default zoom" })
-            .click();
+        await page.getByRole("button", { name: "Reset view to default zoom" }).click();
 
         // Verify zoom returned to 100%
         await expect(page.getByLabel(/Zoom level: 100%/)).toBeVisible();
@@ -170,5 +168,99 @@ test.describe("Grid Creator", () => {
 
         // Canvas should no longer be visible
         await expect(page.locator("canvas")).not.toBeVisible();
+    });
+
+    test.describe("View Mode Selection", () => {
+        test("should show Color view as active when selected", async ({ page }) => {
+            await createGrid(page, 10, 10);
+
+            // Click Color view mode
+            const colorButton = page.getByRole("radio", { name: "Color" });
+            await colorButton.click();
+
+            // Verify it has the active state (aria-checked=true)
+            await expect(colorButton).toHaveAttribute("aria-checked", "true");
+
+            // Verify other buttons are not active
+            await expect(page.getByRole("radio", { name: "Symbol" })).toHaveAttribute("aria-checked", "false");
+            await expect(page.getByRole("radio", { name: "Both" })).toHaveAttribute("aria-checked", "false");
+
+            // Take screenshot to verify visual state
+            await page.screenshot({
+                path: `${SCREENSHOT_DIR}/view-mode-color-active.png`,
+                fullPage: true,
+            });
+        });
+
+        test("should show Symbol view as active when selected", async ({ page }) => {
+            await createGrid(page, 10, 10);
+
+            // Click Symbol view mode
+            const symbolButton = page.getByRole("radio", { name: "Symbol" });
+            await symbolButton.click();
+
+            // Verify it has the active state (aria-checked=true)
+            await expect(symbolButton).toHaveAttribute("aria-checked", "true");
+
+            // Verify other buttons are not active
+            await expect(page.getByRole("radio", { name: "Color" })).toHaveAttribute("aria-checked", "false");
+            await expect(page.getByRole("radio", { name: "Both" })).toHaveAttribute("aria-checked", "false");
+
+            // Take screenshot to verify visual state
+            await page.screenshot({
+                path: `${SCREENSHOT_DIR}/view-mode-symbol-active.png`,
+                fullPage: true,
+            });
+        });
+
+        test("should show Both view as active by default", async ({ page }) => {
+            await createGrid(page, 10, 10);
+
+            // Both view should be active by default
+            const bothButton = page.getByRole("radio", { name: "Both" });
+            await expect(bothButton).toHaveAttribute("aria-checked", "true");
+
+            // Verify other buttons are not active
+            await expect(page.getByRole("radio", { name: "Color" })).toHaveAttribute("aria-checked", "false");
+            await expect(page.getByRole("radio", { name: "Symbol" })).toHaveAttribute("aria-checked", "false");
+
+            // Take screenshot to verify visual state
+            await page.screenshot({
+                path: `${SCREENSHOT_DIR}/view-mode-both-active.png`,
+                fullPage: true,
+            });
+        });
+
+        test("should switch between all view modes", async ({ page }) => {
+            await createGrid(page, 10, 10);
+
+            // Paint a cell first to have content to display
+            await clickCanvasCenter(page);
+
+            const colorButton = page.getByRole("radio", { name: "Color" });
+            const symbolButton = page.getByRole("radio", { name: "Symbol" });
+            const bothButton = page.getByRole("radio", { name: "Both" });
+
+            // Start with Both (default)
+            await expect(bothButton).toHaveAttribute("aria-checked", "true");
+
+            // Switch to Color
+            await colorButton.click();
+            await expect(colorButton).toHaveAttribute("aria-checked", "true");
+            await expect(symbolButton).toHaveAttribute("aria-checked", "false");
+            await expect(bothButton).toHaveAttribute("aria-checked", "false");
+
+            // Switch to Symbol
+            await symbolButton.click();
+            await expect(symbolButton).toHaveAttribute("aria-checked", "true");
+            await expect(colorButton).toHaveAttribute("aria-checked", "false");
+            await expect(bothButton).toHaveAttribute("aria-checked", "false");
+
+            // Switch back to Both
+            await bothButton.click();
+            await expect(bothButton).toHaveAttribute("aria-checked", "true");
+            await expect(colorButton).toHaveAttribute("aria-checked", "false");
+            await expect(symbolButton).toHaveAttribute("aria-checked", "false");
+        });
     });
 });
