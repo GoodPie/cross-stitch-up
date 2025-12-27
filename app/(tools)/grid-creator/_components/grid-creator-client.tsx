@@ -18,7 +18,7 @@ interface GridCreatorClientProps {
 
 export function GridCreatorClient({ threads, brands }: GridCreatorClientProps) {
     // Tool mode state
-    const [toolMode, setToolMode] = useState<ToolMode>("select");
+    const [toolMode, setToolMode] = useState<ToolMode>("paint");
 
     // View mode for symbol/color display
     const [viewMode, setViewMode] = useState<ViewMode>(DEFAULT_VIEW_MODE);
