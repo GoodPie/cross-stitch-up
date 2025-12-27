@@ -1,5 +1,16 @@
 import { RefreshCw, Palette } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { ToolModeSelector } from "./tool-mode-selector";
 import { ViewModeSelector } from "./view-mode-selector";
 import { GridControls } from "./grid-controls";
@@ -86,11 +97,28 @@ export function GridCreatorToolbar({
                 {/* Zoom Controls */}
                 <GridControls scale={viewport.scale} onZoomIn={onZoomIn} onZoomOut={onZoomOut} onReset={onResetView} />
 
-                {/* New Grid Button */}
-                <Button variant="outline" onClick={onReset} className="gap-2">
-                    <RefreshCw className="h-4 w-4" />
-                    <span className="hidden sm:inline">New Grid</span>
-                </Button>
+                {/* New Grid Button with Confirmation */}
+                <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                        <Button variant="outline" className="gap-2">
+                            <RefreshCw className="h-4 w-4" />
+                            <span className="hidden sm:inline">New Grid</span>
+                        </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Create New Grid?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                This will discard your current grid and any unsaved changes. This action cannot be
+                                undone.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={onReset}>Create New Grid</AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
             </div>
         </div>
     );

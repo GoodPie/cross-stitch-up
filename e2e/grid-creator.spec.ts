@@ -162,12 +162,44 @@ test.describe("Grid Creator", () => {
         // Click New Grid button
         await page.getByRole("button", { name: /New Grid/ }).click();
 
+        // Confirmation dialog should appear
+        await expect(page.getByRole("alertdialog")).toBeVisible();
+        await expect(page.getByText("Create New Grid?")).toBeVisible();
+
+        // Confirm the action
+        await page.getByRole("button", { name: "Create New Grid" }).click();
+
         // Verify we're back to config phase - config form should be visible
         await expect(page.locator("#width")).toBeVisible();
         await expect(page.locator("#height")).toBeVisible();
 
         // Canvas should no longer be visible
         await expect(page.locator("canvas")).not.toBeVisible();
+    });
+
+    test("should cancel New Grid confirmation", async ({ page }) => {
+        await createGrid(page, 10, 10);
+
+        // Paint some cells
+        await clickCanvasCenter(page);
+
+        // Verify canvas is visible
+        await expect(page.locator("canvas")).toBeVisible();
+
+        // Click New Grid button
+        await page.getByRole("button", { name: /New Grid/ }).click();
+
+        // Confirmation dialog should appear
+        await expect(page.getByRole("alertdialog")).toBeVisible();
+
+        // Cancel the action
+        await page.getByRole("button", { name: "Cancel" }).click();
+
+        // Dialog should be dismissed
+        await expect(page.getByRole("alertdialog")).not.toBeVisible();
+
+        // Canvas should still be visible (grid was not reset)
+        await expect(page.locator("canvas")).toBeVisible();
     });
 
     test.describe("View Mode Selection", () => {
