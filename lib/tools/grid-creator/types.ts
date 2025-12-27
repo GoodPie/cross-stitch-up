@@ -46,22 +46,6 @@ export interface CellPosition {
 }
 
 /**
- * Generate a unique key for a cell position.
- * Used as Map key for cell state storage.
- */
-export function cellKey(pos: CellPosition): string {
-    return `${pos.row}-${pos.col}`;
-}
-
-/**
- * Parse a cell key back to position.
- */
-export function parseKey(key: string): CellPosition {
-    const [row, col] = key.split("-").map(Number);
-    return { row, col };
-}
-
-/**
  * State of a single grid cell.
  * Sparse storage - only non-default cells are stored.
  */
@@ -111,16 +95,6 @@ export interface SelectedColor {
 }
 
 /**
- * Color palette state - recent colors and selection.
- */
-export interface ColorPaletteState {
-    /** Currently selected color for painting */
-    selectedColor: SelectedColor | null;
-    /** Recently used colors (max 16) */
-    recentColors: SelectedColor[];
-}
-
-/**
  * Default color for painting: Black (DMC 310).
  * This is the most commonly used color in cross-stitch patterns.
  */
@@ -163,17 +137,6 @@ export const VIEWPORT_CONSTRAINTS = {
 } as const;
 
 /**
- * Clamp viewport values to valid ranges.
- */
-export function clampViewport(viewport: ViewportState): ViewportState {
-    return {
-        scale: Math.max(VIEWPORT_CONSTRAINTS.MIN_SCALE, Math.min(VIEWPORT_CONSTRAINTS.MAX_SCALE, viewport.scale)),
-        offsetX: viewport.offsetX,
-        offsetY: viewport.offsetY,
-    };
-}
-
-/**
  * Range of cells currently visible in view-port.
  * Used for render culling - only draw visible cells.
  */
@@ -185,80 +148,12 @@ export interface VisibleRange {
 }
 
 /**
- * Calculate visible cell range from viewport state.
- */
-export function getVisibleRange(
-    viewport: ViewportState,
-    gridConfig: GridConfig,
-    cellSize: number,
-    canvasWidth: number,
-    canvasHeight: number
-): VisibleRange {
-    const startCol = Math.max(0, Math.floor(viewport.offsetX / cellSize));
-    const startRow = Math.max(0, Math.floor(viewport.offsetY / cellSize));
-    const endCol = Math.min(
-        gridConfig.width - 1,
-        Math.ceil((viewport.offsetX + canvasWidth / viewport.scale) / cellSize)
-    );
-    const endRow = Math.min(
-        gridConfig.height - 1,
-        Math.ceil((viewport.offsetY + canvasHeight / viewport.scale) / cellSize)
-    );
-    return { startCol, startRow, endCol, endRow };
-}
-
-/**
  * Application phases for Grid Creator.
  */
 export type GridCreatorPhase =
     | "config" // User entering dimensions
     | "rendering" // Grid being generated
     | "interactive"; // Grid ready for interaction
-
-/**
- * Complete application state for Grid Creator.
- */
-export interface GridState {
-    /** Current phase in the state machine */
-    phase: GridCreatorPhase;
-
-    /** Grid configuration (null until set) */
-    config: GridConfig | null;
-
-    /** Viewport/camera state */
-    viewport: ViewportState;
-
-    /** Cell states (sparse - only non-default cells stored) */
-    cells: Map<string, CellState>;
-
-    /** Currently hovered cell (null if none) */
-    hoveredCell: CellPosition | null;
-
-    /** Current tool mode */
-    toolMode: ToolMode;
-
-    /** Color palette state */
-    colorPalette: ColorPaletteState;
-}
-
-/**
- * Validate that an unknown value is a valid GridConfig.
- */
-export function validateGridConfig(config: unknown): config is GridConfig {
-    if (typeof config !== "object" || config === null) return false;
-    const { width, height } = config as Record<string, unknown>;
-
-    return (
-        typeof width === "number" &&
-        typeof height === "number" &&
-        Number.isInteger(width) &&
-        Number.isInteger(height) &&
-        width >= GRID_CONFIG_CONSTRAINTS.MIN_DIMENSION &&
-        width <= GRID_CONFIG_CONSTRAINTS.MAX_DIMENSION &&
-        height >= GRID_CONFIG_CONSTRAINTS.MIN_DIMENSION &&
-        height <= GRID_CONFIG_CONSTRAINTS.MAX_DIMENSION
-    );
-}
 
 /**
  * Colors for grid rendering.

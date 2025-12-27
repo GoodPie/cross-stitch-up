@@ -20,7 +20,7 @@ import type {
     SelectedColor,
     SymbolDefinition,
 } from "@/lib/tools/grid-creator";
-import { PALETTE_CONSTRAINTS, DEFAULT_VIEW_MODE, DEFAULT_SELECTED_COLOR } from "@/lib/tools/grid-creator";
+import { PALETTE_CONSTRAINTS, DEFAULT_VIEW_MODE, DEFAULT_SELECTED_COLOR, clampViewport } from "@/lib/tools/grid-creator";
 import type { ThreadColour } from "@/lib/tools/threads/types";
 
 interface GridCreatorClientProps {
@@ -134,17 +134,21 @@ export function GridCreatorClient({ threads, brands }: GridCreatorClientProps) {
 
     // Zoom controls
     const handleZoomIn = useCallback(() => {
-        setViewport((prev) => ({
-            ...prev,
-            scale: Math.min(VIEWPORT_CONSTRAINTS.MAX_SCALE, prev.scale + VIEWPORT_CONSTRAINTS.SCALE_STEP),
-        }));
+        setViewport((prev) =>
+            clampViewport({
+                ...prev,
+                scale: prev.scale + VIEWPORT_CONSTRAINTS.SCALE_STEP,
+            })
+        );
     }, []);
 
     const handleZoomOut = useCallback(() => {
-        setViewport((prev) => ({
-            ...prev,
-            scale: Math.max(VIEWPORT_CONSTRAINTS.MIN_SCALE, prev.scale - VIEWPORT_CONSTRAINTS.SCALE_STEP),
-        }));
+        setViewport((prev) =>
+            clampViewport({
+                ...prev,
+                scale: prev.scale - VIEWPORT_CONSTRAINTS.SCALE_STEP,
+            })
+        );
     }, []);
 
     const handleResetView = useCallback(() => {

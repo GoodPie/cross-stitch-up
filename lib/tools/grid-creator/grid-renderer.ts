@@ -9,7 +9,8 @@
  */
 
 import type { GridConfig, CellPosition, CellState, ViewportState, RenderConfig, VisibleRange, ViewMode } from "./types";
-import { DEFAULT_RENDER_COLORS, RENDER_CONSTRAINTS, getVisibleRange, DEFAULT_VIEW_MODE } from "./types";
+import { DEFAULT_RENDER_COLORS, RENDER_CONSTRAINTS, DEFAULT_VIEW_MODE } from "./types";
+import { getVisibleRange } from "./utils";
 import { SYMBOL_RENDER_CONSTRAINTS } from "./symbols";
 import { getContrastColor } from "@/lib/tools/threads/color-utils";
 
