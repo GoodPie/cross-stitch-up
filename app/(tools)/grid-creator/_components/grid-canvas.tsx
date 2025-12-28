@@ -21,6 +21,8 @@ import {
     renderGrid,
     renderCell,
     createInteractionHandlers,
+    DEFAULT_INTERACTION_STATE,
+    type InteractionState,
 } from "@/lib/tools/grid-creator";
 
 interface GridCanvasProps {
@@ -65,6 +67,9 @@ export function GridCanvas({
 }: GridCanvasProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
+
+    // Interaction state ref - persists across effect re-runs to maintain drag state
+    const interactionStateRef = useRef<InteractionState>({ ...DEFAULT_INTERACTION_STATE });
 
     // State - internal viewport only used when uncontrolled
     const [internalViewport, setInternalViewport] = useState<ViewportState>(DEFAULT_VIEWPORT);
@@ -457,14 +462,21 @@ export function GridCanvas({
         const getViewport = () => viewportRef.current;
         const getRenderConfig = () => renderConfigRef.current!;
 
-        const { cleanup } = createInteractionHandlers(canvas, getViewport, getRenderConfig, config, {
-            onHover: handleHover,
-            onClick: handleCellClick,
-            onPan: handlePan,
-            onZoom: handleZoom,
-            onDragStart: handleDragStart,
-            onDragEnd: handleDragEnd,
-        });
+        const { cleanup } = createInteractionHandlers(
+            canvas,
+            getViewport,
+            getRenderConfig,
+            config,
+            {
+                onHover: handleHover,
+                onClick: handleCellClick,
+                onPan: handlePan,
+                onZoom: handleZoom,
+                onDragStart: handleDragStart,
+                onDragEnd: handleDragEnd,
+            },
+            interactionStateRef
+        );
 
         return cleanup;
     }, [config, renderConfig, handleHover, handleCellClick, handlePan, handleZoom, handleDragStart, handleDragEnd]);

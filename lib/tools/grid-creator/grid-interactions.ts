@@ -81,7 +81,7 @@ export interface InteractionCallbacks {
     onDragEnd?: () => void;
 }
 
-interface InteractionState {
+export interface InteractionState {
     isPanning: boolean;
     lastPanX: number;
     lastPanY: number;
@@ -93,6 +93,17 @@ interface InteractionState {
     lastDragCell: CellPosition | null;
 }
 
+/** Default initial state for interaction handler */
+export const DEFAULT_INTERACTION_STATE: InteractionState = {
+    isPanning: false,
+    lastPanX: 0,
+    lastPanY: 0,
+    initialPinchDistance: null,
+    initialScale: 1,
+    isDragging: false,
+    lastDragCell: null,
+};
+
 /**
  * Create and attach all interaction handlers to a canvas.
  * Returns a cleanup function to remove all event listeners.
@@ -102,6 +113,9 @@ interface InteractionState {
  * @param getRenderConfig - Function to retrieve current render configuration
  * @param gridConfig - Grid configuration
  * @param callbacks - Callback functions for interactions
+ * @param stateRef - Optional external state ref that persists across effect re-runs.
+ *                   If provided, the ref's current value is used and mutated.
+ *                   This prevents drag state from being lost when React effects re-run.
  * @returns Object with cleanup function
  */
 export function createInteractionHandlers(
@@ -109,9 +123,12 @@ export function createInteractionHandlers(
     getViewport: () => ViewportState,
     getRenderConfig: () => RenderConfig,
     gridConfig: GridConfig,
-    callbacks: InteractionCallbacks
+    callbacks: InteractionCallbacks,
+    stateRef?: { current: InteractionState }
 ): { cleanup: () => void } {
-    const state: InteractionState = {
+    // Use external state ref if provided (persists across effect re-runs),
+    // otherwise create local state (will reset if effect re-runs)
+    const state: InteractionState = stateRef?.current ?? {
         isPanning: false,
         lastPanX: 0,
         lastPanY: 0,
