@@ -7,7 +7,7 @@
  * - getVisibleRange: Calculate visible cell range for render culling
  */
 
-import type { CellPosition, GridConfig, ViewportState, VisibleRange } from "./types";
+import type { CellPosition, GridConfig, ViewportState, VisibleRange, ToolMode, CommandType } from "./types";
 import { VIEWPORT_CONSTRAINTS } from "./types";
 
 /**
@@ -59,4 +59,18 @@ export function getVisibleRange(
         Math.ceil((viewport.offsetY + canvasHeight / viewport.scale) / cellSize)
     );
     return { startCol, startRow, endCol, endRow };
+}
+
+/**
+ * Map tool mode to command type for undo/redo.
+ */
+export function getCommandTypeFromToolMode(toolMode: ToolMode): CommandType {
+    switch (toolMode) {
+        case "paint":
+            return "paint";
+        case "erase":
+            return "erase";
+        default:
+            return "select";
+    }
 }
