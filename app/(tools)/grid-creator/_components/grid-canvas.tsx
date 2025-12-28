@@ -29,8 +29,8 @@ interface GridCanvasProps {
     readonly viewMode?: ViewMode;
     readonly toolMode?: ToolMode;
     readonly selectedColor?: SelectedColor | null;
-    /** Initial cells for state restoration */
-    readonly initialCells?: Map<string, CellState>;
+    /** External cells state - syncs on reference change (for undo/redo) */
+    readonly cells?: Map<string, CellState>;
     readonly onCellClick?: (position: CellPosition) => void;
     readonly onHoveredCellChange?: (position: CellPosition | null) => void;
     readonly onViewportChange?: (viewport: ViewportState) => void;
@@ -52,7 +52,7 @@ export function GridCanvas({
     viewMode = DEFAULT_VIEW_MODE,
     toolMode = "select",
     selectedColor,
-    initialCells,
+    cells: externalCells,
     onCellClick,
     onHoveredCellChange,
     onViewportChange,
@@ -68,7 +68,7 @@ export function GridCanvas({
 
     // State - internal viewport only used when uncontrolled
     const [internalViewport, setInternalViewport] = useState<ViewportState>(DEFAULT_VIEWPORT);
-    const [cells, setCells] = useState<Map<string, CellState>>(() => initialCells ?? new Map());
+    const [internalCells, setInternalCells] = useState<Map<string, CellState>>(() => externalCells ?? new Map());
     const [hoveredCell, setHoveredCell] = useState<CellPosition | null>(null);
     const [containerSize, setContainerSize] = useState<{
         width: number;
@@ -83,12 +83,23 @@ export function GridCanvas({
     const viewportRef = useRef(viewport);
     const renderConfigRef = useRef<RenderConfig | null>(null);
     const prevHoveredCellRef = useRef<CellPosition | null>(null);
-    const cellsRef = useRef(cells);
+    const cellsRef = useRef(internalCells);
 
     // Refs for undo/redo callbacks (avoid stale closures)
     const onCommandStartRef = useRef(onCommandStart);
     const onCommandDeltaRef = useRef(onCommandDelta);
     const onCommandCommitRef = useRef(onCommandCommit);
+
+    // Track previous external cells for detecting external changes (undo/redo)
+    const [prevExternalCells, setPrevExternalCells] = useState(externalCells);
+
+    // Sync from external cells when reference changes (for undo/redo)
+    // This pattern is React-recommended: updating state during render based on props
+    // See: https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
+    if (externalCells !== prevExternalCells) {
+        setPrevExternalCells(externalCells);
+        setInternalCells(externalCells ?? new Map());
+    }
 
     // Update undo/redo refs when callbacks change
     useEffect(() => {
@@ -109,13 +120,13 @@ export function GridCanvas({
     }, [viewport]);
 
     useEffect(() => {
-        cellsRef.current = cells;
-    }, [cells]);
+        cellsRef.current = internalCells;
+    }, [internalCells]);
 
     // Notify parent when cells change (for persistence)
     useEffect(() => {
-        onCellsChange?.(cells);
-    }, [cells, onCellsChange]);
+        onCellsChange?.(internalCells);
+    }, [internalCells, onCellsChange]);
 
     // Memoized render config
     const renderConfig = useMemo(() => {
@@ -176,7 +187,7 @@ export function GridCanvas({
         ctx.translate(-viewport.offsetX, -viewport.offsetY);
 
         // Render the grid without hover highlight (hover is handled by separate effect)
-        renderGrid(ctx, config, renderConfig, viewport, cells, null);
+        renderGrid(ctx, config, renderConfig, viewport, internalCells, null);
 
         // Reset hover ref - let hover effect re-apply highlight after full render
         prevHoveredCellRef.current = null;
@@ -188,7 +199,7 @@ export function GridCanvas({
             setIsReady(true);
             onReady?.();
         }
-    }, [renderConfig, config, viewport, cells, isReady, onReady]);
+    }, [renderConfig, config, viewport, internalCells, isReady, onReady]);
 
     // Render on any state change
     useEffect(() => {
@@ -255,7 +266,7 @@ export function GridCanvas({
             switch (toolMode) {
                 case "select":
                     // Toggle cell on/off (legacy behavior)
-                    setCells((prev) => {
+                    setInternalCells((prev) => {
                         const newCells = new Map(prev);
                         const current = newCells.get(key);
                         if (current?.active) {
@@ -281,7 +292,7 @@ export function GridCanvas({
                             threadCode: selectedColor.threadCode,
                             symbol: selectedColor.symbol,
                         };
-                        setCells((prev) => {
+                        setInternalCells((prev) => {
                             const newCells = new Map(prev);
                             newCells.set(key, afterState);
                             return newCells;
@@ -293,7 +304,7 @@ export function GridCanvas({
 
                 case "erase":
                     // Remove cell
-                    setCells((prev) => {
+                    setInternalCells((prev) => {
                         const newCells = new Map(prev);
                         newCells.delete(key);
                         return newCells;

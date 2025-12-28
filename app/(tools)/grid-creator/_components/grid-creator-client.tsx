@@ -38,11 +38,12 @@ export function GridCreatorClient({ threads, brands }: GridCreatorClientProps) {
     // Sidebar visibility on mobile
     const [showPalette, setShowPalette] = useState(false);
 
-    // Track cells for persistence (lifted from GridCanvas)
-    const cellsRef = useRef<Map<string, CellState>>(initialState?.cells ?? new Map());
+    // Cells state - updated on undo/redo to trigger sync with GridCanvas
+    // Normal cell changes from painting don't update this (to avoid re-renders)
+    const [cells, setCells] = useState<Map<string, CellState>>(initialState?.cells ?? new Map());
 
-    // Track cells state for triggering re-renders on undo/redo
-    const [cellsVersion, setCellsVersion] = useState(0);
+    // Ref to track latest cells for persistence and undo/redo operations
+    const cellsRef = useRef(cells);
 
     // Undo/redo hook
     const { canUndo, canRedo, startCommand, addDelta, commitCommand, undo, redo, clearHistory } = useUndoRedo();
@@ -78,7 +79,9 @@ export function GridCreatorClient({ threads, brands }: GridCreatorClientProps) {
             setHoveredCell(null);
             setToolMode("select");
             setViewMode(DEFAULT_VIEW_MODE);
-            cellsRef.current = new Map();
+            const emptyCells = new Map<string, CellState>();
+            cellsRef.current = emptyCells;
+            setCells(emptyCells);
             // Clear persisted state when resetting
             clearPersistedState();
             // Clear undo/redo history
@@ -143,10 +146,10 @@ export function GridCreatorClient({ threads, brands }: GridCreatorClientProps) {
                 newCells.set(delta.key, delta.before);
             }
         }
-        cellsRef.current = newCells;
 
-        // Trigger re-render by incrementing version
-        setCellsVersion((v) => v + 1);
+        // Update state (triggers sync with GridCanvas via reference change)
+        cellsRef.current = newCells;
+        setCells(newCells);
 
         // Save to persistence
         if (config) {
@@ -168,10 +171,10 @@ export function GridCreatorClient({ threads, brands }: GridCreatorClientProps) {
                 newCells.set(delta.key, delta.after);
             }
         }
-        cellsRef.current = newCells;
 
-        // Trigger re-render by incrementing version
-        setCellsVersion((v) => v + 1);
+        // Update state (triggers sync with GridCanvas via reference change)
+        cellsRef.current = newCells;
+        setCells(newCells);
 
         // Save to persistence
         if (config) {
@@ -262,7 +265,6 @@ export function GridCreatorClient({ threads, brands }: GridCreatorClientProps) {
                         />
 
                         <GridWorkspace
-                            key={cellsVersion}
                             config={config}
                             isInteractive={isInteractive}
                             isRendering={isRendering}
@@ -271,8 +273,7 @@ export function GridCreatorClient({ threads, brands }: GridCreatorClientProps) {
                             toolMode={toolMode}
                             selectedColor={selectedColor}
                             hoveredCell={hoveredCell}
-                            // eslint-disable-next-line react-hooks/refs -- Intentional: key forces remount on undo/redo
-                            initialCells={cellsRef.current}
+                            cells={cells}
                             onReady={handleGridReady}
                             onViewportChange={handleViewportChange}
                             onHoveredCellChange={handleHoveredCellChange}

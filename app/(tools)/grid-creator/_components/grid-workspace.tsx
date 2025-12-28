@@ -20,7 +20,8 @@ interface GridWorkspaceProps {
     readonly toolMode: ToolMode;
     readonly selectedColor: SelectedColor | null;
     readonly hoveredCell: CellPosition | null;
-    readonly initialCells?: Map<string, CellState>;
+    /** External cells state - syncs on reference change (for undo/redo) */
+    readonly cells?: Map<string, CellState>;
     readonly onReady: () => void;
     readonly onViewportChange: (viewport: ViewportState) => void;
     readonly onHoveredCellChange: (cell: CellPosition | null) => void;
@@ -41,7 +42,7 @@ export function GridWorkspace({
     toolMode,
     selectedColor,
     hoveredCell,
-    initialCells,
+    cells,
     onReady,
     onViewportChange,
     onHoveredCellChange,
@@ -59,7 +60,7 @@ export function GridWorkspace({
                 viewMode={viewMode}
                 toolMode={toolMode}
                 selectedColor={selectedColor}
-                initialCells={initialCells}
+                cells={cells}
                 onReady={onReady}
                 onViewportChange={onViewportChange}
                 onHoveredCellChange={onHoveredCellChange}
