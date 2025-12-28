@@ -45,7 +45,8 @@ export function useGridCells({
     const [prevExternalCells, setPrevExternalCells] = useState(externalCells);
 
     // Sync from external cells when reference changes (for undo/redo)
-    // This pattern is React-recommended: updating state during render based on props
+    // Uses React-recommended pattern: updating state during render based on props
+    // See: https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
     if (externalCells !== prevExternalCells) {
         setPrevExternalCells(externalCells);
         setInternalCells(externalCells ?? new Map());
