@@ -1,4 +1,4 @@
-import { RefreshCw, Palette } from "lucide-react";
+import { RefreshCw, Palette, Undo2, Redo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
     AlertDialog,
@@ -23,6 +23,8 @@ interface GridCreatorToolbarProps {
     readonly viewMode: ViewMode;
     readonly viewport: ViewportState;
     readonly selectedColor: SelectedColor | null;
+    readonly canUndo: boolean;
+    readonly canRedo: boolean;
     readonly onToolModeChange: (mode: ToolMode) => void;
     readonly onViewModeChange: (mode: ViewMode) => void;
     readonly onZoomIn: () => void;
@@ -30,6 +32,8 @@ interface GridCreatorToolbarProps {
     readonly onResetView: () => void;
     readonly onReset: () => void;
     readonly onTogglePalette: () => void;
+    readonly onUndo: () => void;
+    readonly onRedo: () => void;
 }
 
 export function GridCreatorToolbar({
@@ -39,6 +43,8 @@ export function GridCreatorToolbar({
     viewMode,
     viewport,
     selectedColor,
+    canUndo,
+    canRedo,
     onToolModeChange,
     onViewModeChange,
     onZoomIn,
@@ -46,6 +52,8 @@ export function GridCreatorToolbar({
     onResetView,
     onReset,
     onTogglePalette,
+    onUndo,
+    onRedo,
 }: GridCreatorToolbarProps) {
     return (
         <div className="flex flex-wrap items-center justify-between gap-4 px-4 md:gap-6">
@@ -68,6 +76,32 @@ export function GridCreatorToolbar({
 
                 {/* View Mode Selector */}
                 {isInteractive && <ViewModeSelector mode={viewMode} onModeChange={onViewModeChange} />}
+
+                {/* Undo/Redo Buttons */}
+                {isInteractive && (
+                    <div className="flex items-center gap-1">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={onUndo}
+                            disabled={!canUndo}
+                            aria-label="Undo (Ctrl+Z)"
+                            title="Undo (Ctrl+Z)"
+                        >
+                            <Undo2 className="h-4 w-4" />
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={onRedo}
+                            disabled={!canRedo}
+                            aria-label="Redo (Ctrl+Y)"
+                            title="Redo (Ctrl+Y)"
+                        >
+                            <Redo2 className="h-4 w-4" />
+                        </Button>
+                    </div>
+                )}
             </div>
 
             <div className="flex items-center gap-2">

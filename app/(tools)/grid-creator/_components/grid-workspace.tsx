@@ -8,6 +8,7 @@ import type {
     ViewMode,
     ToolMode,
     SelectedColor,
+    CommandType,
 } from "@/lib/tools/grid-creator";
 
 interface GridWorkspaceProps {
@@ -25,6 +26,10 @@ interface GridWorkspaceProps {
     readonly onHoveredCellChange: (cell: CellPosition | null) => void;
     readonly onCellsChange?: (cells: Map<string, CellState>) => void;
     readonly onEyedrop: (color: SelectedColor | null) => void;
+    /** Command lifecycle callbacks for undo/redo */
+    readonly onCommandStart?: (type: CommandType) => void;
+    readonly onCommandDelta?: (key: string, before: CellState | undefined, after: CellState | undefined) => void;
+    readonly onCommandCommit?: () => void;
 }
 
 export function GridWorkspace({
@@ -42,6 +47,9 @@ export function GridWorkspace({
     onHoveredCellChange,
     onCellsChange,
     onEyedrop,
+    onCommandStart,
+    onCommandDelta,
+    onCommandCommit,
 }: GridWorkspaceProps) {
     return (
         <div className="bg-muted/30 relative min-h-0 flex-1 overflow-hidden rounded-lg border">
@@ -57,6 +65,9 @@ export function GridWorkspace({
                 onHoveredCellChange={onHoveredCellChange}
                 onCellsChange={onCellsChange}
                 onEyedrop={onEyedrop}
+                onCommandStart={onCommandStart}
+                onCommandDelta={onCommandDelta}
+                onCommandCommit={onCommandCommit}
             />
 
             {isInteractive && <GridCellTooltip position={hoveredCell} />}

@@ -10,6 +10,7 @@ import type {
     ToolMode,
     SelectedColor,
     ViewMode,
+    CommandType,
 } from "@/lib/tools/grid-creator";
 import { DEFAULT_VIEW_MODE } from "@/lib/tools/grid-creator";
 import {
@@ -37,6 +38,12 @@ interface GridCanvasProps {
     readonly onCellsChange?: (cells: Map<string, CellState>) => void;
     readonly onReady?: () => void;
     readonly onEyedrop?: (color: SelectedColor | null) => void;
+    /** Called when a command starts (for undo/redo) */
+    readonly onCommandStart?: (type: CommandType) => void;
+    /** Called for each cell delta during a command */
+    readonly onCommandDelta?: (key: string, before: CellState | undefined, after: CellState | undefined) => void;
+    /** Called when a command ends */
+    readonly onCommandCommit?: () => void;
 }
 
 export function GridCanvas({
@@ -52,6 +59,9 @@ export function GridCanvas({
     onCellsChange,
     onReady,
     onEyedrop,
+    onCommandStart,
+    onCommandDelta,
+    onCommandCommit,
 }: GridCanvasProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -74,6 +84,24 @@ export function GridCanvas({
     const renderConfigRef = useRef<RenderConfig | null>(null);
     const prevHoveredCellRef = useRef<CellPosition | null>(null);
     const cellsRef = useRef(cells);
+
+    // Refs for undo/redo callbacks (avoid stale closures)
+    const onCommandStartRef = useRef(onCommandStart);
+    const onCommandDeltaRef = useRef(onCommandDelta);
+    const onCommandCommitRef = useRef(onCommandCommit);
+
+    // Update undo/redo refs when callbacks change
+    useEffect(() => {
+        onCommandStartRef.current = onCommandStart;
+    }, [onCommandStart]);
+
+    useEffect(() => {
+        onCommandDeltaRef.current = onCommandDelta;
+    }, [onCommandDelta]);
+
+    useEffect(() => {
+        onCommandCommitRef.current = onCommandCommit;
+    }, [onCommandCommit]);
 
     // Update refs when state changes
     useEffect(() => {
@@ -222,6 +250,7 @@ export function GridCanvas({
     const handleCellClick = useCallback(
         (position: CellPosition) => {
             const key = cellKey(position);
+            const beforeState = cellsRef.current.get(key);
 
             switch (toolMode) {
                 case "select":
@@ -231,8 +260,13 @@ export function GridCanvas({
                         const current = newCells.get(key);
                         if (current?.active) {
                             newCells.delete(key);
+                            // Record delta: cell removed
+                            onCommandDeltaRef.current?.(key, beforeState, undefined);
                         } else {
-                            newCells.set(key, { active: true });
+                            const afterState: CellState = { active: true };
+                            newCells.set(key, afterState);
+                            // Record delta: cell added
+                            onCommandDeltaRef.current?.(key, beforeState, afterState);
                         }
                         return newCells;
                     });
@@ -241,16 +275,19 @@ export function GridCanvas({
                 case "paint":
                     // Apply selected color and symbol to cell
                     if (selectedColor) {
+                        const afterState: CellState = {
+                            active: true,
+                            color: selectedColor.hex,
+                            threadCode: selectedColor.threadCode,
+                            symbol: selectedColor.symbol,
+                        };
                         setCells((prev) => {
                             const newCells = new Map(prev);
-                            newCells.set(key, {
-                                active: true,
-                                color: selectedColor.hex,
-                                threadCode: selectedColor.threadCode,
-                                symbol: selectedColor.symbol,
-                            });
+                            newCells.set(key, afterState);
                             return newCells;
                         });
+                        // Record delta: cell painted
+                        onCommandDeltaRef.current?.(key, beforeState, afterState);
                     }
                     break;
 
@@ -261,10 +298,12 @@ export function GridCanvas({
                         newCells.delete(key);
                         return newCells;
                     });
+                    // Record delta: cell erased
+                    onCommandDeltaRef.current?.(key, beforeState, undefined);
                     break;
 
                 case "eyedropper":
-                    // Pick color and symbol from cell
+                    // Pick color and symbol from cell (no undo needed)
                     {
                         const cellState = cellsRef.current.get(key);
                         if (cellState?.color && cellState?.threadCode) {
@@ -373,6 +412,33 @@ export function GridCanvas({
         }
     }, [internalViewport, externalViewport, onViewportChange]);
 
+    // Map tool mode to command type for undo/redo
+    const getCommandType = useCallback((): CommandType => {
+        switch (toolMode) {
+            case "paint":
+                return "paint";
+            case "erase":
+                return "erase";
+            default:
+                return "select";
+        }
+    }, [toolMode]);
+
+    // Drag handlers for undo/redo command lifecycle
+    const handleDragStart = useCallback(() => {
+        // Don't start command for eyedropper (it doesn't modify cells)
+        if (toolMode !== "eyedropper") {
+            onCommandStartRef.current?.(getCommandType());
+        }
+    }, [toolMode, getCommandType]);
+
+    const handleDragEnd = useCallback(() => {
+        // Don't commit command for eyedropper (it doesn't modify cells)
+        if (toolMode !== "eyedropper") {
+            onCommandCommitRef.current?.();
+        }
+    }, [toolMode]);
+
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas || !renderConfig) return;
@@ -385,10 +451,12 @@ export function GridCanvas({
             onClick: handleCellClick,
             onPan: handlePan,
             onZoom: handleZoom,
+            onDragStart: handleDragStart,
+            onDragEnd: handleDragEnd,
         });
 
         return cleanup;
-    }, [config, renderConfig, handleHover, handleCellClick, handlePan, handleZoom]);
+    }, [config, renderConfig, handleHover, handleCellClick, handlePan, handleZoom, handleDragStart, handleDragEnd]);
 
     // Expose reset function via parent callback if needed
     // This is done via the viewport change - parent can set viewport to DEFAULT_VIEWPORT

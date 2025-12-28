@@ -1,13 +1,19 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef } from "react";
-import { useGridPhase, useGridViewport, useColorSelection, useGridPersistence } from "@/lib/hooks/grid-creator";
+import {
+    useGridPhase,
+    useGridViewport,
+    useColorSelection,
+    useGridPersistence,
+    useUndoRedo,
+} from "@/lib/hooks/grid-creator";
 import { GridConfigForm } from "./grid-config-form";
 import { GridCreatorHeader } from "./grid-creator-header";
 import { GridCreatorToolbar } from "./grid-creator-toolbar";
 import { GridWorkspace } from "./grid-workspace";
 import { PaletteSidebar } from "./palette-sidebar";
-import type { CellPosition, CellState, ToolMode, ViewMode } from "@/lib/tools/grid-creator";
+import type { CellPosition, CellState, ToolMode, ViewMode, CommandType } from "@/lib/tools/grid-creator";
 import { DEFAULT_VIEW_MODE } from "@/lib/tools/grid-creator";
 import type { ThreadColour } from "@/lib/tools/threads/types";
 
@@ -34,6 +40,12 @@ export function GridCreatorClient({ threads, brands }: GridCreatorClientProps) {
 
     // Track cells for persistence (lifted from GridCanvas)
     const cellsRef = useRef<Map<string, CellState>>(initialState?.cells ?? new Map());
+
+    // Track cells state for triggering re-renders on undo/redo
+    const [cellsVersion, setCellsVersion] = useState(0);
+
+    // Undo/redo hook
+    const { canUndo, canRedo, startCommand, addDelta, commitCommand, undo, redo, clearHistory } = useUndoRedo();
 
     // Custom hooks for state management with initial values from persistence
     const { viewport, handleZoomIn, handleZoomOut, handleResetView, handleViewportChange, resetViewport } =
@@ -69,6 +81,8 @@ export function GridCreatorClient({ threads, brands }: GridCreatorClientProps) {
             cellsRef.current = new Map();
             // Clear persisted state when resetting
             clearPersistedState();
+            // Clear undo/redo history
+            clearHistory();
         },
     });
 
@@ -95,6 +109,99 @@ export function GridCreatorClient({ threads, brands }: GridCreatorClientProps) {
         },
         [config, saveState]
     );
+
+    // Command lifecycle callbacks for undo/redo
+    const handleCommandStart = useCallback(
+        (type: CommandType) => {
+            startCommand(type);
+        },
+        [startCommand]
+    );
+
+    const handleCommandDelta = useCallback(
+        (key: string, before: CellState | undefined, after: CellState | undefined) => {
+            addDelta(key, before, after);
+        },
+        [addDelta]
+    );
+
+    const handleCommandCommit = useCallback(() => {
+        commitCommand();
+    }, [commitCommand]);
+
+    // Undo handler - applies deltas in reverse
+    const handleUndo = useCallback(() => {
+        const deltas = undo();
+        if (!deltas) return;
+
+        // Apply deltas to cells (restore 'before' states)
+        const newCells = new Map(cellsRef.current);
+        for (const delta of deltas) {
+            if (delta.before === undefined) {
+                newCells.delete(delta.key);
+            } else {
+                newCells.set(delta.key, delta.before);
+            }
+        }
+        cellsRef.current = newCells;
+
+        // Trigger re-render by incrementing version
+        setCellsVersion((v) => v + 1);
+
+        // Save to persistence
+        if (config) {
+            saveState({ cells: newCells });
+        }
+    }, [undo, config, saveState]);
+
+    // Redo handler - applies deltas forward
+    const handleRedo = useCallback(() => {
+        const deltas = redo();
+        if (!deltas) return;
+
+        // Apply deltas to cells (apply 'after' states)
+        const newCells = new Map(cellsRef.current);
+        for (const delta of deltas) {
+            if (delta.after === undefined) {
+                newCells.delete(delta.key);
+            } else {
+                newCells.set(delta.key, delta.after);
+            }
+        }
+        cellsRef.current = newCells;
+
+        // Trigger re-render by incrementing version
+        setCellsVersion((v) => v + 1);
+
+        // Save to persistence
+        if (config) {
+            saveState({ cells: newCells });
+        }
+    }, [redo, config, saveState]);
+
+    // Keyboard shortcuts for undo/redo
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            // Only handle shortcuts when in interactive phase
+            if (phase !== "interactive") return;
+
+            // Check for Ctrl/Cmd + Z (undo) or Ctrl/Cmd + Y / Ctrl/Cmd + Shift + Z (redo)
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") {
+                e.preventDefault();
+                if (e.shiftKey) {
+                    handleRedo();
+                } else {
+                    handleUndo();
+                }
+            } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "y") {
+                e.preventDefault();
+                handleRedo();
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [phase, handleUndo, handleRedo]);
 
     // Save state when any persisted value changes
     useEffect(() => {
@@ -141,6 +248,8 @@ export function GridCreatorClient({ threads, brands }: GridCreatorClientProps) {
                             viewMode={viewMode}
                             viewport={viewport}
                             selectedColor={selectedColor}
+                            canUndo={canUndo}
+                            canRedo={canRedo}
                             onToolModeChange={setToolMode}
                             onViewModeChange={setViewMode}
                             onZoomIn={handleZoomIn}
@@ -148,9 +257,12 @@ export function GridCreatorClient({ threads, brands }: GridCreatorClientProps) {
                             onResetView={handleResetView}
                             onReset={handleReset}
                             onTogglePalette={handleTogglePalette}
+                            onUndo={handleUndo}
+                            onRedo={handleRedo}
                         />
 
                         <GridWorkspace
+                            key={cellsVersion}
                             config={config}
                             isInteractive={isInteractive}
                             isRendering={isRendering}
@@ -159,12 +271,16 @@ export function GridCreatorClient({ threads, brands }: GridCreatorClientProps) {
                             toolMode={toolMode}
                             selectedColor={selectedColor}
                             hoveredCell={hoveredCell}
-                            initialCells={initialState?.cells}
+                            // eslint-disable-next-line react-hooks/refs -- Intentional: key forces remount on undo/redo
+                            initialCells={cellsRef.current}
                             onReady={handleGridReady}
                             onViewportChange={handleViewportChange}
                             onHoveredCellChange={handleHoveredCellChange}
                             onCellsChange={handleCellsChange}
                             onEyedrop={handleEyedrop}
+                            onCommandStart={handleCommandStart}
+                            onCommandDelta={handleCommandDelta}
+                            onCommandCommit={handleCommandCommit}
                         />
                     </div>
                 )}
