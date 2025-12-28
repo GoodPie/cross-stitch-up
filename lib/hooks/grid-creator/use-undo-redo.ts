@@ -5,7 +5,7 @@
  * Supports grouping multiple cell changes into single commands (for drag operations).
  */
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useRef } from "react";
 import type { CellState } from "@/lib/tools/grid-creator";
 import type { CellDelta, CommandType, UndoCommand, UndoHistory } from "@/lib/tools/grid-creator/undo-types";
 import { UNDO_CONSTRAINTS, createCommandId } from "@/lib/tools/grid-creator/undo-types";
@@ -121,12 +121,8 @@ export function useUndoRedo(options: UseUndoRedoOptions = {}): UseUndoRedoReturn
     const [history, setHistory] = useState<UndoHistory>(INITIAL_HISTORY);
 
     // Ref for synchronous access to history (avoids stale closure issues in undo/redo)
+    // Note: We manually update historyRef in all mutation functions, no useEffect sync needed
     const historyRef = useRef<UndoHistory>(INITIAL_HISTORY);
-
-    // Keep ref in sync with state
-    useEffect(() => {
-        historyRef.current = history;
-    }, [history]);
 
     // Current command being built (not yet committed)
     const pendingCommandRef = useRef<{
@@ -217,6 +213,11 @@ export function useUndoRedo(options: UseUndoRedoOptions = {}): UseUndoRedoReturn
     }, []);
 
     const undo = useCallback((): CellDelta[] | null => {
+        // Commit any pending command first so we undo the most recent action
+        if (pendingCommandRef.current && pendingCommandRef.current.deltas.length > 0) {
+            commitPendingToHistory();
+        }
+
         const currentHistory = historyRef.current;
         if (currentHistory.past.length === 0) {
             return null;
@@ -233,7 +234,7 @@ export function useUndoRedo(options: UseUndoRedoOptions = {}): UseUndoRedoReturn
         setHistory(newHistory);
 
         return command.deltas;
-    }, []);
+    }, [commitPendingToHistory]);
 
     const redo = useCallback((): CellDelta[] | null => {
         const currentHistory = historyRef.current;
