@@ -12,7 +12,7 @@ interface UseGridCellsReturn {
     /** Current cells state */
     cells: Map<string, CellState>;
     /** Ref for synchronous access (avoids stale closures) */
-    cellsRef: React.MutableRefObject<Map<string, CellState>>;
+    cellsRef: React.RefObject<Map<string, CellState>>;
     /** Set cells directly (for tool actions) */
     setCells: React.Dispatch<React.SetStateAction<Map<string, CellState>>>;
 }

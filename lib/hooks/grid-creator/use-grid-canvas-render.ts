@@ -14,7 +14,7 @@ export interface UseGridCanvasRenderOptions {
     renderConfig: RenderConfig | null;
     viewport: ViewportState;
     cells: Map<string, CellState>;
-    cellsRef: React.MutableRefObject<Map<string, CellState>>;
+    cellsRef: React.RefObject<Map<string, CellState>>;
     hoveredCell: CellPosition | null;
     onReady?: () => void;
 }
@@ -23,9 +23,9 @@ interface UseGridCanvasRenderReturn {
     /** Whether canvas has completed first render */
     isReady: boolean;
     /** Ref to viewport for interaction handlers */
-    viewportRef: React.MutableRefObject<ViewportState>;
+    viewportRef: React.RefObject<ViewportState>;
     /** Ref to renderConfig for interaction handlers */
-    renderConfigRef: React.MutableRefObject<RenderConfig | null>;
+    renderConfigRef: React.RefObject<RenderConfig | null>;
 }
 
 /**

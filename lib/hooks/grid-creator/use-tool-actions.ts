@@ -5,12 +5,12 @@ import { cellKey } from "@/lib/tools/grid-creator";
 export interface UseToolActionsOptions {
     toolMode: ToolMode;
     selectedColor?: SelectedColor | null;
-    cellsRef: React.MutableRefObject<Map<string, CellState>>;
+    cellsRef: React.RefObject<Map<string, CellState>>;
     setCells: React.Dispatch<React.SetStateAction<Map<string, CellState>>>;
     onCellClick?: (position: CellPosition) => void;
     onEyedrop?: (color: SelectedColor | null) => void;
     /** Ref to command delta callback (for undo/redo) */
-    onCommandDeltaRef: React.MutableRefObject<
+    onCommandDeltaRef: React.RefObject<
         ((key: string, before: CellState | undefined, after: CellState | undefined) => void) | undefined
     >;
 }
