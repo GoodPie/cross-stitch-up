@@ -5,7 +5,7 @@
  * Supports grouping multiple cell changes into single commands (for drag operations).
  */
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import type { CellState } from "@/lib/tools/grid-creator";
 import type { CellDelta, CommandType, UndoCommand, UndoHistory } from "@/lib/tools/grid-creator/undo-types";
 import { UNDO_CONSTRAINTS, createCommandId } from "@/lib/tools/grid-creator/undo-types";
@@ -120,6 +120,14 @@ export function useUndoRedo(options: UseUndoRedoOptions = {}): UseUndoRedoReturn
 
     const [history, setHistory] = useState<UndoHistory>(INITIAL_HISTORY);
 
+    // Ref for synchronous access to history (avoids stale closure issues in undo/redo)
+    const historyRef = useRef<UndoHistory>(INITIAL_HISTORY);
+
+    // Keep ref in sync with state
+    useEffect(() => {
+        historyRef.current = history;
+    }, [history]);
+
     // Current command being built (not yet committed)
     const pendingCommandRef = useRef<{
         type: CommandType;
@@ -132,18 +140,51 @@ export function useUndoRedo(options: UseUndoRedoOptions = {}): UseUndoRedoReturn
     const undoCount = history.past.length;
     const redoCount = history.future.length;
 
-    const startCommand = useCallback((type: CommandType) => {
-        // If there's already a pending command, commit it first
-        if (pendingCommandRef.current && pendingCommandRef.current.deltas.length > 0) {
-            console.warn("useUndoRedo: Starting new command while previous command is pending. Auto-committing.");
+    // Internal helper to commit pending command to history (used by both commitCommand and startCommand)
+    const commitPendingToHistory = useCallback(() => {
+        const pending = pendingCommandRef.current;
+        if (!pending || pending.deltas.length === 0) {
+            pendingCommandRef.current = null;
+            return;
         }
 
-        pendingCommandRef.current = {
-            type,
-            deltas: [],
-            seenKeys: new Set(),
+        const command: UndoCommand = {
+            id: createCommandId(),
+            timestamp: Date.now(),
+            type: pending.type,
+            deltas: pending.deltas,
         };
-    }, []);
+
+        pendingCommandRef.current = null;
+
+        // Update history - use ref for synchronous read, compute new state, update both ref and state
+        const newHistory: UndoHistory = {
+            past: [...historyRef.current.past, command],
+            // Clear future when new command is added (standard undo behavior)
+            future: [],
+        };
+        const trimmed = trimHistory(newHistory, maxHistorySize, maxTotalDeltas);
+
+        historyRef.current = trimmed;
+        setHistory(trimmed);
+    }, [maxHistorySize, maxTotalDeltas]);
+
+    const startCommand = useCallback(
+        (type: CommandType) => {
+            // If there's already a pending command with deltas, commit it first
+            if (pendingCommandRef.current && pendingCommandRef.current.deltas.length > 0) {
+                console.warn("useUndoRedo: Starting new command while previous command is pending. Auto-committing.");
+                commitPendingToHistory();
+            }
+
+            pendingCommandRef.current = {
+                type,
+                deltas: [],
+                seenKeys: new Set(),
+            };
+        },
+        [commitPendingToHistory]
+    );
 
     const addDelta = useCallback((key: string, before: CellState | undefined, after: CellState | undefined) => {
         const pending = pendingCommandRef.current;
@@ -169,67 +210,52 @@ export function useUndoRedo(options: UseUndoRedoOptions = {}): UseUndoRedoReturn
         pending.deltas.push({ key, before, after });
     }, []);
 
-    const commitCommand = useCallback(() => {
-        const pending = pendingCommandRef.current;
-        pendingCommandRef.current = null;
-
-        if (!pending || pending.deltas.length === 0) {
-            // No changes to commit
-            return;
-        }
-
-        const command: UndoCommand = {
-            id: createCommandId(),
-            timestamp: Date.now(),
-            type: pending.type,
-            deltas: pending.deltas,
-        };
-
-        setHistory((prev) => {
-            const newHistory: UndoHistory = {
-                past: [...prev.past, command],
-                // Clear future when new command is added (standard undo behavior)
-                future: [],
-            };
-            return trimHistory(newHistory, maxHistorySize, maxTotalDeltas);
-        });
-    }, [maxHistorySize, maxTotalDeltas]);
+    const commitCommand = commitPendingToHistory;
 
     const cancelCommand = useCallback(() => {
         pendingCommandRef.current = null;
     }, []);
 
     const undo = useCallback((): CellDelta[] | null => {
-        if (history.past.length === 0) {
+        const currentHistory = historyRef.current;
+        if (currentHistory.past.length === 0) {
             return null;
         }
 
-        const command = history.past.at(-1);
+        const command = currentHistory.past.at(-1)!;
 
-        setHistory((prev) => ({
-            past: prev.past.slice(0, -1),
-            future: [command, ...prev.future],
-        }));
+        const newHistory: UndoHistory = {
+            past: currentHistory.past.slice(0, -1),
+            future: [command, ...currentHistory.future],
+        };
+
+        historyRef.current = newHistory;
+        setHistory(newHistory);
 
         return command.deltas;
-    }, [history.past]);
+    }, []);
 
     const redo = useCallback((): CellDelta[] | null => {
-        if (history.future.length === 0) {
+        const currentHistory = historyRef.current;
+        if (currentHistory.future.length === 0) {
             return null;
         }
 
-        const command = history.future[0];
+        const command = currentHistory.future[0];
 
-        setHistory((prev) => ({
-            past: [...prev.past, command],
-            future: prev.future.slice(1),
-        }));
+        const newHistory: UndoHistory = {
+            past: [...currentHistory.past, command],
+            future: currentHistory.future.slice(1),
+        };
+
+        historyRef.current = newHistory;
+        setHistory(newHistory);
 
         return command.deltas;
-    }, [history.future]);
+    }, []);
 
     const clearHistory = useCallback(() => {
+        historyRef.current = INITIAL_HISTORY;
         setHistory(INITIAL_HISTORY);
         pendingCommandRef.current = null;
     }, []);
