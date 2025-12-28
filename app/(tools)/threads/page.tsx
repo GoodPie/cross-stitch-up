@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import * as Sentry from "@sentry/nextjs";
 import { ThreadsClient } from "./_components/threads-client";
-import type { ThreadColour, ThreadsResponse } from "@/lib/tools/threads/types";
-import { supabase } from "@/lib/supabase/client";
+import { fetchThreads } from "@/lib/tools/threads/fetch-threads";
 
 export const metadata: Metadata = {
     title: "Thread Colors | Cross Stitch-up",
@@ -12,30 +10,8 @@ export const metadata: Metadata = {
 // Cache for 1 hour
 export const revalidate = 3600;
 
-async function getThreads(): Promise<ThreadsResponse> {
-    const { data: threads, error } = await supabase
-        .from("thread_colours")
-        .select("id, brand, colour_code, name, r, g, b, hex")
-        .order("colour_code", { ascending: true });
-
-    if (error) {
-        Sentry.captureException(error, {
-            tags: { api: "threads", operation: "fetch" },
-        });
-        throw new Error("Failed to fetch threads");
-    }
-
-    const brands = [...new Set((threads as ThreadColour[]).map((t) => t.brand))].sort((a, b) => a.localeCompare(b));
-
-    return {
-        threads: threads as ThreadColour[],
-        total: threads.length,
-        brands,
-    };
-}
-
 export default async function ThreadsPage() {
-    const { threads, brands } = await getThreads();
+    const { threads, brands } = await fetchThreads();
 
     return (
         <main className="container mx-auto max-w-6xl px-4 py-8">

@@ -6,3 +6,5 @@ export * from "./utils";
 export * from "./grid-renderer";
 export * from "./grid-interactions";
 export * from "./symbols";
+export * from "./storage";
+export * from "./undo-types";

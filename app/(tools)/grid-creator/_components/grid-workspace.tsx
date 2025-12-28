@@ -3,10 +3,12 @@ import { GridCellTooltip } from "./grid-cell-tooltip";
 import type {
     GridConfig,
     CellPosition,
+    CellState,
     ViewportState,
     ViewMode,
     ToolMode,
     SelectedColor,
+    CommandType,
 } from "@/lib/tools/grid-creator";
 
 interface GridWorkspaceProps {
@@ -18,10 +20,17 @@ interface GridWorkspaceProps {
     readonly toolMode: ToolMode;
     readonly selectedColor: SelectedColor | null;
     readonly hoveredCell: CellPosition | null;
+    /** External cells state - syncs on reference change (for undo/redo) */
+    readonly cells?: Map<string, CellState>;
     readonly onReady: () => void;
     readonly onViewportChange: (viewport: ViewportState) => void;
     readonly onHoveredCellChange: (cell: CellPosition | null) => void;
+    readonly onCellsChange?: (cells: Map<string, CellState>) => void;
     readonly onEyedrop: (color: SelectedColor | null) => void;
+    /** Command lifecycle callbacks for undo/redo */
+    readonly onCommandStart?: (type: CommandType) => void;
+    readonly onCommandDelta?: (key: string, before: CellState | undefined, after: CellState | undefined) => void;
+    readonly onCommandCommit?: () => void;
 }
 
 export function GridWorkspace({
@@ -33,10 +42,15 @@ export function GridWorkspace({
     toolMode,
     selectedColor,
     hoveredCell,
+    cells,
     onReady,
     onViewportChange,
     onHoveredCellChange,
+    onCellsChange,
     onEyedrop,
+    onCommandStart,
+    onCommandDelta,
+    onCommandCommit,
 }: GridWorkspaceProps) {
     return (
         <div className="bg-muted/30 relative min-h-0 flex-1 overflow-hidden rounded-lg border">
@@ -46,10 +60,15 @@ export function GridWorkspace({
                 viewMode={viewMode}
                 toolMode={toolMode}
                 selectedColor={selectedColor}
+                cells={cells}
                 onReady={onReady}
                 onViewportChange={onViewportChange}
                 onHoveredCellChange={onHoveredCellChange}
+                onCellsChange={onCellsChange}
                 onEyedrop={onEyedrop}
+                onCommandStart={onCommandStart}
+                onCommandDelta={onCommandDelta}
+                onCommandCommit={onCommandCommit}
             />
 
             {isInteractive && <GridCellTooltip position={hoveredCell} />}

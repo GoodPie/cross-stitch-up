@@ -73,15 +73,36 @@ export interface InteractionCallbacks {
     onClick: (cell: CellPosition) => void;
     onPan: (deltaX: number, deltaY: number) => void;
     onZoom: (newScale: number, centerX: number, centerY: number) => void;
+    /** Called when drag operation starts (for undo/redo command batching) */
+    onDragStart?: (cell: CellPosition) => void;
+    /** Called for each new cell during drag (cell already applied via onClick) */
+    onDragMove?: (cell: CellPosition) => void;
+    /** Called when drag operation ends */
+    onDragEnd?: () => void;
 }
 
-interface InteractionState {
+export interface InteractionState {
     isPanning: boolean;
     lastPanX: number;
     lastPanY: number;
     initialPinchDistance: number | null;
     initialScale: number;
+    /** Whether currently dragging (painting/erasing cells) */
+    isDragging: boolean;
+    /** Last cell during drag (to avoid duplicate callbacks) */
+    lastDragCell: CellPosition | null;
 }
+
+/** Default initial state for interaction handler */
+export const DEFAULT_INTERACTION_STATE: InteractionState = {
+    isPanning: false,
+    lastPanX: 0,
+    lastPanY: 0,
+    initialPinchDistance: null,
+    initialScale: 1,
+    isDragging: false,
+    lastDragCell: null,
+};
 
 /**
  * Create and attach all interaction handlers to a canvas.
@@ -92,6 +113,9 @@ interface InteractionState {
  * @param getRenderConfig - Function to retrieve current render configuration
  * @param gridConfig - Grid configuration
  * @param callbacks - Callback functions for interactions
+ * @param stateRef - Optional external state ref that persists across effect re-runs.
+ *                   If provided, the ref's current value is used and mutated.
+ *                   This prevents drag state from being lost when React effects re-run.
  * @returns Object with cleanup function
  */
 export function createInteractionHandlers(
@@ -99,14 +123,19 @@ export function createInteractionHandlers(
     getViewport: () => ViewportState,
     getRenderConfig: () => RenderConfig,
     gridConfig: GridConfig,
-    callbacks: InteractionCallbacks
+    callbacks: InteractionCallbacks,
+    stateRef?: { current: InteractionState }
 ): { cleanup: () => void } {
-    const state: InteractionState = {
+    // Use external state ref if provided (persists across effect re-runs),
+    // otherwise create local state (will reset if effect re-runs)
+    const state: InteractionState = stateRef?.current ?? {
         isPanning: false,
         lastPanX: 0,
         lastPanY: 0,
         initialPinchDistance: null,
         initialScale: 1,
+        isDragging: false,
+        lastDragCell: null,
     };
 
     // =========================================================================
@@ -130,6 +159,16 @@ export function createInteractionHandlers(
         const { canvasX, canvasY } = screenToCanvas(e.clientX, e.clientY, canvas, viewport);
         const cell = getCellFromCoords(canvasX, canvasY, renderConfig, gridConfig);
         callbacks.onHover(cell);
+
+        // Drag painting - if dragging and cell changed, apply to new cell
+        if (state.isDragging && cell) {
+            const lastCell = state.lastDragCell;
+            if (!lastCell || lastCell.row !== cell.row || lastCell.col !== cell.col) {
+                state.lastDragCell = cell;
+                callbacks.onClick(cell);
+                callbacks.onDragMove?.(cell);
+            }
+        }
     };
 
     const handleMouseDown = (e: MouseEvent) => {
@@ -152,21 +191,35 @@ export function createInteractionHandlers(
             return;
         }
 
-        // Cell click
+        // Cell click - start drag operation
         const renderConfig = getRenderConfig();
         const { canvasX, canvasY } = screenToCanvas(e.clientX, e.clientY, canvas, viewport);
         const cell = getCellFromCoords(canvasX, canvasY, renderConfig, gridConfig);
         if (cell) {
+            // Start drag and apply first cell
+            state.isDragging = true;
+            state.lastDragCell = cell;
+            callbacks.onDragStart?.(cell);
             callbacks.onClick(cell);
         }
     };
 
     const handleMouseUp = () => {
         state.isPanning = false;
+        if (state.isDragging) {
+            state.isDragging = false;
+            state.lastDragCell = null;
+            callbacks.onDragEnd?.();
+        }
     };
 
     const handleMouseLeave = () => {
         state.isPanning = false;
+        if (state.isDragging) {
+            state.isDragging = false;
+            state.lastDragCell = null;
+            callbacks.onDragEnd?.();
+        }
         callbacks.onHover(null);
     };
 
@@ -203,54 +256,72 @@ export function createInteractionHandlers(
 
     const handleTouchStart = (e: TouchEvent) => {
         if (e.touches.length === 1) {
-            // Single touch - could be tap or pan
+            // Single touch - record start position for drag detection
             state.lastPanX = e.touches[0].clientX;
             state.lastPanY = e.touches[0].clientY;
         } else if (e.touches.length === 2) {
-            // Two touches - pinch to zoom
+            // Two touches - switch to pinch/pan mode
             state.initialPinchDistance = getTouchDistance(e.touches[0], e.touches[1]);
             state.initialScale = getViewport().scale;
-            state.isPanning = false;
+            state.isPanning = true;
+            // End any drag that was in progress
+            if (state.isDragging) {
+                state.isDragging = false;
+                state.lastDragCell = null;
+                callbacks.onDragEnd?.();
+            }
         }
     };
 
     const handleTouchMove = (e: TouchEvent) => {
         e.preventDefault();
 
-        if (e.touches.length === 1 && state.isPanning) {
-            // Panning
-            const viewport = getViewport();
-            const touch = e.touches[0];
-            const deltaX = (touch.clientX - state.lastPanX) / viewport.scale;
-            const deltaY = (touch.clientY - state.lastPanY) / viewport.scale;
-            callbacks.onPan(-deltaX, -deltaY);
-            state.lastPanX = touch.clientX;
-            state.lastPanY = touch.clientY;
-        } else if (e.touches.length === 2 && state.initialPinchDistance) {
-            // Pinch zoom
-            const currentDistance = getTouchDistance(e.touches[0], e.touches[1]);
-            const scale = state.initialScale * (currentDistance / state.initialPinchDistance);
-            const newScale = Math.max(VIEWPORT_CONSTRAINTS.MIN_SCALE, Math.min(VIEWPORT_CONSTRAINTS.MAX_SCALE, scale));
+        if (e.touches.length === 2) {
+            // Two-finger: pan and pinch zoom
+            if (state.initialPinchDistance) {
+                const currentDistance = getTouchDistance(e.touches[0], e.touches[1]);
+                const scale = state.initialScale * (currentDistance / state.initialPinchDistance);
+                const newScale = Math.max(
+                    VIEWPORT_CONSTRAINTS.MIN_SCALE,
+                    Math.min(VIEWPORT_CONSTRAINTS.MAX_SCALE, scale)
+                );
 
-            // Center point of pinch
-            const centerX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
-            const centerY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+                // Center point of pinch
+                const centerX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                const centerY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
 
-            callbacks.onZoom(newScale, centerX, centerY);
+                callbacks.onZoom(newScale, centerX, centerY);
+            }
         } else if (e.touches.length === 1) {
-            // Start panning if moved enough (5px threshold)
             const touch = e.touches[0];
-            const dx = Math.abs(touch.clientX - state.lastPanX);
-            const dy = Math.abs(touch.clientY - state.lastPanY);
-            if (dx > 5 || dy > 5) {
-                state.isPanning = true;
-                // Apply first delta immediately to avoid "jump"
-                const viewport = getViewport();
-                const deltaX = (touch.clientX - state.lastPanX) / viewport.scale;
-                const deltaY = (touch.clientY - state.lastPanY) / viewport.scale;
-                callbacks.onPan(-deltaX, -deltaY);
-                state.lastPanX = touch.clientX;
-                state.lastPanY = touch.clientY;
+            const viewport = getViewport();
+            const renderConfig = getRenderConfig();
+            const { canvasX, canvasY } = screenToCanvas(touch.clientX, touch.clientY, canvas, viewport);
+            const cell = getCellFromCoords(canvasX, canvasY, renderConfig, gridConfig);
+
+            if (state.isDragging) {
+                // Continue drag - apply to new cell if changed
+                if (cell) {
+                    const lastCell = state.lastDragCell;
+                    if (!lastCell || lastCell.row !== cell.row || lastCell.col !== cell.col) {
+                        state.lastDragCell = cell;
+                        callbacks.onClick(cell);
+                        callbacks.onDragMove?.(cell);
+                    }
+                }
+            } else {
+                // Not yet dragging - detect if moved enough to start drag
+                const dx = Math.abs(touch.clientX - state.lastPanX);
+                const dy = Math.abs(touch.clientY - state.lastPanY);
+                if (dx > 5 || dy > 5) {
+                    // Start drag painting
+                    state.isDragging = true;
+                    if (cell) {
+                        state.lastDragCell = cell;
+                        callbacks.onDragStart?.(cell);
+                        callbacks.onClick(cell);
+                    }
+                }
             }
         }
     };
@@ -258,33 +329,58 @@ export function createInteractionHandlers(
     const handleTouchEnd = (e: TouchEvent) => {
         if (e.touches.length === 0) {
             // All touches ended
-            if (!state.isPanning && e.changedTouches.length === 1) {
-                // This was a tap - treat as click
+            if (state.isDragging) {
+                state.isDragging = false;
+                state.lastDragCell = null;
+                callbacks.onDragEnd?.();
+            } else if (!state.isPanning && e.changedTouches.length === 1) {
+                // This was a tap - treat as click with drag lifecycle
                 const touch = e.changedTouches[0];
                 const viewport = getViewport();
                 const renderConfig = getRenderConfig();
                 const { canvasX, canvasY } = screenToCanvas(touch.clientX, touch.clientY, canvas, viewport);
                 const cell = getCellFromCoords(canvasX, canvasY, renderConfig, gridConfig);
                 if (cell) {
+                    callbacks.onDragStart?.(cell);
                     callbacks.onClick(cell);
+                    callbacks.onDragEnd?.();
                 }
             }
             state.isPanning = false;
             state.initialPinchDistance = null;
             callbacks.onHover(null);
         } else if (e.touches.length === 1) {
-            // One touch remaining - reset pan state
+            // One touch remaining - reset for potential new gesture
             state.lastPanX = e.touches[0].clientX;
             state.lastPanY = e.touches[0].clientY;
             state.initialPinchDistance = null;
+            state.isPanning = false;
         }
     };
 
     const handleTouchCancel = () => {
         // Reset state when touch is cancelled (e.g., iOS notification, gesture interruption)
+        if (state.isDragging) {
+            state.isDragging = false;
+            state.lastDragCell = null;
+            callbacks.onDragEnd?.();
+        }
         state.isPanning = false;
         state.initialPinchDistance = null;
         callbacks.onHover(null);
+    };
+
+    // =========================================================================
+    // Window-level handler for catching drags that end outside canvas
+    // =========================================================================
+
+    const handleWindowMouseUp = () => {
+        if (state.isDragging) {
+            state.isDragging = false;
+            state.lastDragCell = null;
+            callbacks.onDragEnd?.();
+        }
+        state.isPanning = false;
     };
 
     // =========================================================================
@@ -303,6 +399,9 @@ export function createInteractionHandlers(
     canvas.addEventListener("touchend", handleTouchEnd, { passive: true });
     canvas.addEventListener("touchcancel", handleTouchCancel, { passive: true });
 
+    // Window-level listener for catching mouse releases outside canvas
+    window.addEventListener("mouseup", handleWindowMouseUp);
+
     // =========================================================================
     // Cleanup Function
     // =========================================================================
@@ -320,6 +419,8 @@ export function createInteractionHandlers(
             canvas.removeEventListener("touchmove", handleTouchMove);
             canvas.removeEventListener("touchend", handleTouchEnd);
             canvas.removeEventListener("touchcancel", handleTouchCancel);
+
+            window.removeEventListener("mouseup", handleWindowMouseUp);
         },
     };
 }
