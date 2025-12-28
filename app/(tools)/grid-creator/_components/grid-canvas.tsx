@@ -21,12 +21,7 @@ import {
     getCommandTypeFromToolMode,
     type InteractionState,
 } from "@/lib/tools/grid-creator";
-import {
-    useContainerSize,
-    useGridCells,
-    useGridCanvasRender,
-    useToolActions,
-} from "@/lib/hooks/grid-creator";
+import { useContainerSize, useGridCells, useGridCanvasRender, useToolActions } from "@/lib/hooks/grid-creator";
 
 interface GridCanvasProps {
     readonly config: GridConfig;
@@ -262,7 +257,18 @@ export function GridCanvas({
         );
 
         return cleanup;
-    }, [config, renderConfig, handleHover, handleCellClick, handlePan, handleZoom, handleDragStart, handleDragEnd, viewportRef, renderConfigRef]);
+    }, [
+        config,
+        renderConfig,
+        handleHover,
+        handleCellClick,
+        handlePan,
+        handleZoom,
+        handleDragStart,
+        handleDragEnd,
+        viewportRef,
+        renderConfigRef,
+    ]);
 
     return (
         <div

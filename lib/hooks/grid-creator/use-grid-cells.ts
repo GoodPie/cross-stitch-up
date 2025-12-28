@@ -29,14 +29,9 @@ interface UseGridCellsReturn {
  * updating state during render based on prop reference changes.
  * See: https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
  */
-export function useGridCells({
-    externalCells,
-    onCellsChange,
-}: UseGridCellsOptions = {}): UseGridCellsReturn {
+export function useGridCells({ externalCells, onCellsChange }: UseGridCellsOptions = {}): UseGridCellsReturn {
     // Internal cells state - initialized from external if provided
-    const [internalCells, setInternalCells] = useState<Map<string, CellState>>(
-        () => externalCells ?? new Map()
-    );
+    const [internalCells, setInternalCells] = useState<Map<string, CellState>>(() => externalCells ?? new Map());
 
     // Ref for synchronous access (avoids stale closures in event handlers)
     const cellsRef = useRef(internalCells);

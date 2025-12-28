@@ -1,11 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import type {
-    GridConfig,
-    ViewportState,
-    CellState,
-    CellPosition,
-    RenderConfig,
-} from "@/lib/tools/grid-creator";
+import type { GridConfig, ViewportState, CellState, CellPosition, RenderConfig } from "@/lib/tools/grid-creator";
 import { cellKey, renderGrid, renderCell } from "@/lib/tools/grid-creator";
 
 export interface UseGridCanvasRenderOptions {
@@ -125,10 +119,7 @@ export function useGridCanvasRender({
         const currentHovered = hoveredCell;
 
         // Skip if hover hasn't changed
-        if (
-            prevHovered?.row === currentHovered?.row &&
-            prevHovered?.col === currentHovered?.col
-        ) {
+        if (prevHovered?.row === currentHovered?.row && prevHovered?.col === currentHovered?.col) {
             return;
         }
 
@@ -149,27 +140,13 @@ export function useGridCanvasRender({
         // Re-render previous hovered cell (remove highlight)
         if (prevHovered) {
             const prevCellState = currentCells.get(cellKey(prevHovered));
-            renderCell(
-                ctx,
-                prevHovered,
-                prevCellState,
-                currentRenderConfig,
-                false,
-                currentViewport.scale
-            );
+            renderCell(ctx, prevHovered, prevCellState, currentRenderConfig, false, currentViewport.scale);
         }
 
         // Render new hovered cell (add highlight)
         if (currentHovered) {
             const currentCellState = currentCells.get(cellKey(currentHovered));
-            renderCell(
-                ctx,
-                currentHovered,
-                currentCellState,
-                currentRenderConfig,
-                true,
-                currentViewport.scale
-            );
+            renderCell(ctx, currentHovered, currentCellState, currentRenderConfig, true, currentViewport.scale);
         }
 
         ctx.restore();
