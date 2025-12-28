@@ -76,6 +76,19 @@ const INITIAL_HISTORY: UndoHistory = {
 };
 
 /**
+ * Shallow equality check for CellState objects.
+ * More efficient than JSON.stringify, especially during drag operations.
+ */
+function areCellStatesEqual(a: CellState | undefined, b: CellState | undefined): boolean {
+    // Both undefined
+    if (a === undefined && b === undefined) return true;
+    // One undefined, one not
+    if (a === undefined || b === undefined) return false;
+    // Compare all properties directly
+    return a.active === b.active && a.color === b.color && a.threadCode === b.threadCode && a.symbol === b.symbol;
+}
+
+/**
  * Count total deltas across all commands in history.
  */
 function countTotalDeltas(history: UndoHistory): number {
@@ -196,9 +209,7 @@ export function useUndoRedo(options: UseUndoRedoOptions = {}): UseUndoRedoReturn
         }
 
         // Skip no-op changes
-        const beforeStr = JSON.stringify(before);
-        const afterStr = JSON.stringify(after);
-        if (beforeStr === afterStr) {
+        if (areCellStatesEqual(before, after)) {
             return;
         }
 
