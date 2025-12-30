@@ -78,7 +78,7 @@ const eslintConfig = defineConfig([
     },
 
     // Global ignores
-    globalIgnores([".next/**", "out/**", "build/**", "public/**", "next-env.d.ts", "pnpm-lock.yaml"]),
+    globalIgnores([".next/**", "out/**", "build/**", "public/**", "next-env.d.ts", "pnpm-lock.yaml", ".serena/**"]),
 
     // Prettier (must be last)
     eslintConfigPrettier,
