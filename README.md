@@ -1,4 +1,4 @@
-# StitchMerge
+# Cross Stitch-up
 
 A collection of free tools to help you work with cross stitch patterns. Built with Next.js 16 and designed with privacy in mind—all processing happens in your browser.
 
@@ -87,7 +87,7 @@ GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
 
 # Database
-POSTGRES_URL=postgresql://user:password@localhost:5432/stitchmerge
+POSTGRES_URL=postgresql://user:password@localhost:5432/crossstitchup
 
 # Email
 RESEND_API_KEY=re_xxxxxxxxxxxxx
@@ -146,7 +146,7 @@ pnpm sync-env
 Add the following environment variables in your Vercel project settings:
 
 - `BETTER_AUTH_SECRET` - Generate a secure random string
-- `BETTER_AUTH_URL` - Your production URL (e.g., `https://stitchmerge.com`)
+- `BETTER_AUTH_URL` - Your production URL (e.g., `https://crossstitchup.com`)
 - `GOOGLE_CLIENT_ID` - Your Google OAuth client ID
 - `GOOGLE_CLIENT_SECRET` - Your Google OAuth client secret
 - `POSTGRES_URL` - Your PostgreSQL connection string (Vercel Postgres or external)
@@ -156,7 +156,7 @@ Add the following environment variables in your Vercel project settings:
 
 ## Privacy
 
-StitchMerge is designed with privacy in mind:
+Cross Stitch-up is designed with privacy in mind:
 
 - **Client-side processing**: PDF files are processed entirely in your browser
 - **No file uploads**: Your pattern files never leave your device

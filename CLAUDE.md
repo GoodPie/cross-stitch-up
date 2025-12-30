@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-StitchMerge is a Next.js 16 application providing tools for cross stitch pattern work. The app currently offers:
+Cross Stitch-up is a Next.js 16 application providing tools for cross stitch pattern work. The app currently offers:
 
 - **Pattern Merge Tool** (`/merge`) - Merges multi-page pattern PDFs into a single unified image
 - **Thread Colors Tool** (`/threads`) - Browse and search 1000+ thread colors from various brands (DMC, Anchor, Sullivans)
