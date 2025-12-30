@@ -6,27 +6,46 @@ import { ProcessingState } from "@/components/shared/processing-state";
 import { ResultsState } from "./_components/results-state";
 import { StitchConfigForm } from "./_components/stitch-config-form";
 import { PageSelector } from "./_components/page-selector";
-import type { PageRenderResult } from "@/lib/shared/types";
-import type { StitchConfig, GridArrangement, MergeResult } from "@/lib/tools/merge/types";
+import type { PageInfo } from "@/lib/shared/types";
+import type {
+    StitchConfig,
+    GridArrangement,
+    ServerGridArrangement,
+    ServerMergeResult,
+    MergeResult,
+} from "@/lib/tools/merge/types";
 
 type MergeState = "config" | "upload" | "selecting" | "processing" | "success" | "error";
+
+/**
+ * Type guard to check if arrangement is server-side (URL-based)
+ */
+function isServerArrangement(
+    arrangement: GridArrangement | ServerGridArrangement
+): arrangement is ServerGridArrangement {
+    return arrangement.cells.length > 0 && "imageUrl" in arrangement.cells[0];
+}
 
 export default function MergePage() {
     const [mergeState, setMergeState] = useState<MergeState>("config");
     const [processingStage, setProcessingStage] = useState("");
-    const [result, setResult] = useState<MergeResult | null>(null);
+    const [result, setResult] = useState<ServerMergeResult | MergeResult | null>(null);
     const [error, setError] = useState<string | null>(null);
 
-    // New state for user-driven flow
+    // Configuration and page state
     const [stitchConfig, setStitchConfig] = useState<StitchConfig | null>(null);
-    const [pdfPages, setPdfPages] = useState<PageRenderResult[]>([]);
+    const [pdfPages, setPdfPages] = useState<PageInfo[]>([]);
     const [originalFilename, setOriginalFilename] = useState<string>("");
+    const [jobId, setJobId] = useState<string>("");
 
     const handleConfigContinue = useCallback((config: StitchConfig) => {
         setStitchConfig(config);
         setMergeState("upload");
     }, []);
 
+    /**
+     * Upload PDF via SSE for real-time progress updates
+     */
     const handleFileSelected = useCallback(async (file: File) => {
         if (file.type !== "application/pdf") {
             setError("Please upload a PDF file");
@@ -36,22 +55,91 @@ export default function MergePage() {
 
         setOriginalFilename(file.name);
         setMergeState("processing");
-        setProcessingStage("Loading PDF...");
+        setProcessingStage("Uploading PDF...");
         setError(null);
 
         try {
-            // Dynamic import to avoid SSR issues with pdfjs-dist
-            const { loadAndRenderPdf } = await import("@/lib/shared/pdf-loader");
+            const formData = new FormData();
+            formData.append("file", file);
 
-            const pages = await loadAndRenderPdf(file, (stage) => {
-                setProcessingStage(stage);
+            // Use SSE for progress updates
+            const response = await fetch("/api/merge/upload", {
+                method: "POST",
+                headers: {
+                    Accept: "text/event-stream",
+                },
+                body: formData,
             });
 
-            setPdfPages(pages);
-            setMergeState("selecting");
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || "Failed to upload PDF");
+            }
+
+            // Check if we got SSE response
+            const contentType = response.headers.get("content-type");
+            if (contentType?.includes("text/event-stream")) {
+                // Handle SSE stream
+                const reader = response.body?.getReader();
+                if (!reader) throw new Error("No response body");
+
+                const decoder = new TextDecoder();
+                let buffer = "";
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split("\n\n");
+                    buffer = lines.pop() || "";
+
+                    for (const line of lines) {
+                        if (!line.trim()) continue;
+
+                        // Parse SSE event
+                        const eventMatch = line.match(/event: (\w+)/);
+                        const dataMatch = line.match(/data: (.+)/s);
+
+                        if (eventMatch && dataMatch) {
+                            const eventType = eventMatch[1];
+                            const data = JSON.parse(dataMatch[1]);
+
+                            switch (eventType) {
+                                case "start":
+                                    setProcessingStage(`Processing ${data.totalPages} pages...`);
+                                    break;
+                                case "progress":
+                                    setProcessingStage(
+                                        `${data.stage === "rendering" ? "Rendering" : "Uploading"} page ${data.page} of ${data.total}...`
+                                    );
+                                    break;
+                                case "batch":
+                                    setProcessingStage(
+                                        `Processed ${data.pagesCompleted} of ${data.total} pages...`
+                                    );
+                                    break;
+                                case "complete":
+                                    setJobId(data.jobId);
+                                    setPdfPages(data.pages);
+                                    setMergeState("selecting");
+                                    break;
+                                case "error":
+                                    throw new Error(data.message);
+                            }
+                        }
+                    }
+                }
+            } else {
+                // Non-SSE response (fallback)
+                const data = await response.json();
+                setJobId(data.jobId);
+                setPdfPages(data.pages);
+                setMergeState("selecting");
+            }
         } catch (err) {
-            console.error("PDF loading error:", err);
-            setError(err instanceof Error ? err.message : "Failed to load PDF. Please try a different file.");
+            console.error("PDF upload error:", err);
+            setError(err instanceof Error ? err.message : "Failed to upload PDF. Please try again.");
             setMergeState("error");
         }
     }, []);
@@ -60,6 +148,7 @@ export default function MergePage() {
         setMergeState("config");
         setPdfPages([]);
         setOriginalFilename("");
+        setJobId("");
     }, []);
 
     const handleBackToUpload = useCallback(() => {
@@ -67,36 +156,64 @@ export default function MergePage() {
         setPdfPages([]);
     }, []);
 
+    /**
+     * Process and merge selected pages via API
+     */
     const handleMerge = useCallback(
-        async (arrangement: GridArrangement) => {
-            if (!stitchConfig) return;
+        async (arrangement: GridArrangement | ServerGridArrangement) => {
+            if (!stitchConfig || !jobId) return;
+
+            // Ensure we're using server arrangement
+            if (!isServerArrangement(arrangement)) {
+                setError("Invalid arrangement type for server-side processing");
+                setMergeState("error");
+                return;
+            }
 
             setMergeState("processing");
             setProcessingStage("Extracting grid sections...");
 
             try {
-                // Dynamic import for processing
-                const { processSelectedPages } = await import("@/lib/tools/merge");
-
-                const mergeResult = await processSelectedPages(pdfPages, arrangement, stitchConfig, (stage) => {
-                    setProcessingStage(stage);
+                const response = await fetch("/api/merge/process", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        jobId,
+                        cells: arrangement.cells,
+                        arrangement: {
+                            rows: arrangement.rows,
+                            cols: arrangement.cols,
+                        },
+                        stitchConfig,
+                    }),
                 });
 
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || "Failed to process merge");
+                }
+
+                setProcessingStage("Finalizing...");
+
+                const processResult = await response.json();
+
                 setResult({
-                    imageUrl: mergeResult.imageUrl,
-                    pagesMerged: mergeResult.pagesMerged,
-                    dimensions: mergeResult.dimensions,
+                    resultUrl: processResult.resultUrl,
+                    previewUrl: processResult.previewUrl,
+                    pagesMerged: processResult.pagesMerged,
+                    dimensions: processResult.dimensions,
                     originalFilename,
-                    canvas: mergeResult.canvas,
                 });
                 setMergeState("success");
             } catch (err) {
-                console.error("PDF processing error:", err);
-                setError(err instanceof Error ? err.message : "Failed to process PDF. Please try again.");
+                console.error("Merge processing error:", err);
+                setError(err instanceof Error ? err.message : "Failed to process merge. Please try again.");
                 setMergeState("error");
             }
         },
-        [pdfPages, stitchConfig, originalFilename]
+        [stitchConfig, jobId, originalFilename]
     );
 
     const handleReset = useCallback(() => {
@@ -107,6 +224,7 @@ export default function MergePage() {
         setStitchConfig(null);
         setPdfPages([]);
         setOriginalFilename("");
+        setJobId("");
     }, []);
 
     return (
@@ -125,7 +243,7 @@ export default function MergePage() {
                     </button>
                     {stitchConfig && (
                         <div className="text-muted-foreground mb-4 text-sm">
-                            Pattern size: {stitchConfig.width} × {stitchConfig.height} stitches
+                            Pattern size: {stitchConfig.width} x {stitchConfig.height} stitches
                         </div>
                     )}
                     <DropZone onFileSelected={handleFileSelected} />

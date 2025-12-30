@@ -5,6 +5,18 @@ export interface PageRenderResult {
     height: number;
 }
 
+/**
+ * Server-side page info returned from API.
+ * Replaces PageRenderResult when using server-side PDF processing.
+ */
+export interface PageInfo {
+    pageNumber: number;
+    thumbnailUrl: string; // 200px thumbnail in Blob storage
+    imageUrl: string; // Full resolution in Blob storage
+    width: number;
+    height: number;
+}
+
 export interface ProcessingProgress {
     stage: string;
     progress: number; // 0-100

@@ -5,10 +5,17 @@ import Image from "next/image";
 import { X } from "lucide-react";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import type { PageRenderResult } from "@/lib/shared/types";
+import type { PageRenderResult, PageInfo } from "@/lib/shared/types";
+
+/**
+ * Type guard to check if a page is a server-side PageInfo (URL-based)
+ */
+function isPageInfo(page: PageRenderResult | PageInfo): page is PageInfo {
+    return "thumbnailUrl" in page && "imageUrl" in page;
+}
 
 interface PageThumbnailProps {
-    readonly page: PageRenderResult;
+    readonly page: PageRenderResult | PageInfo;
     readonly isSelected?: boolean;
     readonly isInGrid?: boolean;
     readonly gridPosition?: { row: number; col: number };
@@ -34,10 +41,15 @@ export function PageThumbnail({
         },
     });
 
-    // Convert canvas to data URL for display
+    // Get image URL - either from server (thumbnailUrl) or client (canvas.toDataURL)
     const imageUrl = useMemo(() => {
+        if (isPageInfo(page)) {
+            // Server-side: use the thumbnail URL directly
+            return page.thumbnailUrl;
+        }
+        // Client-side: convert canvas to data URL
         return page.canvas.toDataURL("image/jpeg", 0.8);
-    }, [page.canvas]);
+    }, [page]);
 
     const style = transform
         ? {

@@ -1,5 +1,5 @@
 // Re-export shared types for convenience
-export type { PageRenderResult, ProcessingProgress, ExportOptions } from "@/lib/shared/types";
+export type { PageRenderResult, ProcessingProgress, ExportOptions, PageInfo } from "@/lib/shared/types";
 
 export interface GridCoordinates {
     xStart: number;
@@ -103,4 +103,59 @@ export interface GridCell {
     col: number;
     pageNumber: number;
     canvas: HTMLCanvasElement;
+}
+
+// ============================================================================
+// Server-side types (URL-based instead of canvas-based)
+// ============================================================================
+
+/**
+ * Server-side grid cell with image URL instead of canvas.
+ * Used when processing is done on the server.
+ */
+export interface ServerGridCell {
+    row: number;
+    col: number;
+    pageNumber: number;
+    imageUrl: string;
+}
+
+/**
+ * Server-side grid arrangement with URL-based cells.
+ */
+export interface ServerGridArrangement {
+    rows: number;
+    cols: number;
+    cells: ServerGridCell[];
+}
+
+/**
+ * Server-side merge result with blob URLs.
+ * Replaces MergeResult when using server-side processing.
+ */
+export interface ServerMergeResult {
+    resultUrl: string; // Full resolution merged image URL
+    previewUrl: string; // Smaller preview image URL
+    pagesMerged: number;
+    dimensions: { width: number; height: number };
+    originalFilename?: string;
+}
+
+/**
+ * Response from the upload API endpoint.
+ */
+export interface UploadResponse {
+    jobId: string;
+    pages: import("@/lib/shared/types").PageInfo[];
+    totalPages: number;
+}
+
+/**
+ * Response from the process API endpoint.
+ */
+export interface ProcessResponse {
+    resultUrl: string;
+    previewUrl: string;
+    dimensions: { width: number; height: number };
+    pagesMerged: number;
 }

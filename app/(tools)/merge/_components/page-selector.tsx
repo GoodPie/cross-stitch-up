@@ -7,18 +7,32 @@ import { Label } from "@/components/ui/label";
 import { PageThumbnail } from "@/components/shared/page-thumbnail";
 import { GridCanvas } from "./grid-canvas";
 import { MergeDndProvider } from "./dnd-provider";
-import type { PageRenderResult } from "@/lib/shared/types";
-import type { GridCell, GridArrangement } from "@/lib/tools/merge/types";
+import type { PageRenderResult, PageInfo } from "@/lib/shared/types";
+import type { GridCell, GridArrangement, ServerGridCell, ServerGridArrangement } from "@/lib/tools/merge/types";
 
+/**
+ * Type guard to check if pages are server-side PageInfo (URL-based)
+ */
+function isPageInfoArray(pages: PageRenderResult[] | PageInfo[]): pages is PageInfo[] {
+    return pages.length > 0 && "thumbnailUrl" in pages[0];
+}
+
+/**
+ * Props for PageSelector - supports both client-side (canvas) and server-side (URL) modes
+ */
 interface PageSelectorProps {
-    readonly pages: PageRenderResult[];
+    readonly pages: PageRenderResult[] | PageInfo[];
     readonly onBack: () => void;
-    readonly onMerge: (arrangement: GridArrangement) => void;
+    readonly onMerge: (arrangement: GridArrangement | ServerGridArrangement) => void;
 }
 
 export function PageSelector({ pages, onBack, onMerge }: PageSelectorProps) {
     const [gridDimensions, setGridDimensions] = useState({ rows: 2, cols: 2 });
-    const [cells, setCells] = useState<GridCell[]>([]);
+    // Store cells as a union type to support both canvas and URL-based cells
+    const [cells, setCells] = useState<(GridCell | ServerGridCell)[]>([]);
+
+    // Determine if we're in server-side mode (URL-based)
+    const isServerMode = isPageInfoArray(pages);
 
     // Track which pages are assigned to the grid
     const assignedPageNumbers = new Set(cells.map((c) => c.pageNumber));
@@ -34,16 +48,29 @@ export function PageSelector({ pages, onBack, onMerge }: PageSelectorProps) {
                 const filtered = prev.filter((c) => !(c.row === row && c.col === col));
                 // Remove the page from any other position
                 const withoutPage = filtered.filter((c) => c.pageNumber !== pageNumber);
-                // Add a new cell
-                return [
-                    ...withoutPage,
-                    {
+
+                // Create the appropriate cell type based on mode
+                if (isPageInfoArray(pages)) {
+                    // Server-side mode: use imageUrl
+                    const pageInfo = page as PageInfo;
+                    const newCell: ServerGridCell = {
                         row,
                         col,
                         pageNumber,
-                        canvas: page.canvas,
-                    },
-                ];
+                        imageUrl: pageInfo.imageUrl, // Use full-res URL for merging
+                    };
+                    return [...withoutPage, newCell];
+                } else {
+                    // Client-side mode: use canvas
+                    const pageRender = page as PageRenderResult;
+                    const newCell: GridCell = {
+                        row,
+                        col,
+                        pageNumber,
+                        canvas: pageRender.canvas,
+                    };
+                    return [...withoutPage, newCell];
+                }
             });
         },
         [pages]
@@ -70,11 +97,23 @@ export function PageSelector({ pages, onBack, onMerge }: PageSelectorProps) {
     const handleMerge = () => {
         if (cells.length === 0) return;
 
-        onMerge({
-            rows: gridDimensions.rows,
-            cols: gridDimensions.cols,
-            cells,
-        });
+        if (isServerMode) {
+            // Server-side mode: return ServerGridArrangement
+            const serverArrangement: ServerGridArrangement = {
+                rows: gridDimensions.rows,
+                cols: gridDimensions.cols,
+                cells: cells as ServerGridCell[],
+            };
+            onMerge(serverArrangement);
+        } else {
+            // Client-side mode: return GridArrangement
+            const clientArrangement: GridArrangement = {
+                rows: gridDimensions.rows,
+                cols: gridDimensions.cols,
+                cells: cells as GridCell[],
+            };
+            onMerge(clientArrangement);
+        }
     };
 
     const totalSlots = gridDimensions.rows * gridDimensions.cols;

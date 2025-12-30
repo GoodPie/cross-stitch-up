@@ -11,12 +11,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { downloadAsPng } from "@/lib/export/png-exporter";
 import { downloadAsPdf } from "@/lib/export/pdf-exporter";
-import { calculateMaintainedDimension } from "@/lib/export/canvas-scaler";
 
 interface ExportDialogProps {
     readonly open: boolean;
     readonly onOpenChange: (open: boolean) => void;
     readonly canvas: HTMLCanvasElement | null;
+    readonly imageUrl?: string; // Server-side: URL to the full-resolution image
     readonly filename: string;
 }
 
@@ -29,7 +29,7 @@ const DPI_OPTIONS = [
     { value: "600", label: "600 DPI (High Quality)" },
 ];
 
-export function ExportDialog({ open, onOpenChange, canvas, filename }: ExportDialogProps) {
+export function ExportDialog({ open, onOpenChange, canvas, imageUrl, filename }: ExportDialogProps) {
     const [format, setFormat] = useState<ExportFormat>("png");
     const [sizeMode, setSizeMode] = useState<SizeMode>("original");
     const [pixelWidth, setPixelWidth] = useState<string>("");
@@ -39,6 +39,23 @@ export function ExportDialog({ open, onOpenChange, canvas, filename }: ExportDia
     const [dpi, setDpi] = useState<string>("300");
     const [maintainAspectRatio, setMaintainAspectRatio] = useState(true);
     const [trackedCanvas, setTrackedCanvas] = useState<HTMLCanvasElement | null>(null);
+    const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(null);
+    const [isExporting, setIsExporting] = useState(false);
+
+    // Load image dimensions when imageUrl is provided
+    const [trackedImageUrl, setTrackedImageUrl] = useState<string | undefined>(undefined);
+    if (imageUrl !== trackedImageUrl) {
+        setTrackedImageUrl(imageUrl);
+        if (imageUrl) {
+            const img = new Image();
+            img.onload = () => {
+                setImageDimensions({ width: img.naturalWidth, height: img.naturalHeight });
+                setPixelWidth(String(img.naturalWidth));
+                setPixelHeight(String(img.naturalHeight));
+            };
+            img.src = imageUrl;
+        }
+    }
 
     // Sync pixel dimensions when canvas changes (state adjustment during render)
     if (canvas !== trackedCanvas) {
@@ -49,17 +66,22 @@ export function ExportDialog({ open, onOpenChange, canvas, filename }: ExportDia
         }
     }
 
+    // Get source dimensions (either from canvas or loaded image)
+    const sourceDimensions = canvas
+        ? { width: canvas.width, height: canvas.height }
+        : imageDimensions;
+
     // Calculate output dimensions for preview
     const getOutputDimensions = (): { width: number; height: number } | null => {
-        if (!canvas) return null;
+        if (!sourceDimensions) return null;
 
         switch (sizeMode) {
             case "original":
-                return { width: canvas.width, height: canvas.height };
+                return { width: sourceDimensions.width, height: sourceDimensions.height };
             case "pixels":
                 return {
-                    width: Number.parseInt(pixelWidth) || canvas.width,
-                    height: Number.parseInt(pixelHeight) || canvas.height,
+                    width: Number.parseInt(pixelWidth) || sourceDimensions.width,
+                    height: Number.parseInt(pixelHeight) || sourceDimensions.height,
                 };
             case "print": {
                 const w = Number.parseFloat(printWidth) || 8;
@@ -74,24 +96,26 @@ export function ExportDialog({ open, onOpenChange, canvas, filename }: ExportDia
 
     const handlePixelWidthChange = (value: string) => {
         setPixelWidth(value);
-        if (maintainAspectRatio && canvas && value) {
-            const newHeight = calculateMaintainedDimension(canvas, "width", Number.parseInt(value));
+        if (maintainAspectRatio && sourceDimensions && value) {
+            const aspectRatio = sourceDimensions.width / sourceDimensions.height;
+            const newHeight = Math.round(Number.parseInt(value) / aspectRatio);
             setPixelHeight(String(newHeight));
         }
     };
 
     const handlePixelHeightChange = (value: string) => {
         setPixelHeight(value);
-        if (maintainAspectRatio && canvas && value) {
-            const newWidth = calculateMaintainedDimension(canvas, "height", Number.parseInt(value));
+        if (maintainAspectRatio && sourceDimensions && value) {
+            const aspectRatio = sourceDimensions.width / sourceDimensions.height;
+            const newWidth = Math.round(Number.parseInt(value) * aspectRatio);
             setPixelWidth(String(newWidth));
         }
     };
 
     const handlePrintWidthChange = (value: string) => {
         setPrintWidth(value);
-        if (maintainAspectRatio && canvas && value) {
-            const aspectRatio = canvas.width / canvas.height;
+        if (maintainAspectRatio && sourceDimensions && value) {
+            const aspectRatio = sourceDimensions.width / sourceDimensions.height;
             const newHeight = Number.parseFloat(value) / aspectRatio;
             setPrintHeight(newHeight.toFixed(2));
         }
@@ -99,33 +123,74 @@ export function ExportDialog({ open, onOpenChange, canvas, filename }: ExportDia
 
     const handlePrintHeightChange = (value: string) => {
         setPrintHeight(value);
-        if (maintainAspectRatio && canvas && value) {
-            const aspectRatio = canvas.width / canvas.height;
+        if (maintainAspectRatio && sourceDimensions && value) {
+            const aspectRatio = sourceDimensions.width / sourceDimensions.height;
             const newWidth = Number.parseFloat(value) * aspectRatio;
             setPrintWidth(newWidth.toFixed(2));
         }
     };
 
-    const handleExport = () => {
-        if (!canvas) return;
+    /**
+     * Create a canvas from an image URL by loading and drawing it
+     */
+    const createCanvasFromUrl = async (url: string): Promise<HTMLCanvasElement> => {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+            img.onload = () => {
+                const tempCanvas = document.createElement("canvas");
+                tempCanvas.width = img.naturalWidth;
+                tempCanvas.height = img.naturalHeight;
+                const ctx = tempCanvas.getContext("2d");
+                if (!ctx) {
+                    reject(new Error("Failed to get canvas context"));
+                    return;
+                }
+                ctx.drawImage(img, 0, 0);
+                resolve(tempCanvas);
+            };
+            img.onerror = () => reject(new Error("Failed to load image"));
+            img.src = url;
+        });
+    };
 
-        const options = {
-            sizeMode,
-            width: sizeMode === "pixels" ? Number.parseInt(pixelWidth) : Number.parseFloat(printWidth),
-            height: sizeMode === "pixels" ? Number.parseInt(pixelHeight) : Number.parseFloat(printHeight),
-            dpi: Number.parseInt(dpi),
-            maintainAspectRatio,
-        };
+    const handleExport = async () => {
+        setIsExporting(true);
 
-        if (format === "png") {
-            downloadAsPng(canvas, filename, options);
-        } else {
-            downloadAsPdf(canvas, filename, {
-                ...options,
-            });
+        try {
+            let exportCanvas: HTMLCanvasElement;
+
+            if (canvas) {
+                exportCanvas = canvas;
+            } else if (imageUrl) {
+                // URL mode: create canvas from the image
+                exportCanvas = await createCanvasFromUrl(imageUrl);
+            } else {
+                return;
+            }
+
+            const options = {
+                sizeMode,
+                width: sizeMode === "pixels" ? Number.parseInt(pixelWidth) : Number.parseFloat(printWidth),
+                height: sizeMode === "pixels" ? Number.parseInt(pixelHeight) : Number.parseFloat(printHeight),
+                dpi: Number.parseInt(dpi),
+                maintainAspectRatio,
+            };
+
+            if (format === "png") {
+                downloadAsPng(exportCanvas, filename, options);
+            } else {
+                downloadAsPdf(exportCanvas, filename, {
+                    ...options,
+                });
+            }
+
+            onOpenChange(false);
+        } catch (error) {
+            console.error("Export failed:", error);
+        } finally {
+            setIsExporting(false);
         }
-
-        onOpenChange(false);
     };
 
     const outputDimensions = getOutputDimensions();
@@ -175,7 +240,7 @@ export function ExportDialog({ open, onOpenChange, canvas, filename }: ExportDia
                             <div className="flex items-center space-x-2">
                                 <RadioGroupItem value="original" id="size-original" />
                                 <Label htmlFor="size-original" className="cursor-pointer">
-                                    Original size ({canvas?.width} x {canvas?.height} px)
+                                    Original size ({sourceDimensions?.width ?? "..."} x {sourceDimensions?.height ?? "..."} px)
                                 </Label>
                             </div>
                             <div className="flex items-center space-x-2">
@@ -316,12 +381,16 @@ export function ExportDialog({ open, onOpenChange, canvas, filename }: ExportDia
 
                 {/* Actions */}
                 <div className="flex justify-end gap-3">
-                    <Button variant="outline" onClick={() => onOpenChange(false)}>
+                    <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isExporting}>
                         Cancel
                     </Button>
-                    <Button onClick={handleExport} className="gap-2">
+                    <Button
+                        onClick={handleExport}
+                        className="gap-2"
+                        disabled={!sourceDimensions || isExporting}
+                    >
                         {format === "png" ? <FileImage className="h-4 w-4" /> : <FileText className="h-4 w-4" />}
-                        Export {format.toUpperCase()}
+                        {isExporting ? "Exporting..." : `Export ${format.toUpperCase()}`}
                     </Button>
                 </div>
             </DialogContent>

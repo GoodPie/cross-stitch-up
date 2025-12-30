@@ -2,12 +2,12 @@
 
 import { PageThumbnail } from "@/components/shared/page-thumbnail";
 import { DroppableCell } from "./droppable-cell";
-import type { PageRenderResult } from "@/lib/shared/types";
-import type { GridCell } from "@/lib/tools/merge/types";
+import type { PageRenderResult, PageInfo } from "@/lib/shared/types";
+import type { GridCell, ServerGridCell } from "@/lib/tools/merge/types";
 
 interface GridCanvasProps {
-    readonly cells: GridCell[];
-    readonly pages: PageRenderResult[];
+    readonly cells: (GridCell | ServerGridCell)[];
+    readonly pages: PageRenderResult[] | PageInfo[];
     readonly onCellRemove: (row: number, col: number) => void;
     readonly gridDimensions: { rows: number; cols: number };
 }
