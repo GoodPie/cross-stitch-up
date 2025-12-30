@@ -1,14 +1,17 @@
 # Cross Stitch-up - Project Overview
 
 ## Purpose
+
 A Next.js application providing tools for cross stitch pattern work.
 
 ## Current Tools
+
 1. **Pattern Merge Tool** (`/merge`) - Merges multi-page pattern PDFs into a single unified image
 2. **Thread Colors Tool** (`/threads`) - Browse and search 1000+ thread colors from various brands (DMC, Anchor, Sullivans)
 3. **Account Settings** (`/account`) - User profile management (protected route)
 
 ## Tech Stack
+
 - **Framework**: Next.js 16 (React 19)
 - **Language**: TypeScript 5.x
 - **Styling**: Tailwind CSS 4, CSS variables for theming
@@ -22,6 +25,7 @@ A Next.js application providing tools for cross stitch pattern work.
 - **PDF Processing**: pdfjs-dist (client-side only)
 
 ## Key Directories
+
 ```
 app/
   (auth)/                     # Auth routes (login, register, etc.)
@@ -42,5 +46,6 @@ lib/
 ```
 
 ## Privacy
+
 - PDF processing happens client-side; files never leave the browser
 - User data protected via authentication
