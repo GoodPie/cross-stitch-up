@@ -2,6 +2,7 @@ import type React from "react";
 import type { Metadata } from "next";
 import { DM_Sans, Fraunces } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { AuthProvider } from "@/components/providers/auth-provider";
 import "./globals.css";
 
 const dmSans = DM_Sans({ subsets: ["latin"] });
@@ -21,7 +22,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={`${dmSans.className} ${fraunces.variable} font-sans antialiased`}>
-                {children}
+                <AuthProvider>{children}</AuthProvider>
                 <Analytics />
             </body>
         </html>
