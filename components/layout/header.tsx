@@ -19,10 +19,12 @@ function AuthSection() {
         return <Skeleton className="h-9 w-9 rounded-full" />;
     }
 
-    if (session?.user) {
+    // Show UserMenu only for real (non-anonymous) users
+    if (session?.user && !session.user.isAnonymous) {
         return <UserMenu user={session.user} />;
     }
 
+    // No session OR anonymous user -> show login/signup buttons
     return (
         <>
             <Button variant="ghost" size="sm" asChild>

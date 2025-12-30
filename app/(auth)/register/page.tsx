@@ -7,11 +7,22 @@ export const metadata = {
     description: "Create a new Cross Stitch-up account",
 };
 
-export default function RegisterPage() {
+interface RegisterPageProps {
+    readonly searchParams: Promise<{ message?: string }>;
+}
+
+export default async function RegisterPage({ searchParams }: RegisterPageProps) {
+    const { message } = await searchParams;
+    const isFromAccountRedirect = message === "create-account";
+
     return (
         <AuthCard
             title="Create an account"
-            description="Enter your details below to create your account"
+            description={
+                isFromAccountRedirect
+                    ? "Create an account to access your account settings and save your preferences"
+                    : "Enter your details below to create your account"
+            }
             footer={
                 <p>
                     Already have an account?{" "}

@@ -17,6 +17,11 @@ export default async function AccountPage() {
         redirect("/login");
     }
 
+    // Anonymous users should create an account to access settings
+    if (session.user.isAnonymous) {
+        redirect("/register?message=create-account");
+    }
+
     return (
         <div className="container max-w-2xl py-10">
             <AccountSettings user={session.user} />
