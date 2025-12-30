@@ -1,6 +1,6 @@
 # Cross Stitch-up
 
-A collection of free tools to help you work with cross stitch patterns. Built with Next.js 16 and designed with privacy in mind—all processing happens in your browser.
+A collection of free tools to help you work with cross stitch patterns. Built with Next.js 16 and designed for performance and reliability.
 
 ## Features
 
@@ -154,13 +154,13 @@ Add the following environment variables in your Vercel project settings:
 - `SENTRY_AUTH_TOKEN` - Your Sentry auth token (optional)
 - `BLOB_READ_WRITE_TOKEN` - Auto-generated if using Vercel Blob
 
-## Privacy
+## Your Data
 
-Cross Stitch-up is designed with privacy in mind:
+Cross Stitch-up handles your pattern data responsibly:
 
-- **Client-side processing**: PDF files are processed entirely in your browser
-- **No file uploads**: Your pattern files never leave your device
-- **No tracking of content**: We don't analyze or store your patterns
+- **Authenticated accounts**: Your data is protected through secure authentication
+- **No data selling**: We never sell or share your pattern data with third parties
+- **Performance-focused**: Processing is optimized for speed and reliability
 
 ## Contributing
 

@@ -284,7 +284,7 @@ SENTRY_AUTH_TOKEN=           # Sentry auth token (build-time)
 
 - **Client components**: Use `"use client"` directive for interactive components
 - **Dynamic imports**: PDF processing uses dynamic imports to avoid SSR issues with pdfjs-dist
-- **Privacy-first**: PDF processing happens client-side; files never leave the browser
+- **Performance-first**: Heavy processing leverages server-side capabilities; user data protected via authentication
 - **Drag-and-drop**: Uses @dnd-kit for accessible, mobile-friendly drag-and-drop
 - **Color algorithms**: Thread similarity uses CIE76 color distance formula in `lib/tools/threads/color-utils.ts`
 
