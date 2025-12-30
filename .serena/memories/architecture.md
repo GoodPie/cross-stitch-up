@@ -13,6 +13,7 @@ app/(tools)/               # Route group with shared layout
 ```
 
 ### Adding New Tools
+
 1. Create `app/(tools)/[tool-name]/page.tsx`
 2. Create `app/(tools)/[tool-name]/_components/`
 3. Create `lib/tools/[tool-name]/`
@@ -26,14 +27,14 @@ The merge tool uses a state machine pattern for its workflow:
 config → upload → selecting → processing → success/error
 ```
 
-| State | Description |
-|-------|-------------|
-| `config` | Enter pattern dimensions (rows × columns) |
-| `upload` | Drag-and-drop PDF upload |
-| `selecting` | Arrange pages in grid layout (uses @dnd-kit) |
-| `processing` | Extract and merge grids |
-| `success` | Preview with zoom, export options |
-| `error` | Error with retry option |
+| State        | Description                                  |
+| ------------ | -------------------------------------------- |
+| `config`     | Enter pattern dimensions (rows × columns)    |
+| `upload`     | Drag-and-drop PDF upload                     |
+| `selecting`  | Arrange pages in grid layout (uses @dnd-kit) |
+| `processing` | Extract and merge grids                      |
+| `success`    | Preview with zoom, export options            |
+| `error`      | Error with retry option                      |
 
 ## Thread Colors Algorithm
 
@@ -43,10 +44,10 @@ config → upload → selecting → processing → success/error
 
 ## API Routes
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/auth/[...all]` | ALL | Better Auth handler |
-| `/api/threads` | GET | Thread colors with pagination (1hr cache) |
+| Endpoint             | Method | Description                               |
+| -------------------- | ------ | ----------------------------------------- |
+| `/api/auth/[...all]` | ALL    | Better Auth handler                       |
+| `/api/threads`       | GET    | Thread colors with pagination (1hr cache) |
 
 ## Key Patterns
 
