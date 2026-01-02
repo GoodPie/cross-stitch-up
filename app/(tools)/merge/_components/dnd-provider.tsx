@@ -11,11 +11,18 @@ import {
     type DragStartEvent,
     type DragEndEvent,
 } from "@dnd-kit/core";
-import type { PageRenderResult } from "@/lib/shared/types";
+import type { PageRenderResult, PageInfo } from "@/lib/shared/types";
+
+/**
+ * Type guard to check if a page is server-side PageInfo (URL-based)
+ */
+function isPageInfo(page: PageRenderResult | PageInfo): page is PageInfo {
+    return "thumbnailUrl" in page && "imageUrl" in page;
+}
 
 interface MergeDndProviderProps {
     readonly children: React.ReactNode;
-    readonly pages: PageRenderResult[];
+    readonly pages: PageRenderResult[] | PageInfo[];
     readonly onDrop: (pageNumber: number, row: number, col: number) => void;
 }
 
@@ -78,12 +85,15 @@ export function MergeDndProvider({ children, pages, onDrop }: MergeDndProviderPr
 }
 
 // Separate component for overlay content
-function DragOverlayContent({ page }: { readonly page: PageRenderResult }) {
-    const imageUrl = page.canvas.toDataURL("image/jpeg", 0.8);
+function DragOverlayContent({ page }: { readonly page: PageRenderResult | PageInfo }) {
+    // Get image URL based on page type
+    const imageUrl = isPageInfo(page)
+        ? page.thumbnailUrl // Server-side: use thumbnail URL
+        : page.canvas.toDataURL("image/jpeg", 0.8); // Client-side: convert canvas
 
     return (
         <div className="border-primary bg-background relative aspect-3/4 w-24 rounded-lg border-2 shadow-lg">
-            {/* eslint-disable-next-line @next/next/no-img-element -- canvas data URL for drag preview */}
+            {/* eslint-disable-next-line @next/next/no-img-element -- canvas data URL or blob URL for drag preview */}
             <img
                 src={imageUrl}
                 alt={`Page ${page.pageNumber}`}

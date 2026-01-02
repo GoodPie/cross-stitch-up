@@ -67,7 +67,7 @@ export function ResultsState({ result, onReset }: ResultsStateProps) {
                         >
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
-                                src={result.imageUrl || "/placeholder.svg"}
+                                src={result.previewUrl}
                                 alt="Merged cross stitch pattern"
                                 className="h-auto max-w-full"
                             />
@@ -75,7 +75,7 @@ export function ResultsState({ result, onReset }: ResultsStateProps) {
                     </div>
 
                     <p className="text-muted-foreground text-center text-sm">
-                        {result.dimensions.width} × {result.dimensions.height} stitches
+                        {result.dimensions.width} × {result.dimensions.height} pixels
                     </p>
                 </Card>
 
@@ -126,7 +126,8 @@ export function ResultsState({ result, onReset }: ResultsStateProps) {
             <ExportDialog
                 open={exportDialogOpen}
                 onOpenChange={setExportDialogOpen}
-                canvas={result.canvas ?? null}
+                canvas={null}
+                imageUrl={result.resultUrl}
                 filename={result.originalFilename || "cross-stitch-pattern"}
             />
         </div>

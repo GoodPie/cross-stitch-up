@@ -7,11 +7,11 @@ import { Label } from "@/components/ui/label";
 import { PageThumbnail } from "@/components/shared/page-thumbnail";
 import { GridCanvas } from "./grid-canvas";
 import { MergeDndProvider } from "./dnd-provider";
-import type { PageRenderResult } from "@/lib/shared/types";
+import type { PageInfo } from "@/lib/shared/types";
 import type { GridCell, GridArrangement } from "@/lib/tools/merge/types";
 
 interface PageSelectorProps {
-    readonly pages: PageRenderResult[];
+    readonly pages: PageInfo[];
     readonly onBack: () => void;
     readonly onMerge: (arrangement: GridArrangement) => void;
 }
@@ -25,7 +25,6 @@ export function PageSelector({ pages, onBack, onMerge }: PageSelectorProps) {
 
     const handleCellAdd = useCallback(
         (pageNumber: number, row: number, col: number) => {
-            // Find the page
             const page = pages.find((p) => p.pageNumber === pageNumber);
             if (!page) return;
 
@@ -34,16 +33,14 @@ export function PageSelector({ pages, onBack, onMerge }: PageSelectorProps) {
                 const filtered = prev.filter((c) => !(c.row === row && c.col === col));
                 // Remove the page from any other position
                 const withoutPage = filtered.filter((c) => c.pageNumber !== pageNumber);
-                // Add a new cell
-                return [
-                    ...withoutPage,
-                    {
-                        row,
-                        col,
-                        pageNumber,
-                        canvas: page.canvas,
-                    },
-                ];
+
+                const newCell: GridCell = {
+                    row,
+                    col,
+                    pageNumber,
+                    imageUrl: page.imageUrl,
+                };
+                return [...withoutPage, newCell];
             });
         },
         [pages]
@@ -70,11 +67,12 @@ export function PageSelector({ pages, onBack, onMerge }: PageSelectorProps) {
     const handleMerge = () => {
         if (cells.length === 0) return;
 
-        onMerge({
+        const arrangement: GridArrangement = {
             rows: gridDimensions.rows,
             cols: gridDimensions.cols,
             cells,
-        });
+        };
+        onMerge(arrangement);
     };
 
     const totalSlots = gridDimensions.rows * gridDimensions.cols;

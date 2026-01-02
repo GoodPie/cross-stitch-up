@@ -1,5 +1,5 @@
 // Re-export shared types for convenience
-export type { PageRenderResult, ProcessingProgress, ExportOptions } from "@/lib/shared/types";
+export type { PageRenderResult, ProcessingProgress, ExportOptions, PageInfo } from "@/lib/shared/types";
 
 export interface GridCoordinates {
     xStart: number;
@@ -18,22 +18,6 @@ export interface GridBounds {
     y: number;
     width: number;
     height: number;
-}
-
-export interface DetectedGridPage {
-    pageNumber: number;
-    canvas: HTMLCanvasElement;
-    coordinates: GridCoordinates;
-    position: GridPosition;
-    gridBounds: GridBounds;
-}
-
-export interface MergeResult {
-    canvas: HTMLCanvasElement;
-    imageUrl: string;
-    pagesMerged: number;
-    dimensions: { width: number; height: number };
-    originalFilename?: string;
 }
 
 /**
@@ -92,15 +76,72 @@ export interface StitchConfig {
     gridDetection?: Partial<GridDetectionConfig>; // Config for grid detection algorithm
 }
 
+// =============================================================================
+// Grid Cell and Arrangement Types (URL-based, server-side processing)
+// =============================================================================
+
+/**
+ * Grid cell with image URL for server-side processing.
+ */
+export interface GridCell {
+    row: number;
+    col: number;
+    pageNumber: number;
+    imageUrl: string;
+}
+
+/**
+ * Grid arrangement with URL-based cells.
+ */
 export interface GridArrangement {
     rows: number;
     cols: number;
     cells: GridCell[]; // Sparse array - some cells may be empty
 }
 
-export interface GridCell {
-    row: number;
-    col: number;
-    pageNumber: number;
-    canvas: HTMLCanvasElement;
+/**
+ * Merge result with blob URLs.
+ */
+export interface MergeResult {
+    resultUrl: string; // Full resolution merged image URL
+    previewUrl: string; // Smaller preview image URL
+    pagesMerged: number;
+    dimensions: { width: number; height: number };
+    originalFilename?: string;
+}
+
+// =============================================================================
+// Type Aliases for Backwards Compatibility
+// =============================================================================
+
+/** @deprecated Use GridCell instead */
+export type ServerGridCell = GridCell;
+
+/** @deprecated Use GridArrangement instead */
+export type ServerGridArrangement = GridArrangement;
+
+/** @deprecated Use MergeResult instead */
+export type ServerMergeResult = MergeResult;
+
+// =============================================================================
+// API Response Types
+// =============================================================================
+
+/**
+ * Response from the upload API endpoint.
+ */
+export interface UploadResponse {
+    jobId: string;
+    pages: import("@/lib/shared/types").PageInfo[];
+    totalPages: number;
+}
+
+/**
+ * Response from the process API endpoint.
+ */
+export interface ProcessResponse {
+    resultUrl: string;
+    previewUrl: string;
+    dimensions: { width: number; height: number };
+    pagesMerged: number;
 }

@@ -22,9 +22,25 @@ const TEST_CONFIG = {
 
 // Helper: Enter dimensions in config form
 async function enterDimensions(page: Page, width: number, height: number) {
-    await page.locator("#width").fill(String(width));
-    await page.locator("#height").fill(String(height));
-    await page.getByRole("button", { name: /Continue to Upload/i }).click();
+    const widthInput = page.getByLabel("Width (stitches)");
+    const heightInput = page.getByLabel("Height (stitches)");
+
+    // Use click + clear + type for reliable cross-browser input
+    // (fill() can be unreliable on number inputs in WebKit)
+    await widthInput.click();
+    await widthInput.clear();
+    await widthInput.pressSequentially(String(width));
+    await expect(widthInput).toHaveValue(String(width));
+
+    await heightInput.click();
+    await heightInput.clear();
+    await heightInput.pressSequentially(String(height));
+    await expect(heightInput).toHaveValue(String(height));
+
+    // Wait for button to be enabled before clicking
+    const continueButton = page.getByRole("button", { name: /Continue to Upload/i });
+    await expect(continueButton).toBeEnabled({ timeout: 5000 });
+    await continueButton.click();
 }
 
 // Helper: Upload PDF file
@@ -144,10 +160,9 @@ test.describe("PDF Merge Tool", () => {
 
         // Step 7: Verify success state content
         await expect(page.getByText("Pattern merged successfully!")).toBeVisible();
-        // Verify dimensions shown (use first match since it appears multiple times)
-        await expect(
-            page.getByText(`${TEST_CONFIG.dimensions.width} × ${TEST_CONFIG.dimensions.height}`).first()
-        ).toBeVisible();
+        // Verify pixel dimensions are shown (format: "width × height pixels")
+        // The dimensions shown are pixel dimensions of the merged image, not stitch count
+        await expect(page.getByText(/\d+ × \d+ pixels/).first()).toBeVisible();
 
         // Step 8: Capture and compare merged result
         const resultImage = page.locator('img[alt="Merged cross stitch pattern"]');
