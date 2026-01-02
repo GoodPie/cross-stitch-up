@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FileImage, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -38,33 +38,29 @@ export function ExportDialog({ open, onOpenChange, canvas, imageUrl, filename }:
     const [printHeight, setPrintHeight] = useState<string>("10");
     const [dpi, setDpi] = useState<string>("300");
     const [maintainAspectRatio, setMaintainAspectRatio] = useState(true);
-    const [trackedCanvas, setTrackedCanvas] = useState<HTMLCanvasElement | null>(null);
     const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(null);
     const [isExporting, setIsExporting] = useState(false);
 
-    // Load image dimensions when imageUrl is provided
-    const [trackedImageUrl, setTrackedImageUrl] = useState<string | undefined>(undefined);
-    if (imageUrl !== trackedImageUrl) {
-        setTrackedImageUrl(imageUrl);
-        if (imageUrl) {
-            const img = new Image();
-            img.onload = () => {
-                setImageDimensions({ width: img.naturalWidth, height: img.naturalHeight });
-                setPixelWidth(String(img.naturalWidth));
-                setPixelHeight(String(img.naturalHeight));
-            };
-            img.src = imageUrl;
-        }
-    }
+    // Load image dimensions when imageUrl changes
+    useEffect(() => {
+        if (!imageUrl) return;
 
-    // Sync pixel dimensions when canvas changes (state adjustment during render)
-    if (canvas !== trackedCanvas) {
-        setTrackedCanvas(canvas);
+        const img = new Image();
+        img.onload = () => {
+            setImageDimensions({ width: img.naturalWidth, height: img.naturalHeight });
+            setPixelWidth(String(img.naturalWidth));
+            setPixelHeight(String(img.naturalHeight));
+        };
+        img.src = imageUrl;
+    }, [imageUrl]);
+
+    // Sync pixel dimensions when canvas changes
+    useEffect(() => {
         if (canvas) {
             setPixelWidth(String(canvas.width));
             setPixelHeight(String(canvas.height));
         }
-    }
+    }, [canvas]);
 
     // Get source dimensions (either from canvas or loaded image)
     const sourceDimensions = canvas ? { width: canvas.width, height: canvas.height } : imageDimensions;
