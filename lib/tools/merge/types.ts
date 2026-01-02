@@ -20,22 +20,6 @@ export interface GridBounds {
     height: number;
 }
 
-export interface DetectedGridPage {
-    pageNumber: number;
-    canvas: HTMLCanvasElement;
-    coordinates: GridCoordinates;
-    position: GridPosition;
-    gridBounds: GridBounds;
-}
-
-export interface MergeResult {
-    canvas: HTMLCanvasElement;
-    imageUrl: string;
-    pagesMerged: number;
-    dimensions: { width: number; height: number };
-    originalFilename?: string;
-}
-
 /**
  * Configuration for the grid detection algorithm.
  * These can be overridden via StitchConfig.gridDetection
@@ -92,28 +76,14 @@ export interface StitchConfig {
     gridDetection?: Partial<GridDetectionConfig>; // Config for grid detection algorithm
 }
 
-export interface GridArrangement {
-    rows: number;
-    cols: number;
-    cells: GridCell[]; // Sparse array - some cells may be empty
-}
-
-export interface GridCell {
-    row: number;
-    col: number;
-    pageNumber: number;
-    canvas: HTMLCanvasElement;
-}
-
-// ============================================================================
-// Server-side types (URL-based instead of canvas-based)
-// ============================================================================
+// =============================================================================
+// Grid Cell and Arrangement Types (URL-based, server-side processing)
+// =============================================================================
 
 /**
- * Server-side grid cell with image URL instead of canvas.
- * Used when processing is done on the server.
+ * Grid cell with image URL for server-side processing.
  */
-export interface ServerGridCell {
+export interface GridCell {
     row: number;
     col: number;
     pageNumber: number;
@@ -121,25 +91,41 @@ export interface ServerGridCell {
 }
 
 /**
- * Server-side grid arrangement with URL-based cells.
+ * Grid arrangement with URL-based cells.
  */
-export interface ServerGridArrangement {
+export interface GridArrangement {
     rows: number;
     cols: number;
-    cells: ServerGridCell[];
+    cells: GridCell[]; // Sparse array - some cells may be empty
 }
 
 /**
- * Server-side merge result with blob URLs.
- * Replaces MergeResult when using server-side processing.
+ * Merge result with blob URLs.
  */
-export interface ServerMergeResult {
+export interface MergeResult {
     resultUrl: string; // Full resolution merged image URL
     previewUrl: string; // Smaller preview image URL
     pagesMerged: number;
     dimensions: { width: number; height: number };
     originalFilename?: string;
 }
+
+// =============================================================================
+// Type Aliases for Backwards Compatibility
+// =============================================================================
+
+/** @deprecated Use GridCell instead */
+export type ServerGridCell = GridCell;
+
+/** @deprecated Use GridArrangement instead */
+export type ServerGridArrangement = GridArrangement;
+
+/** @deprecated Use MergeResult instead */
+export type ServerMergeResult = MergeResult;
+
+// =============================================================================
+// API Response Types
+// =============================================================================
 
 /**
  * Response from the upload API endpoint.

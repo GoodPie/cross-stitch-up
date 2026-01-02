@@ -7,29 +7,14 @@ import { ResultsState } from "./_components/results-state";
 import { StitchConfigForm } from "./_components/stitch-config-form";
 import { PageSelector } from "./_components/page-selector";
 import type { PageInfo } from "@/lib/shared/types";
-import type {
-    StitchConfig,
-    GridArrangement,
-    ServerGridArrangement,
-    ServerMergeResult,
-    MergeResult,
-} from "@/lib/tools/merge/types";
+import type { StitchConfig, GridArrangement, MergeResult } from "@/lib/tools/merge/types";
 
 type MergeState = "config" | "upload" | "selecting" | "processing" | "success" | "error";
-
-/**
- * Type guard to check if arrangement is server-side (URL-based)
- */
-function isServerArrangement(
-    arrangement: GridArrangement | ServerGridArrangement
-): arrangement is ServerGridArrangement {
-    return arrangement.cells.length > 0 && "imageUrl" in arrangement.cells[0];
-}
 
 export default function MergePage() {
     const [mergeState, setMergeState] = useState<MergeState>("config");
     const [processingStage, setProcessingStage] = useState("");
-    const [result, setResult] = useState<ServerMergeResult | MergeResult | null>(null);
+    const [result, setResult] = useState<MergeResult | null>(null);
     const [error, setError] = useState<string | null>(null);
 
     // Configuration and page state
@@ -163,15 +148,8 @@ export default function MergePage() {
      * Process and merge selected pages via API
      */
     const handleMerge = useCallback(
-        async (arrangement: GridArrangement | ServerGridArrangement) => {
+        async (arrangement: GridArrangement) => {
             if (!stitchConfig || !jobId) return;
-
-            // Ensure we're using server arrangement
-            if (!isServerArrangement(arrangement)) {
-                setError("Invalid arrangement type for server-side processing");
-                setMergeState("error");
-                return;
-            }
 
             setMergeState("processing");
             setProcessingStage("Extracting grid sections...");
