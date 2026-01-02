@@ -5,17 +5,10 @@ import { Download, RotateCcw, ZoomIn, ZoomOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ExportDialog } from "@/components/shared/export-dialog";
-import type { MergeResult, ServerMergeResult } from "@/lib/tools/merge/types";
-
-/**
- * Type guard to check if result is server-side (URL-based)
- */
-function isServerResult(result: MergeResult | ServerMergeResult): result is ServerMergeResult {
-    return "resultUrl" in result && "previewUrl" in result;
-}
+import type { MergeResult } from "@/lib/tools/merge/types";
 
 interface ResultsStateProps {
-    readonly result: MergeResult | ServerMergeResult;
+    readonly result: MergeResult;
     readonly onReset: () => void;
 }
 
@@ -74,11 +67,7 @@ export function ResultsState({ result, onReset }: ResultsStateProps) {
                         >
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
-                                src={
-                                    isServerResult(result)
-                                        ? result.previewUrl // Server-side: use preview URL
-                                        : result.imageUrl || "/placeholder.svg" // Client-side: use imageUrl
-                                }
+                                src={result.previewUrl}
                                 alt="Merged cross stitch pattern"
                                 className="h-auto max-w-full"
                             />
@@ -137,8 +126,8 @@ export function ResultsState({ result, onReset }: ResultsStateProps) {
             <ExportDialog
                 open={exportDialogOpen}
                 onOpenChange={setExportDialogOpen}
-                canvas={isServerResult(result) ? null : (result.canvas ?? null)}
-                imageUrl={isServerResult(result) ? result.resultUrl : undefined}
+                canvas={null}
+                imageUrl={result.resultUrl}
                 filename={result.originalFilename || "cross-stitch-pattern"}
             />
         </div>
