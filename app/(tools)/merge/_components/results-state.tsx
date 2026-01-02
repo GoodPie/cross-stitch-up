@@ -86,7 +86,7 @@ export function ResultsState({ result, onReset }: ResultsStateProps) {
                     </div>
 
                     <p className="text-muted-foreground text-center text-sm">
-                        {result.dimensions.width} × {result.dimensions.height} stitches
+                        {result.dimensions.width} × {result.dimensions.height} pixels
                     </p>
                 </Card>
 
