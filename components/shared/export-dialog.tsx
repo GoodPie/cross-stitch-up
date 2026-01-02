@@ -67,9 +67,7 @@ export function ExportDialog({ open, onOpenChange, canvas, imageUrl, filename }:
     }
 
     // Get source dimensions (either from canvas or loaded image)
-    const sourceDimensions = canvas
-        ? { width: canvas.width, height: canvas.height }
-        : imageDimensions;
+    const sourceDimensions = canvas ? { width: canvas.width, height: canvas.height } : imageDimensions;
 
     // Calculate output dimensions for preview
     const getOutputDimensions = (): { width: number; height: number } | null => {
@@ -240,7 +238,8 @@ export function ExportDialog({ open, onOpenChange, canvas, imageUrl, filename }:
                             <div className="flex items-center space-x-2">
                                 <RadioGroupItem value="original" id="size-original" />
                                 <Label htmlFor="size-original" className="cursor-pointer">
-                                    Original size ({sourceDimensions?.width ?? "..."} x {sourceDimensions?.height ?? "..."} px)
+                                    Original size ({sourceDimensions?.width ?? "..."} x{" "}
+                                    {sourceDimensions?.height ?? "..."} px)
                                 </Label>
                             </div>
                             <div className="flex items-center space-x-2">
@@ -384,11 +383,7 @@ export function ExportDialog({ open, onOpenChange, canvas, imageUrl, filename }:
                     <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isExporting}>
                         Cancel
                     </Button>
-                    <Button
-                        onClick={handleExport}
-                        className="gap-2"
-                        disabled={!sourceDimensions || isExporting}
-                    >
+                    <Button onClick={handleExport} className="gap-2" disabled={!sourceDimensions || isExporting}>
                         {format === "png" ? <FileImage className="h-4 w-4" /> : <FileText className="h-4 w-4" />}
                         {isExporting ? "Exporting..." : `Export ${format.toUpperCase()}`}
                     </Button>

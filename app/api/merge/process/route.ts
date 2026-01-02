@@ -44,13 +44,13 @@ export async function POST(request: NextRequest): Promise<NextResponse<MergeProc
         // Validate cells have required fields
         for (const cell of body.cells) {
             if (cell.pageNumber === undefined || cell.row === undefined || cell.col === undefined) {
-                return NextResponse.json({ error: "Invalid cell data: missing pageNumber, row, or col" }, { status: 400 });
-            }
-            if (!cell.imageUrl) {
                 return NextResponse.json(
-                    { error: `Missing imageUrl for page ${cell.pageNumber}` },
+                    { error: "Invalid cell data: missing pageNumber, row, or col" },
                     { status: 400 }
                 );
+            }
+            if (!cell.imageUrl) {
+                return NextResponse.json({ error: `Missing imageUrl for page ${cell.pageNumber}` }, { status: 400 });
             }
         }
 

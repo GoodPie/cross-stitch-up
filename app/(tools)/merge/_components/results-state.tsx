@@ -137,7 +137,7 @@ export function ResultsState({ result, onReset }: ResultsStateProps) {
             <ExportDialog
                 open={exportDialogOpen}
                 onOpenChange={setExportDialogOpen}
-                canvas={isServerResult(result) ? null : result.canvas ?? null}
+                canvas={isServerResult(result) ? null : (result.canvas ?? null)}
                 imageUrl={isServerResult(result) ? result.resultUrl : undefined}
                 filename={result.originalFilename || "cross-stitch-pattern"}
             />

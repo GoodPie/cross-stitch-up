@@ -73,6 +73,7 @@ export default function MergePage() {
 
             if (!response.ok) {
                 const errorData = await response.json();
+                // noinspection ExceptionCaughtLocallyJS
                 throw new Error(errorData.error || "Failed to upload PDF");
             }
 
@@ -81,7 +82,10 @@ export default function MergePage() {
             if (contentType?.includes("text/event-stream")) {
                 // Handle SSE stream
                 const reader = response.body?.getReader();
-                if (!reader) throw new Error("No response body");
+                if (!reader) {
+                    // noinspection ExceptionCaughtLocallyJS
+                    throw new Error("No response body");
+                }
 
                 const decoder = new TextDecoder();
                 let buffer = "";
@@ -99,7 +103,7 @@ export default function MergePage() {
 
                         // Parse SSE event
                         const eventMatch = line.match(/event: (\w+)/);
-                        const dataMatch = line.match(/data: (.+)/s);
+                        const dataMatch = line.match(/data: ([\s\S]+)/);
 
                         if (eventMatch && dataMatch) {
                             const eventType = eventMatch[1];
@@ -115,9 +119,7 @@ export default function MergePage() {
                                     );
                                     break;
                                 case "batch":
-                                    setProcessingStage(
-                                        `Processed ${data.pagesCompleted} of ${data.total} pages...`
-                                    );
+                                    setProcessingStage(`Processed ${data.pagesCompleted} of ${data.total} pages...`);
                                     break;
                                 case "complete":
                                     setJobId(data.jobId);
@@ -125,6 +127,7 @@ export default function MergePage() {
                                     setMergeState("selecting");
                                     break;
                                 case "error":
+                                    // noinspection ExceptionCaughtLocallyJS
                                     throw new Error(data.message);
                             }
                         }
@@ -192,6 +195,7 @@ export default function MergePage() {
 
                 if (!response.ok) {
                     const errorData = await response.json();
+                    // noinspection ExceptionCaughtLocallyJS
                     throw new Error(errorData.error || "Failed to process merge");
                 }
 

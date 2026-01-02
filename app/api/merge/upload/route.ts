@@ -32,10 +32,6 @@ export async function POST(request: NextRequest) {
                         let result: RenderResult | undefined;
                         for await (const event of generator) {
                             controller.enqueue(encoder.encode(event));
-                            // Store the final result if it's returned
-                            if (typeof event !== "string") {
-                                result = event;
-                            }
                         }
                         // Get the return value from the generator
                         const finalResult = await generator.return(result!);
@@ -45,9 +41,7 @@ export async function POST(request: NextRequest) {
                     } catch (error) {
                         const errorMessage = error instanceof Error ? error.message : "Unknown error";
                         controller.enqueue(
-                            encoder.encode(
-                                `event: error\ndata: ${JSON.stringify({ message: errorMessage })}\n\n`
-                            )
+                            encoder.encode(`event: error\ndata: ${JSON.stringify({ message: errorMessage })}\n\n`)
                         );
                     } finally {
                         controller.close();

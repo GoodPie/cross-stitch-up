@@ -11,6 +11,19 @@ import type { GridArrangement, StitchConfig } from "@/lib/tools/merge/types";
 const PREVIEW_WIDTH = 800;
 const DEFAULT_OVERLAP_PIXELS = 3;
 
+/**
+ * Validate that a URL is a legitimate Vercel Blob Storage URL.
+ * Prevents SSRF attacks by ensuring we only fetch from trusted domains.
+ */
+function isValidBlobUrl(url: string): boolean {
+    try {
+        const parsed = new URL(url);
+        return parsed.protocol === "https:" && parsed.hostname.endsWith(".vercel-storage.com");
+    } catch {
+        return false;
+    }
+}
+
 interface MergeCell {
     pageNumber: number;
     row: number;
@@ -38,6 +51,9 @@ export interface MergeProcessResult {
  * Fetch image from URL and return as buffer
  */
 async function fetchImageBuffer(url: string): Promise<Buffer> {
+    if (!isValidBlobUrl(url)) {
+        throw new Error("Invalid image URL: must be a Vercel Blob Storage URL");
+    }
     const response = await fetch(url);
     if (!response.ok) {
         throw new Error(`Failed to fetch image: ${response.statusText}`);
@@ -49,18 +65,12 @@ async function fetchImageBuffer(url: string): Promise<Buffer> {
 /**
  * Process a single page: fetch, detect grid, crop to grid area
  */
-async function processPage(
-    cell: MergeCell,
-    stitchConfig: StitchConfig
-): Promise<ProcessedGrid> {
+async function processPage(cell: MergeCell, stitchConfig: StitchConfig): Promise<ProcessedGrid> {
     // Fetch the full-resolution image
     const imageBuffer = await fetchImageBuffer(cell.imageUrl);
 
     // Detect and crop to grid (removing axis numbers)
-    const { buffer: croppedBuffer, bounds } = await extractGridWithoutAxisNumbers(
-        imageBuffer,
-        stitchConfig
-    );
+    const { buffer: croppedBuffer, bounds } = await extractGridWithoutAxisNumbers(imageBuffer, stitchConfig);
 
     return {
         pageNumber: cell.pageNumber,
@@ -157,9 +167,10 @@ async function generatePreview(imageBuffer: Buffer): Promise<Buffer> {
  *
  * @param jobId - Job identifier for blob storage
  * @param cells - Array of cells with page numbers and positions
+ * @param arrangement - Grid arrangement configuration
  * @param stitchConfig - Pattern configuration
  * @param overlapPixels - Pixels to overlap between grids (default 3)
- * @returns URLs and dimensions of merged result
+ * @returns URLs and dimensions of merged results
  */
 export async function mergeImages(
     jobId: string,
@@ -173,16 +184,10 @@ export async function mergeImages(
     }
 
     // Step 1: Process all pages in parallel (fetch, detect grid, crop)
-    const processedGrids = await Promise.all(
-        cells.map((cell) => processPage(cell, stitchConfig))
-    );
+    const processedGrids = await Promise.all(cells.map((cell) => processPage(cell, stitchConfig)));
 
     // Step 2: Merge grids into single image
-    const { buffer: mergedBuffer, width, height } = await mergeGrids(
-        processedGrids,
-        arrangement,
-        overlapPixels
-    );
+    const { buffer: mergedBuffer, width, height } = await mergeGrids(processedGrids, arrangement, overlapPixels);
 
     // Step 3: Generate preview
     const previewBuffer = await generatePreview(mergedBuffer);

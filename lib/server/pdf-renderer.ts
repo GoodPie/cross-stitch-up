@@ -26,10 +26,7 @@ export interface RenderResult {
 /**
  * Render a single PDF page to a PNG buffer
  */
-function renderPageToBuffer(
-    doc: mupdf.Document,
-    pageIndex: number
-): { buffer: Buffer; width: number; height: number } {
+function renderPageToBuffer(doc: mupdf.Document, pageIndex: number): { buffer: Buffer; width: number; height: number } {
     const page = doc.loadPage(pageIndex);
 
     // Scale matrix: 72 DPI base * RENDER_SCALE
@@ -143,9 +140,7 @@ export async function renderPdfPages(
  * Render PDF pages with Server-Sent Events for progress streaming
  * Returns an async generator that yields progress events
  */
-export async function* renderPdfPagesWithSSE(
-    pdfBuffer: Buffer
-): AsyncGenerator<string, RenderResult, unknown> {
+export async function* renderPdfPagesWithSSE(pdfBuffer: Buffer): AsyncGenerator<string, RenderResult, unknown> {
     const jobId = nanoid(12);
 
     // Open PDF document

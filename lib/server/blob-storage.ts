@@ -9,11 +9,7 @@ const BLOB_TOKEN = process.env.BLOB_READ_WRITE_TOKEN;
  * @param contentType - MIME type (defaults to image/png)
  * @returns URL of the uploaded blob
  */
-export async function uploadImage(
-    buffer: Buffer,
-    path: string,
-    contentType: string = "image/png"
-): Promise<string> {
+export async function uploadImage(buffer: Buffer, path: string, contentType: string = "image/png"): Promise<string> {
     const blob = await put(path, buffer, {
         access: "public",
         contentType,
@@ -68,11 +64,7 @@ export function getMergePath(jobId: string, filename: string): string {
 /**
  * Upload a full-resolution page image
  */
-export async function uploadPageImage(
-    jobId: string,
-    pageNumber: number,
-    buffer: Buffer
-): Promise<string> {
+export async function uploadPageImage(jobId: string, pageNumber: number, buffer: Buffer): Promise<string> {
     const path = getMergePath(jobId, `page-${pageNumber}.png`);
     return uploadImage(buffer, path);
 }
@@ -80,11 +72,7 @@ export async function uploadPageImage(
 /**
  * Upload a thumbnail image
  */
-export async function uploadThumbnail(
-    jobId: string,
-    pageNumber: number,
-    buffer: Buffer
-): Promise<string> {
+export async function uploadThumbnail(jobId: string, pageNumber: number, buffer: Buffer): Promise<string> {
     const path = getMergePath(jobId, `thumb-${pageNumber}.jpg`);
     return uploadImage(buffer, path, "image/jpeg");
 }
@@ -92,10 +80,7 @@ export async function uploadThumbnail(
 /**
  * Upload the final merged result
  */
-export async function uploadMergedResult(
-    jobId: string,
-    buffer: Buffer
-): Promise<string> {
+export async function uploadMergedResult(jobId: string, buffer: Buffer): Promise<string> {
     const path = getMergePath(jobId, "result.png");
     return uploadImage(buffer, path);
 }
@@ -103,10 +88,7 @@ export async function uploadMergedResult(
 /**
  * Upload a preview of the merged result
  */
-export async function uploadMergedPreview(
-    jobId: string,
-    buffer: Buffer
-): Promise<string> {
+export async function uploadMergedPreview(jobId: string, buffer: Buffer): Promise<string> {
     const path = getMergePath(jobId, "preview.jpg");
     return uploadImage(buffer, path, "image/jpeg");
 }

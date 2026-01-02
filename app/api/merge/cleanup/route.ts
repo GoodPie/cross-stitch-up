@@ -19,9 +19,7 @@ interface CleanupResponse {
  * Requires authentication - only authenticated users can cleanup.
  * Anonymous users cannot cleanup (blobs will expire via TTL).
  */
-export async function DELETE(
-    request: NextRequest
-): Promise<NextResponse<CleanupResponse | { error: string }>> {
+export async function DELETE(request: NextRequest): Promise<NextResponse<CleanupResponse | { error: string }>> {
     try {
         // Require authentication
         const session = await auth.api.getSession({

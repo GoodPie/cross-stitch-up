@@ -901,7 +901,6 @@ export function detectGridBoundaries(
         console.log(`Canvas: ${ctx.width}x${ctx.height}`);
     }
 
-    // Step 1: Find horizontal borders
     const horizontalBorders = findHorizontalBorders(ctx);
 
     if (DEBUG_GRID_DETECTION) {
@@ -917,7 +916,6 @@ export function detectGridBoundaries(
         return extractGridArea(canvas);
     }
 
-    // Step 2: Find vertical borders (guided by horizontal)
     const verticalBorders = findVerticalBorders(ctx, horizontalBorders);
 
     if (DEBUG_GRID_DETECTION) {
@@ -926,7 +924,6 @@ export function detectGridBoundaries(
         console.log("  Right:", verticalBorders.right);
     }
 
-    // Step 3: Resolve vertical borders (use synthetic if needed)
     const resolvedVertical = resolveVerticalBorders(
         { top: horizontalBorders.top, bottom: horizontalBorders.bottom },
         verticalBorders
@@ -946,14 +943,12 @@ export function detectGridBoundaries(
         right: resolvedVertical.right,
     };
 
-    // Step 4: Check border alignment
     const alignment = checkBorderAlignment(borders);
 
     if (!alignment.aligned && DEBUG_GRID_DETECTION) {
         console.log("Detection WARNING - borders poorly aligned, attempting to continue...");
     }
 
-    // Step 5: Validate corners
     const validCorners = validateCorners(ctx, borders);
 
     if (validCorners < 2 && !alignment.aligned) {
@@ -963,7 +958,6 @@ export function detectGridBoundaries(
         return extractGridArea(canvas);
     }
 
-    // Step 6: Calculate preliminary bounds
     const preliminaryBounds: GridBounds = {
         x: borders.left.position,
         y: borders.top.position,
@@ -971,7 +965,6 @@ export function detectGridBoundaries(
         height: borders.bottom.position - borders.top.position,
     };
 
-    // Step 7: Validate size
     if (
         preliminaryBounds.width < ctx.width * config.minBorderFraction ||
         preliminaryBounds.height < ctx.height * config.minBorderFraction
@@ -982,10 +975,8 @@ export function detectGridBoundaries(
         return extractGridArea(canvas);
     }
 
-    // Step 8: Calculate grid line confidence
     const gridLineConfidence = calculateGridLineConfidence(ctx, preliminaryBounds);
 
-    // Step 9: Calculate overall confidence
     const overallConfidence = calculateOverallConfidence(borders, validCorners, alignment.score, gridLineConfidence);
 
     if (DEBUG_GRID_DETECTION) {
@@ -1007,7 +998,6 @@ export function detectGridBoundaries(
         return extractGridArea(canvas);
     }
 
-    // Step 10: Apply border expansion and return final bounds
     const expansion = config.borderExpansion;
     const finalBounds: GridBounds = {
         x: Math.max(0, preliminaryBounds.x - expansion),
