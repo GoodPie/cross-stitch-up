@@ -29,7 +29,7 @@ export interface RenderResult {
 function renderPageToBuffer(doc: mupdf.Document, pageIndex: number): { buffer: Buffer; width: number; height: number } {
     const page = doc.loadPage(pageIndex);
 
-    // Scale matrix: 72 DPI base * RENDER_SCALE
+    // Scale matrix: 96 DPI base converted to MuPDF's 72 DPI units * RENDER_SCALE
     const scale = (96 / 72) * RENDER_SCALE;
     const matrix = mupdf.Matrix.scale(scale, scale);
 
